@@ -1,0 +1,15 @@
+# Describe a set of files to fetch from a given repository.
+---
+schema:
+  version: 1
+# remote - a remote repository to fetch protobuf definitions from
+remote: https://github.com/cdsap/ProtoExample.git
+# branch - only this branch will be cloned/pulled, there the sha values below must be in
+# master
+branch: master
+# Indicate the sha (in remote/branch) for each proto file that we want to have models generated for.
+# The structure of the definitions matches the directory structure of the remote repo.
+definitions:
+  # the root directory in the repo
+  definitions:
+    user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b

@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# SyncGitRepo - Command Line Interface
+
+scriptDir=$( cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1 ; pwd -P )
+
+cd "$scriptDir" || exit 1
+
+([ -f ./cli/build/install/cli/bin/cli ] || ./gradlew --quiet clean installDist) && ./cli/build/install/cli/bin/cli "$@"

@@ -1,0 +1,203 @@
+/*
+ * © 2019 Match Group, LLC.
+ */
+
+package com.tinder.gitquery.core
+
+import org.yaml.snakeyaml.Yaml
+import org.yaml.snakeyaml.constructor.Constructor
+import java.io.File
+import java.nio.file.Files
+
+/**
+ * A utility class that given a yaml file, describing a set of files in a remote git repo, and an
+ * intermediate (repo) directory, query, fetch and sync those files into a given output directory.
+ *
+ * For more details see the README.md file in the root of this project.
+ */
+object GitQueryCore {
+
+    /**
+     * Sync all files
+     */
+    fun sync(configFile: String, repoPath: String, outputPath: String) {
+        val config = loadConfig(configFile)
+        validateConfig(config.remote, config.branch)
+
+        prepareRepo(config.remote, config.branch, repoPath)
+
+        prepareOutputDirectory(outputPath)
+
+        // Sync all the files in `config.definitions`, recursively.
+        config.definitions.forEach { (key, value) ->
+            syncFiles(
+                fileMap = value,
+                remote = config.remote,
+                repoPath = repoPath,
+                outputPath = outputPath,
+                relativePath = key
+            )
+        }
+    }
+
+    /**
+     * Load the config file
+     */
+    private fun loadConfig(configFile: String): GitQueryConfig {
+        require(configFile.isNotEmpty()) {
+            "Input configFile can't be an empty string ($configFile)"
+        }
+
+        check(0 == sh("[ -f $configFile ]")) {
+            "Config file does not exist ($configFile)"
+        }
+
+        val yaml = Yaml(Constructor(GitQueryConfig::class.java))
+        return Files.newBufferedReader(File(configFile).toPath()).use {
+            yaml.load(it)
+        }
+    }
+
+    /**
+     * Validate essential config attributes.
+     */
+    private fun validateConfig(remote: String, branch: String) {
+        require(remote.isNotEmpty()) {
+            "Parameter remote can't be an empty string ($remote)"
+        }
+
+        require(branch.isNotEmpty()) {
+            "Parameter branch can't be an empty string ($branch)"
+        }
+    }
+
+    /**
+     * Clone or pull the `remote` repo @ `branch` into file(`repoDir`)
+     */
+    private fun prepareRepo(remote: String, branch: String, repoDir: String) {
+        val repoExists = repoExists(repoDir)
+        var exitCode = 0
+
+        // If repo directory already exists, it means we have already cloned the remote repo
+        if (repoExists) {
+            // since we have th repo already, fetch the right branch from origin and checkout the branch
+            exitCode =
+                sh("cd $repoDir && git fetch origin $branch:$branch && git checkout $branch")
+        }
+
+        // Either:
+        // 1) repoDir doesn't exist
+        // 2) or, we couldn't pull the branch that we wanted.
+        // Cleanup and try a fresh clone.
+        if (exitCode != 0 || !repoExists) {
+            sh("rm -rf $repoDir")
+            exitCode =
+                sh("git clone --single-branch -b $branch $remote $repoDir")
+        }
+
+        check(exitCode == 0) { "Error cloning/updating repo $remote into directory $repoDir" }
+    }
+
+    /**
+     * Sync all files recursively.
+     */
+    private fun syncFiles(
+        fileMap: Map<String, Any>,
+        remote: String,
+        repoPath: String,
+        outputPath: String,
+        relativePath: String
+    ) {
+        fileMap.forEach { (filename, value) ->
+            val path = "$relativePath/$filename"
+            val destDir = "$outputPath/$path"
+
+            if (value is Map<*, *>) {
+                syncFiles(
+                    fileMap = fileMap[filename] as Map<String, Any>,
+                    remote = remote,
+                    repoPath = repoPath,
+                    outputPath = outputPath,
+                    relativePath = path
+                )
+            } else {
+                // value is the git sha
+
+                // Create the destination directory for each file
+                // `<outputDir>/<definition>/file.proto`,
+                // then run `git show sha:file > dest` to copy the file into the dest
+                val exitCode = sh(
+                    """
+                        (cd $repoPath && mkdir -p $outputPath/$relativePath && 
+                        echo "// DOT NOT EDIT" > $destDir && 
+                        echo "// This file is synced from remote repo:" >> $destDir && 
+                        echo "// $remote/$path@sha=$value" >> $destDir && 
+                        echo "" >> $destDir && 
+                        git show $value:$path >> $destDir)
+                    """.trimIndent()
+                )
+                check(exitCode == 0) { "Failed to sync: $remote/$path: exit code=$exitCode" }
+            }
+        }
+    }
+
+    /**
+     * Check for and create the output folder - relative to projectDir. Throws exceptions if there are issues.
+     */
+    private fun prepareOutputDirectory(outputPath: String) {
+        println("Creating outputPath: $outputPath")
+
+        // Either outputPath exists or we can create it
+        check(0 == sh("[ -d $outputPath ] || mkdir -p $outputPath")) {
+            "OutputDir: $outputPath not found and couldn't be created"
+        }
+
+        // Either outputPath doesn't exist, or we can write to it.
+        check(0 == sh("[ ! -d $outputPath ] || [ -w $outputPath ]")) {
+            "OutputDir: $outputPath does not have write permission"
+        }
+
+        // Clean the output folder so that if files were removed from the config, they don't get included.
+        check(0 == sh("(cd $outputPath && rm -rf *)")) {
+            "Error cleaning outputDir with path: `$outputPath"
+        }
+    }
+
+    /**
+     * Checks the existence of the repoDir
+     */
+    private fun repoExists(repoDir: String): Boolean {
+        return 0 == sh("[ -d $repoDir ] && [ -d $repoDir/.git ]")
+    }
+
+    /**
+     * Run a shell command.
+     */
+    private fun sh(vararg cmd: String): Int {
+        return runCommand(
+            *listOf(
+                "sh",
+                "-c",
+                *cmd
+            ).toTypedArray()
+        )
+    }
+
+    private fun runCommand(vararg cmd: String): Int {
+        val processBuilder = ProcessBuilder()
+            .command(*cmd)
+            .redirectErrorStream(true)
+
+        val process = processBuilder.start()
+        val lines = process.inputStream.bufferedReader().use { reader ->
+            reader.readLines().joinToString(separator = "\n")
+        }
+
+        val exitCode = process.waitFor()
+        if (exitCode != 0 && lines.isNotEmpty()) {
+            println(lines)
+        }
+        return exitCode
+    }
+}
+
