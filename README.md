@@ -8,11 +8,11 @@ This enables a new approach for querying dependencies across repos as an alterna
 pre-built and published artifacts. 
 
 It is sometimes preferable to query individual files in a remote repo when:
- - we only need a small number of files from very large remote (mono)repo
- - we need granular versioning for each dependency file 
- - it is hard to globally version the files in the remote repo and it would require many artifacts to be published 
- - we want to avoid decoupling the building of the artifact and our module to avoid breaking changes
- - not all interested in the artifact will be using the same version dependencies as the artifact
+ - we only need a small number of files from (very) large remote (mono)repo.
+ - we need granular versioning for each dependency file.
+ - it is hard to globally version the files in the remote repo and it would require many artifacts to be published .
+ - we want to combine the source files of an artifact into our module.
+ - we want to avoid version conflicts as possible when including pre-build artifacts. 
 
 #### Sample config.yaml
 
@@ -21,7 +21,7 @@ It is sometimes preferable to query individual files in a remote repo when:
 ---
 schema:
   version: 1
-remote - a remote repository to fetch protobuf definitions from
+# remote - a remote repository to fetch Protobuf definitions from
 remote: https://github.com/cdsap/ProtoExample.git
 # branch - only this branch will be cloned/pulled, there the sha values below must be in 
 # master
