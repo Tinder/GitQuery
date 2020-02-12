@@ -73,6 +73,12 @@ Options:
   -h, --help          Show this message and exit
 ```
 
+#### Example Use Case - Code Generation
+We have a tech stack with many mobile/web apps and services with many developers actively working on them. We want to avoid duplicating and handwriting our models and service interfaces, so we decide to store definitions of models and service interfaces in a central idl repo. 
+
+We can choose to build a single artifact for each language that we support in our tech stack or even build many of them. However, since each of our apps or services just needs a couple of files from the idl repo. We can avoid including unneccesary files, in pre-built artifacts, by using GitQuery to pull and sync the idl files that we want. This allows them to be staged for our build. From there we can use our code generation tools, the sames ones we were using to generate code and build them in to an artifact, to generate code from the idl definitions that we care about and use the generated code in our project as any other source code.
+
+
 License
 ---
 ~~~
