@@ -24,15 +24,14 @@ It is sometimes preferable to query individual files in a remote repo when:
 ---
 schema:
   version: 1
-# remote - a remote repository to fetch Protobuf definitions from
-remote: https://github.com/cdsap/ProtoExample.git
-# branch - only this branch will be cloned/pulled, there the sha values below must be in 
-# master
+# remote - a remote repository to fetch files from
+remote: https://github.com/aminghadersohi/ProtoExample.git
+# branch - only this branch will be cloned/pulled, there the sha values below must be in master
 branch: master
 # Indicate the sha (in remote/branch) for each proto file that we want to have models generated for.
 # The structure of the definitions matches the directory structure of the remote repo.
 definitions:
-  # the root directory in the repo
+  README.md: d654b510d2689e8ee56d23d03dff2be742737f86
   definitions:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 ```
@@ -59,7 +58,7 @@ To run
 
 #### Sample CLI
 ```shell script
-./gitquery --config-file=./samples/sample1.yaml --repo-dir=./build/tmp/repo --output-dir=./synced-src
+./gitquery --config-file=./samples/sample2.yaml --repo-dir=./build/tmp/repo --output-dir=./synced-src
 ```
 
 ```shell script

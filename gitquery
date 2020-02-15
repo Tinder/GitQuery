@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SyncGitRepo - Command Line Interface
+# GitQuery - Command Line Interface
 
 scriptDir=$( cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1 ; pwd -P )
 
