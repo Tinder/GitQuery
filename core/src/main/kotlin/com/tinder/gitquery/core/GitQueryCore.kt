@@ -28,9 +28,9 @@ object GitQueryCore {
 
         prepareOutputDirectory(outputPath)
 
-        // Sync all the files in `config.definitions`, recursively.
+        // Sync all the files in `config.files`, recursively.
         syncFiles(
-            fileMap = config.definitions,
+            fileMap = config.files,
             remote = config.remote,
             repoPath = repoPath,
             outputPath = outputPath,
@@ -80,7 +80,7 @@ object GitQueryCore {
         if (repoExists) {
             // since we have th repo already, fetch the right branch from origin and checkout the branch
             exitCode =
-                sh("cd $repoDir && git fetch origin $branch:$branch && git checkout $branch")
+                sh("cd $repoDir && git fetch -u origin $branch:$branch && git checkout $branch")
         }
 
         // Either:
@@ -112,6 +112,7 @@ object GitQueryCore {
 
             // Value is a map of filenames and directory names to shas
             if (value is Map<*, *>) {
+                @Suppress("UNCHECKED_CAST")
                 syncFiles(
                     fileMap = fileMap[filename] as Map<String, Any>,
                     remote = remote,

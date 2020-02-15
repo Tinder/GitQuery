@@ -29,25 +29,6 @@ class GitQueryTaskTest {
     }
 
     @Test
-    fun taskCreateFolderWithProtoFiles() {
-        testProjectDir.apply {
-            newFolder("synced-src")
-            newFile("build.gradle").appendText(getBuildGradleSetup())
-            newFile("config.yml").appendText(getContentConfigWithFileAtRoot())
-        }
-
-        val result = GradleRunner.create()
-            .withProjectDir(testProjectDir.root)
-            .withArguments("gitQueryTask")
-            .withPluginClasspath()
-            .build()
-        assert(result.task(":gitQueryTask")?.outcome == TaskOutcome.SUCCESS)
-        assert(result.output.contains("Creating outputPath"))
-        assert(File("${testProjectDir.root}/synced-src/definitions/user.proto").exists())
-        assert(File("${testProjectDir.root}/synced-src/README.md").exists())
-    }
-
-    @Test
     fun taskCreateFolderWithFilesAtRoot() {
         testProjectDir.apply {
             newFolder("synced-src")
@@ -117,9 +98,10 @@ gitQuery {
 ---
 schema:
   version: 1
-remote: https://github.com/cdsap/ProtoExample.git
+remote: https://github.com/aminghadersohi/ProtoExample.git
 branch: master
-definitions:
+files:
+  README.md: d654b510d2689e8ee56d23d03dff2be742737f86
   definitions:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 """.trimIndent()
@@ -129,7 +111,7 @@ definitions:
 schema:
   version: 1
 branch: master
-definitions:
+files:
   definitions:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 """.trimIndent()
@@ -139,15 +121,3 @@ master{ }
 incorrectFormat
  """.trimIndent()
 }
-
-private fun getContentConfigWithFileAtRoot() = """
----
-schema:
-  version: 1
-remote: https://github.com/aminghadersohi/ProtoExample.git
-branch: master
-definitions:
-  README.md: d654b510d2689e8ee56d23d03dff2be742737f86
-  definitions:
-    user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
-""".trimIndent()
