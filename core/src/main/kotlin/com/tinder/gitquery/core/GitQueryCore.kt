@@ -80,7 +80,7 @@ object GitQueryCore {
         if (repoExists) {
             // since we have th repo already, fetch the right branch from origin and checkout the branch
             exitCode =
-                sh("cd $repoDir && git fetch -u origin $branch:$branch && git checkout $branch")
+                sh("cd $repoDir && git checkout $branch && git pull origin $branch")
         }
 
         // Either:
