@@ -1,12 +1,15 @@
 com.tinder.gitquery - GitQuery
 ==========
 
-A core library, command line interface, and incremental Gradle plugin, that given a config file, syncs files 
-from a git repo to a given directory. The git repo is cached to provide ultra fast subsequent/incremental builds. 
+Fast and incremental query and sync of files in a remote git repository.
 
-This enables a new approach for querying dependencies across repos as an alternative to the traditional  
-pre-built and published artifacts. 
+ - Core library (Kotlin)
+ - Command line interface
+ - Gradle plugin
 
+An alternative approach for defining dependencies in a build project vs importing of pre-built and published artifacts. 
+
+#### Use cases: 
 It is sometimes preferable to query individual files in a remote repo when:
  - we only need a small number of files from (very) large remote (mono)repo.
  - we need granular versioning for each dependency file.
