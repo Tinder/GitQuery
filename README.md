@@ -29,8 +29,8 @@ remote: https://github.com/aminghadersohi/ProtoExample.git
 # branch - only this branch will be cloned/pulled, there the sha values below must be in master
 branch: master
 # Indicate the sha (in remote/branch) for each proto file that we want to have models generated for.
-# The structure of the definitions matches the directory structure of the remote repo.
-definitions:
+# The structure of `files` matches the directory structure of the remote repo.
+files:
   README.md: d654b510d2689e8ee56d23d03dff2be742737f86
   definitions:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
@@ -51,14 +51,20 @@ gitQuery {
 ```
 
 #### Command line interface 
-To run
+
+To run - also does install
 ```shell script
 ./gitquery
 ``` 
 
+To re-install
+```shell script
+./install
+``` 
+
 #### Sample CLI
 ```shell script
-./gitquery --config-file=./samples/sample2.yaml --repo-dir=./build/tmp/repo --output-dir=./synced-src
+./gitquery --config-file=./samples/sample1.yaml --repo-dir=./build/tmp/repo --output-dir=./synced-src
 ```
 
 ```shell script
@@ -79,7 +85,6 @@ Options:
 We have a tech stack with many mobile/web apps and services with many developers actively working on them. We want to avoid duplicating and handwriting our models and service interfaces, so we decide to store definitions of models and service interfaces in a central idl repo. 
 
 We can choose to build a single artifact for each language that we support in our tech stack or even build many of them. However, since each of our apps or services just needs a couple of files from the idl repo. We can avoid including unneccesary files, in pre-built artifacts, by using GitQuery to pull and sync the idl files that we want. This allows them to be staged for our build. From there we can use our code generation tools, the sames ones we were using to generate code and build them in to an artifact, to generate code from the idl definitions that we care about and use the generated code in our project as any other source code.
-
 
 License
 ---
