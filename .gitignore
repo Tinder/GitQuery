@@ -48,8 +48,6 @@ out/
 # Gradle files
 .gradle/
 build/
-gradle.properties
-nimbledroid.properties
 
 # Local configuration file (sdk path, etc)
 
@@ -72,7 +70,13 @@ proguard/
 ## Plugin-specific files:
 
 # IntelliJ
-/out/
+.idea
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/gradle.xml
+.idea/dictionaries
+.idea/libraries
+.settings
 
 # mpeltonen/sbt-idea plugin
 .idea_modules/
@@ -97,3 +101,4 @@ obj/
 synced-src
 
 tmp
+
