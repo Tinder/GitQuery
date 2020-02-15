@@ -29,15 +29,13 @@ object GitQueryCore {
         prepareOutputDirectory(outputPath)
 
         // Sync all the files in `config.definitions`, recursively.
-        config.definitions.forEach { (key, value) ->
-            syncFiles(
-                fileMap = value,
-                remote = config.remote,
-                repoPath = repoPath,
-                outputPath = outputPath,
-                relativePath = key
-            )
-        }
+        syncFiles(
+            fileMap = config.definitions,
+            remote = config.remote,
+            repoPath = repoPath,
+            outputPath = outputPath,
+            relativePath = ""
+        )
     }
 
     /**
@@ -109,9 +107,10 @@ object GitQueryCore {
         relativePath: String
     ) {
         fileMap.forEach { (filename, value) ->
-            val path = "$relativePath/$filename"
+            val path = if (relativePath.isNotBlank()) "$relativePath/$filename" else filename
             val destDir = "$outputPath/$path"
 
+            // Value is a map of filenames and directory names to shas
             if (value is Map<*, *>) {
                 syncFiles(
                     fileMap = fileMap[filename] as Map<String, Any>,
@@ -120,9 +119,9 @@ object GitQueryCore {
                     outputPath = outputPath,
                     relativePath = path
                 )
-            } else {
-                // value is the git sha
-
+            }
+            // Value is expected to be the git sha
+            else {
                 // Create the destination directory for each file
                 // `<outputDir>/<definition>/file.proto`,
                 // then run `git show sha:file > dest` to copy the file into the dest

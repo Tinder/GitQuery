@@ -33,6 +33,25 @@ class GitQueryTaskTest {
         testProjectDir.apply {
             newFolder("synced-src")
             newFile("build.gradle").appendText(getBuildGradleSetup())
+            newFile("config.yml").appendText(getContentConfigWithFileAtRoot())
+        }
+
+        val result = GradleRunner.create()
+            .withProjectDir(testProjectDir.root)
+            .withArguments("gitQueryTask")
+            .withPluginClasspath()
+            .build()
+        assert(result.task(":gitQueryTask")?.outcome == TaskOutcome.SUCCESS)
+        assert(result.output.contains("Creating outputPath"))
+        assert(File("${testProjectDir.root}/synced-src/definitions/user.proto").exists())
+        assert(File("${testProjectDir.root}/synced-src/README.md").exists())
+    }
+
+    @Test
+    fun taskCreateFolderWithFilesAtRoot() {
+        testProjectDir.apply {
+            newFolder("synced-src")
+            newFile("build.gradle").appendText(getBuildGradleSetup())
             newFile("config.yml").appendText(getContentConfig())
         }
 
@@ -45,7 +64,6 @@ class GitQueryTaskTest {
         assert(result.output.contains("Creating outputPath"))
         assert(File("${testProjectDir.root}/synced-src/definitions/user.proto").exists())
     }
-
 
     @Test
     fun missingRemoteInConfigFileIsThrowingException() {
@@ -65,7 +83,6 @@ class GitQueryTaskTest {
         assert(result.output.contains("Parameter remote can't be an empty string ()"))
     }
 
-
     @Test
     fun wrongConfigFormatThrowingException() {
         testProjectDir.apply {
@@ -83,8 +100,6 @@ class GitQueryTaskTest {
 
         assert(result.output.contains("Can't construct a java object for tag:yaml.org"))
         assert(result.task(":gitQueryTask")?.outcome == TaskOutcome.FAILED)
-
-
     }
 
     private fun getBuildGradleSetup() = """
@@ -97,7 +112,6 @@ gitQuery {
     outputDir =  "synced-src"
     repoDir = "tmp/remote"
 }""".trimIndent()
-
 
     private fun getContentConfig() = """
 ---
@@ -125,3 +139,15 @@ master{ }
 incorrectFormat
  """.trimIndent()
 }
+
+private fun getContentConfigWithFileAtRoot() = """
+---
+schema:
+  version: 1
+remote: https://github.com/aminghadersohi/ProtoExample.git
+branch: master
+definitions:
+  README.md: d654b510d2689e8ee56d23d03dff2be742737f86
+  definitions:
+    user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
+""".trimIndent()

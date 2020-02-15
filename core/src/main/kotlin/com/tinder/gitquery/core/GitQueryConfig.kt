@@ -8,7 +8,7 @@ import java.util.Collections.emptyMap
 
 data class GitQueryConfig(
     var branch: String = "master",
-    var definitions: Map<String, Map<String, Any>> = emptyMap(),
+    var definitions: Map<String, Any> = emptyMap(),
     var remote: String = "",
     var schema: GitQueryConfigSchema = GitQueryConfigSchema()
 )
