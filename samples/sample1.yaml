@@ -6,6 +6,7 @@ schema:
 remote: https://github.com/aminghadersohi/ProtoExample.git
 # branch - only this branch will be cloned/pulled, there the sha values below must be in master.
 branch: master
+# a list of commit aliases that can be used in the `files` section.
 commits:
   latest: d654b510d2689e8ee56d23d03dff2be742737f86
 # Indicate the sha (in remote/branch) for each proto file that we want to have models generated for.

@@ -20,19 +20,23 @@ It is sometimes preferable to query individual files in a remote repo when:
 #### Sample config.yaml
 
 ```yaml
-# Describe a set of files to fetch from a given repository.
----
 schema:
   version: 1
-# remote - a remote repository to fetch files from
+# remote - the remote repository to query files from.
 remote: https://github.com/aminghadersohi/ProtoExample.git
-# branch - only this branch will be cloned/pulled, there the sha values below must be in master
+# branch - only this branch will be cloned/pulled, there the sha values below must be in master.
 branch: master
+# a list of commit aliases that can be used in the `files` section.
+commits:
+  latest: d654b510d2689e8ee56d23d03dff2be742737f86
 # Indicate the sha (in remote/branch) for each proto file that we want to have models generated for.
 # The structure of `files` matches the directory structure of the remote repo.
 files:
-  README.md: d654b510d2689e8ee56d23d03dff2be742737f86
+  # a file at the root fo the remote repo.
+  README.md: latest
+  # a directory at the root of the remote repo.
   definitions:
+    # a file inside the definitions folder.
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 ```
 
