@@ -32,6 +32,7 @@ object GitQueryCore {
         syncFiles(
             fileMap = config.files,
             remote = config.remote,
+            commits = config.commits,
             repoPath = repoPath,
             outputPath = outputPath,
             relativePath = ""
@@ -101,6 +102,7 @@ object GitQueryCore {
      */
     private fun syncFiles(
         fileMap: Map<String, Any>,
+        commits: Map<String, String>,
         remote: String,
         repoPath: String,
         outputPath: String,
@@ -114,6 +116,7 @@ object GitQueryCore {
             if (value is Map<*, *>) {
                 @Suppress("UNCHECKED_CAST")
                 syncFiles(
+                    commits = commits,
                     fileMap = fileMap[filename] as Map<String, Any>,
                     remote = remote,
                     repoPath = repoPath,
@@ -123,6 +126,7 @@ object GitQueryCore {
             }
             // Value is expected to be the git sha
             else {
+                val sha = if (commits.containsKey(value)) commits[value] else value
                 // Create the destination directory for each file
                 // `<outputDir>/<definition>/file.proto`,
                 // then run `git show sha:file > dest` to copy the file into the dest
@@ -131,9 +135,9 @@ object GitQueryCore {
                         (cd $repoPath && mkdir -p $outputPath/$relativePath && 
                         echo "// DOT NOT EDIT" > $destDir && 
                         echo "// This file is synced from remote repo:" >> $destDir && 
-                        echo "// $remote/$path@sha=$value" >> $destDir && 
+                        echo "// $remote/$path@sha=$sha" >> $destDir && 
                         echo "" >> $destDir && 
-                        git show $value:$path >> $destDir)
+                        git show $sha:$path >> $destDir)
                     """.trimIndent()
                 )
                 check(exitCode == 0) { "Failed to sync: $remote/$path: exit code=$exitCode" }
