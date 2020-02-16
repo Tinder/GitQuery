@@ -100,10 +100,13 @@ schema:
   version: 1
 remote: https://github.com/aminghadersohi/ProtoExample.git
 branch: master
+commits:
+  latest: d654b510d2689e8ee56d23d03dff2be742737f86
 files:
-  README.md: d654b510d2689e8ee56d23d03dff2be742737f86
+  README.md: latest
   definitions:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
+
 """.trimIndent()
 
     private fun getContentMissingRemoteConfig() = """

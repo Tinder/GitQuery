@@ -6,11 +6,13 @@ schema:
 remote: https://github.com/aminghadersohi/ProtoExample.git
 # branch - only this branch will be cloned/pulled, there the sha values below must be in master.
 branch: master
+commits:
+  latest: d654b510d2689e8ee56d23d03dff2be742737f86
 # Indicate the sha (in remote/branch) for each proto file that we want to have models generated for.
 # The structure of `files` matches the directory structure of the remote repo.
 files:
   # a file at the root fo the remote repo.
-  README.md: d654b510d2689e8ee56d23d03dff2be742737f86
+  README.md: latest
   # a directory at the root of the remote repo.
   definitions:
     # a file inside the definitions folder.
