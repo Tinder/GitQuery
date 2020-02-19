@@ -57,7 +57,7 @@ To run - also does install
 ./gitquery
 ``` 
 
-To re-install
+To re-install  sdfg;kdsfg;s
 ```shell script
 ./install
 ``` 
