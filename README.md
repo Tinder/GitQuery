@@ -54,7 +54,7 @@ gitQuery {
 
 To run - also does install
 ```shell script
-./gitquery
+gitquery
 ``` 
 
 To re-install
