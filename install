@@ -9,3 +9,5 @@ scriptDir=$( cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1 ; pwd -P )
 cd "$scriptDir" || exit 1
 
 ./gradlew --quiet clean installDist
+
+ln -sF $(pwd)/cli/build/install/cli/bin/cli /usr/local/bin/gitquery
