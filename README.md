@@ -56,14 +56,14 @@ gitQuery {
 
 #### Command line interface 
 
-To run - also does install
-```shell script
-./gitquery
-``` 
-
-To re-install
+To install
 ```shell script
 ./install
+``` 
+
+To run 
+```shell script
+gitquery
 ``` 
 
 #### Sample CLI
