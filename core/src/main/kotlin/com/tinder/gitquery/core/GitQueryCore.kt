@@ -24,7 +24,10 @@ object GitQueryCore {
         val config = loadConfig(configFile)
         validateConfig(config.remote, config.branch)
 
-        prepareRepo(config.remote, config.branch, repoPath)
+        val actualRepoPath = "$repoPath/" +
+                config.remote.substring(config.remote.lastIndexOf("/")).removeSuffix(".git")
+
+        prepareRepo(config.remote, config.branch, actualRepoPath)
 
         prepareOutputDirectory(outputPath)
 
@@ -33,7 +36,7 @@ object GitQueryCore {
             fileMap = config.files,
             remote = config.remote,
             commits = config.commits,
-            repoPath = repoPath,
+            repoPath = actualRepoPath,
             outputPath = outputPath,
             relativePath = ""
         )
@@ -149,7 +152,7 @@ object GitQueryCore {
      * Check for and create the output folder - relative to projectDir. Throws exceptions if there are issues.
      */
     private fun prepareOutputDirectory(outputPath: String) {
-        println("Creating outputPath: $outputPath")
+        println("GitQuery: creating outputPath: $outputPath")
 
         // Either outputPath exists or we can create it
         check(0 == sh("[ -d $outputPath ] || mkdir -p $outputPath")) {
