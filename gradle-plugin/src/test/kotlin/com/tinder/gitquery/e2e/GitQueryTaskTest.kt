@@ -42,7 +42,7 @@ class GitQueryTaskTest {
             .withPluginClasspath()
             .build()
         assert(result.task(":gitQueryTask")?.outcome == TaskOutcome.SUCCESS)
-        assert(result.output.contains("Creating outputPath"))
+        assert(result.output.contains("GitQuery: creating outputPath"))
         assert(File("${testProjectDir.root}/synced-src/definitions/user.proto").exists())
     }
 
