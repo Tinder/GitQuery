@@ -65,6 +65,11 @@ or
 brew install Tinder/tap/gitquery
 ```
 
+If you need Java 1.8:
+```
+brew cask install homebrew/cask-versions/adoptopenjdk8 
+```
+
 To install from source:
 ```shell script
 ./install
