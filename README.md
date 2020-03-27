@@ -55,8 +55,17 @@ gitQuery {
 ```
 
 #### Command line interface 
+Install using brew (https://github.com/Tinder/homebrew-tap):
+```
+brew tap Tinder/tap 
+brew install gitquery
+```
+or
+```
+brew install Tinder/tap/gitquery
+```
 
-To install
+To install from source:
 ```shell script
 ./install
 ``` 
