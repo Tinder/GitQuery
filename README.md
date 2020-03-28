@@ -55,8 +55,22 @@ gitQuery {
 ```
 
 #### Command line interface 
+Install using brew (https://github.com/Tinder/homebrew-tap):
+```
+brew tap Tinder/tap 
+brew install gitquery
+```
+or
+```
+brew install Tinder/tap/gitquery
+```
 
-To install
+If you need Java 1.8:
+```
+brew cask install homebrew/cask-versions/adoptopenjdk8 
+```
+
+To install from source:
 ```shell script
 ./install
 ``` 
