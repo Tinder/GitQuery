@@ -15,6 +15,8 @@ import javax.inject.Inject
  * intermediate (repo) directory, query, fetch and sync those files into a given output directory.
  *
  * For more details see the README.md file in the root of this project.
+ *
+ * @param extension [GitQueryExtension]
  */
 open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : DefaultTask() {
 

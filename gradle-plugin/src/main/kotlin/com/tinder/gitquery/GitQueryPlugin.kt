@@ -7,6 +7,9 @@ package com.tinder.gitquery
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
+/**
+ * The main plugin class.
+ */
 class GitQueryPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         val extension = target.extensions.create("gitQuery", GitQueryExtension::class.java, target)

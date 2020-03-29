@@ -6,6 +6,9 @@ package com.tinder.gitquery.core
 
 import java.util.Collections.emptyMap
 
+/**
+ * A model for the config yaml file.
+ */
 data class GitQueryConfig(
     var branch: String = "master",
     var files: Map<String, Any> = emptyMap(),

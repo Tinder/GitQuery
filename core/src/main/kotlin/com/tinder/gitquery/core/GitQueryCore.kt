@@ -18,7 +18,11 @@ import java.nio.file.Files
 object GitQueryCore {
 
     /**
-     * Sync all files
+     * Sync all files.
+     *
+     * @param configFile a yaml file that describe a set of files to fetch/sync from a given repository
+     * @param repoPath where the remote repo(s) can be cloned locally and stored temporarily.
+     * @param outputPath path to a directory where the files should be synced to.
      */
     fun sync(configFile: String, repoPath: String, outputPath: String) {
         val config = loadConfig(configFile)
@@ -43,7 +47,9 @@ object GitQueryCore {
     }
 
     /**
-     * Load the config file
+     * Load the config file.
+     *
+     * @param configFile the path to the config file
      */
     private fun loadConfig(configFile: String): GitQueryConfig {
         require(configFile.isNotEmpty()) {
@@ -62,6 +68,9 @@ object GitQueryCore {
 
     /**
      * Validate essential config attributes.
+     *
+     * @param remote the url to the remote git repo
+     * @param branch a branch in the remote repo
      */
     private fun validateConfig(remote: String, branch: String) {
         require(remote.isNotEmpty()) {
@@ -75,6 +84,10 @@ object GitQueryCore {
 
     /**
      * Clone or pull the `remote` repo @ `branch` into file(`repoDir`)
+     *
+     * @param remote the url to the remote git repo
+     * @param branch a branch in the remote repo
+     * @param repoDir where the remote repo(s) can be cloned locally and stored temporarily.
      */
     private fun prepareRepo(remote: String, branch: String, repoDir: String) {
         val repoExists = repoExists(repoDir)

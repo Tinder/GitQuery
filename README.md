@@ -1,5 +1,6 @@
-com.tinder.gitquery - GitQuery
+GitQuery
 ==========
+[![CircleCI](https://circleci.com/gh/Tinder/GitQuery.svg?style=svg)](https://circleci.com/gh/Tinder/GitQuery)
 
 Fast and incremental query and sync of files in a remote git repository.
 
@@ -40,8 +41,8 @@ files:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 ```
 
-#### Sample module/build.gradle:
-
+#### Gradle Plugin - com.tinder.gitquery
+`module/build.gradle:`
 ```groovy
 plugins {
   id 'com.tinder.gitquery'

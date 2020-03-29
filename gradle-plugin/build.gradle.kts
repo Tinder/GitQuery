@@ -6,8 +6,10 @@ plugins {
     kotlin("jvm")
     `java-gradle-plugin`
     `java-library`
-     id("com.vanniktech.maven.publish")
+    id("com.gradle.plugin-publish")
 }
+
+val VERSION_NAME: String by project
 
 gradlePlugin {
     plugins {
@@ -20,6 +22,24 @@ gradlePlugin {
         implementation(project(":core"))
         testImplementation(Libs.junit)
         testImplementation(gradleTestKit())
+    }
+}
+
+pluginBundle {
+    website = "https://github.com/Tinder/GitQuery"
+    vcsUrl = "https://github.com/Tinder/GitQuery"
+    description = "A Gradle plugin to query and sync files in a remote git repo."
+    (plugins) {
+        "GitQuery" {
+            displayName = "Gradle Gitquery plugin"
+            tags = listOf("gitquery", "protobuf", "git")
+            version = VERSION_NAME
+        }
+    }
+    mavenCoordinates {
+        groupId = project.group as String
+        artifactId = "gitquery-plugin"
+        version = VERSION_NAME
     }
 }
 
