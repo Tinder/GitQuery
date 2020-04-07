@@ -10,6 +10,7 @@ plugins {
 }
 
 val VERSION_NAME: String by project
+val GROUP: String by project
 
 gradlePlugin {
     plugins {
@@ -37,7 +38,7 @@ pluginBundle {
         }
     }
     mavenCoordinates {
-        groupId = project.group as String
+        groupId = GROUP
         artifactId = "gitquery-plugin"
         version = VERSION_NAME
     }
