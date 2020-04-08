@@ -41,11 +41,11 @@ files:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 ```
 
-#### Gradle Plugin - com.tinder.gitquery
+#### Gradle Plugin - (https://plugins.gradle.org/plugin/com.tinder.gitquery)
 `module/build.gradle:`
 ```groovy
 plugins {
-  id 'com.tinder.gitquery'
+  id "com.tinder.gitquery" version "1.1.1"
 }
 
 gitQuery {
