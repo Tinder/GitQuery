@@ -55,6 +55,12 @@ gitQuery {
 }
 ```
 
+This adds a task called `gitQueryTask` to the module. It can be executed like so:
+
+```
+./gradlew :module:gitQueryTask
+```
+
 #### Command line interface 
 Install using brew (https://github.com/Tinder/homebrew-tap):
 ```
