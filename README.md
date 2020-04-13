@@ -25,19 +25,19 @@ schema:
   version: 1
 # remote - the remote repository to query files from.
 remote: https://github.com/aminghadersohi/ProtoExample.git
-# branch - only this branch will be cloned/pulled, there the sha values below must be in master.
+# branch - only this branch will be cloned/pulled. `sha` values used below must be under `branch`.
 branch: master
-# a list of commit aliases that can be used in the `files` section.
+# A list of commit aliases that can be used in the `files` section.
 commits:
   latest: d654b510d2689e8ee56d23d03dff2be742737f86
-# Indicate the sha (in remote/branch) for each proto file that we want to have models generated for.
+# Indicate the sha (in `remote/branch`) for each proto file that we want to have models generated for.
 # The structure of `files` matches the directory structure of the remote repo.
 files:
-  # a file at the root fo the remote repo.
+  # A file at the root fo the remote repo.
   README.md: latest
-  # a directory at the root of the remote repo.
+  # A directory at the root of the remote repo.
   definitions:
-    # a file inside the definitions folder.
+    # A file inside the definitions folder.
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 ```
 
