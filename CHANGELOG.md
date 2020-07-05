@@ -16,6 +16,7 @@ Version in this change log adheres to [Semantic Versioning](http://semver.org/).
     - Added a free form `extra` map to the `GitQueryConfig` to allow for custom key values for ease of integration
     - Added `Depenendencies.kt` to `buildSrc`
     - More tests
+    - Kotlin updated to 1.3.72
     - Add changelog, and pull request template
 
 ### 1.1.1 (2020-07-01)

@@ -24,49 +24,49 @@ jobs:
 
       - run: find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
 
-      - run:
-          name: Publish artifacts to local maven repository
-          command: |
-            ./gradlew publishToMavenLocal
-            echo "Published files:"
-            find $HOME/.m2/repository -type f
+#      - run:
+#          name: Publish artifacts to local maven repository
+#          command: |
+#            ./gradlew publishToMavenLocal
+#            echo "Published files:"
+#            find $HOME/.m2/repository -type f
+#
+#      - persist_to_workspace:
+#          root: /home/circleci
+#          paths:
+#            - .m2/repository
 
-      - persist_to_workspace:
-          root: /home/circleci
-          paths:
-            - .m2/repository
-
-  build_samples:
-    executor:
-      name: jvm
-
-    steps:
-      - checkout
-
-      - attach_workspace:
-          at: ~/project
-
-      - run:
-          name: Setup local maven repository
-          command: mv .m2 $HOME/
-
-      - run:
-          name: Build all samples
-          command: |
-            for d in samples/*; do
-              set -e
-              [ -d "$d" ] || continue
-              echo "== $d =="
-              pushd "$d" >/dev/null
-              ../../gradlew build
-              popd >/dev/null
-            done
+#  build_samples:
+#    executor:
+#      name: jvm
+#
+#    steps:
+#      - checkout
+#
+#      - attach_workspace:
+#          at: ~/project
+#
+#      - run:
+#          name: Setup local maven repository
+#          command: mv .m2 $HOME/
+#
+#      - run:
+#          name: Build all samples
+#          command: |
+#            for d in samples/*; do
+#              set -e
+#              [ -d "$d" ] || continue
+#              echo "== $d =="
+#              pushd "$d" >/dev/null
+#              ../../gradlew build
+#              popd >/dev/null
+#            done
 
 workflows:
   version: 2.1
   build:
     jobs:
       - build
-      - build_samples:
-          requires:
-            - build
+#      - build_samples:
+#          requires:
+#            - build

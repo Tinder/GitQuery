@@ -6,7 +6,7 @@ package com.tinder.gitquery.core
 
 const val defaultConfigFilename: String = "gitquery.yml"
 const val defaultRepoDir: String = "/tmp/qitquery/repo"
-const val defaultOutputDir: String = "gitquery-out"
+const val defaultOutputDir: String = "gitquery-output"
 
 /**
  * A utility class that given a yaml file, describing a set of files in a remote git repo, and an

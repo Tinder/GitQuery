@@ -43,8 +43,8 @@ files:
   definitions:
     # A file inside the definitions folder.
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
-# A directory to sync the queried files into. default: gitquery-out
-outputDir: gitquery-out
+# A directory to sync the queried files into. default: gitquery-output
+outputDir: gitquery-output
 # A directory to hold the intermediate cloned git repo. default: /tmp/qitquery/repo
 repoDir: /tmp/.gitquery
 # If true [default], cleans out the output folder prior to running sync.

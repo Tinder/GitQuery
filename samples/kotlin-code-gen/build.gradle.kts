@@ -14,7 +14,7 @@ plugins {
     application
     id("com.google.protobuf") version "0.8.12"
     // Fetch/sync remote proto files prior to code gen.
-    id("com.tinder.gitquery") version "2.0.0-SNAPSHOT"
+    id("com.tinder.gitquery") version "2.0.0"
 }
 
 val protoDir = "src/main/proto"
@@ -34,7 +34,7 @@ sourceSets {
 
 val kotlinxSerializationVersion by extra("0.20.0")
 val protobufVersion by extra("3.12.2")
-val pbandkVersion by extra("0.8.2-SNAPSHOT")
+val pbandkVersion by extra("0.8.1")
 
 repositories {
     jcenter()

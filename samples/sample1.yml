@@ -32,8 +32,8 @@ files:
         wrappers.proto: v3_12_2
         compiler:
           plugin.proto: v3_12_2
-# A directory to sync the queried files into. default: gitquery-out
-outputDir: gitquery-out
+# A directory to sync the queried files into. default: gitquery-output
+outputDir: gitquery-output
 # A directory to hold the intermediate cloned git repo. default: /tmp/qitquery/repo
 repoDir: /tmp/.gitquery
 # If true [default=false], cleans out the output folder prior to running sync.
