@@ -5,6 +5,8 @@
 package com.tinder.gitquery
 
 import com.tinder.gitquery.core.GitQueryCore.sync
+import com.tinder.gitquery.core.GitQueryCore.toAbsolutePath
+import com.tinder.gitquery.core.loadConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -32,17 +34,47 @@ open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : Defa
     @Input
     val repoDir: String = extension.repoDir
 
+    // An boolean directing to clean (remote all files) the output folder prior to running.
+    @Input
+    val cleanOutput: Boolean = extension.cleanOutput
+
+    // An boolean to enable showing the underlying commands and their outputs in the console
+    @Input
+    val verbose: Boolean = extension.verbose
+
     init {
         group = "build"
-        description = "Fetch the proto files defined in the config.yaml file"
+        description = "Fetch the proto files defined in the gitquery.yml file"
     }
 
     @TaskAction
     fun syncRepo() {
+        val config = loadConfig(
+            toAbsolutePath(
+                path = configFile,
+                prefixPath = "${project.projectDir}"
+            )
+        )
+        config.repoDir = toAbsolutePath(
+            path = if (repoDir.isNotBlank()) {
+                repoDir
+            } else {
+                config.repoDir
+            },
+            prefixPath = "${project.buildDir}"
+        )
+        config.outputDir = toAbsolutePath(
+            path = if (outputDir.isNotBlank()) {
+                outputDir
+            } else {
+                config.outputDir
+            },
+            prefixPath = "${project.projectDir}"
+        )
+        config.cleanOutput = config.cleanOutput || cleanOutput
         sync(
-            "${project.projectDir}/$configFile",
-            "${project.buildDir}/$repoDir",
-            "${project.projectDir}/$outputDir"
+            config = config,
+            verbose = verbose
         )
     }
 }

@@ -1,0 +1,44 @@
+# Describe a set of files to fetch from a given repository.
+---
+schema:
+  version: 1
+# remote - The remote repository to query files from.
+remote: git@github.com:protocolbuffers/protobuf.git
+# branch - The single branch that will be cloned on first run and pulled incrementally on
+# subsequent runs. The sha values used in [commits] and [files] must be available under [branch].
+branch: master
+# A list of commit aliases that can be used in the `files` section.
+commits:
+  # This sha pertains to https://github.com/protocolbuffers/protobuf/releases/tag/v3.12.2
+  v3_12_2: 678da4f76eb9168c9965afc2149944a66cd48546
+# Specify a nested map of filenames to sha (or commit alias) included file that we
+# want to query and sync. The structure of `files` matches the directory structure of the
+# remote repo. A key whose value is a nested map is considered a directory.
+files:
+  # This is a directory at the root of the repo pointed to by remote.
+  src:
+    google:
+      protobuf:
+        descriptor.proto: v3_12_2
+        any.proto: v3_12_2
+        api.proto: v3_12_2
+        duration.proto: v3_12_2
+        empty.proto: v3_12_2
+        field_mask.proto: v3_12_2
+        source_context.proto: v3_12_2
+        struct.proto: v3_12_2
+        timestamp.proto: v3_12_2
+        type.proto: v3_12_2
+        wrappers.proto: v3_12_2
+        compiler:
+          plugin.proto: v3_12_2
+# A directory to sync the queried files into. default: gitquery-out
+outputDir: gitquery-out
+# A directory to hold the intermediate cloned git repo. default: /tmp/qitquery/repo
+repoDir: /tmp/.gitquery
+# If true [default=false], cleans out the output folder prior to running sync.
+cleanOutput: false
+# A free form map of String -> Any - enabling self contained integration with various systems.
+extra:
+  attr1: value1
+  attr2: 1

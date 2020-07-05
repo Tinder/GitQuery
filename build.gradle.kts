@@ -1,8 +1,8 @@
 plugins {
     base
-    kotlin("jvm") version "1.3.61" apply false
-    id("com.vanniktech.maven.publish") version "0.10.0" apply false
-    id("com.gradle.plugin-publish") version "0.11.0" apply false
+    kotlin("jvm") version Libs.Versions.kotlin apply false
+    id("com.vanniktech.maven.publish") version Libs.Versions.vanniktechMavenPublish apply false
+    id("com.gradle.plugin-publish") version Libs.Versions.gradlePluginPublish apply false
 }
 
 allprojects {

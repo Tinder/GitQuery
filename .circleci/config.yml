@@ -1,20 +1,72 @@
-version: 2
+version: 2.1
 
-jobs:
-  build:
+executors:
+  jvm:
     docker:
-      - image: circleci/openjdk:11.0.3-jdk-stretch
+      - image: circleci/openjdk:8-jdk
     environment:
       TERM: dumb
       JAVA_TOOL_OPTIONS: "-Xmx1g"
       GRADLE_OPTS: '-Dorg.gradle.parallel=false -Dorg.gradle.daemon=false'
       CIRCLE_TEST_REPORTS: test-reports
+
+jobs:
+  build:
+    executor:
+      name: jvm
+
     steps:
       - checkout
-      - run: if [ -e ./gradlew ]; then ./gradlew dependencies;else gradle dependencies;fi
+
       - run: ./gradlew test
+
       - run: mkdir -p $CIRCLE_TEST_REPORTS/junit/
+
       - run: find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
-#       - run:
-#           name: Deploy Snapshot
-#           command: ./publish
+
+      - run:
+          name: Publish artifacts to local maven repository
+          command: |
+            ./gradlew publishToMavenLocal
+            echo "Published files:"
+            find $HOME/.m2/repository -type f
+
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - .m2/repository
+
+  build_samples:
+    executor:
+      name: jvm
+
+    steps:
+      - checkout
+
+      - attach_workspace:
+          at: ~/project
+
+      - run:
+          name: Setup local maven repository
+          command: mv .m2 $HOME/
+
+      - run:
+          name: Build all samples
+          command: |
+            for d in samples/*; do
+              set -e
+              [ -d "$d" ] || continue
+              echo "== $d =="
+              pushd "$d" >/dev/null
+              ../../gradlew build
+              popd >/dev/null
+            done
+
+workflows:
+  version: 2.1
+  build:
+    jobs:
+      - build
+      - build_samples:
+          requires:
+            - build

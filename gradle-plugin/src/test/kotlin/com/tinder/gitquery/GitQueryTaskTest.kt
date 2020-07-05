@@ -2,7 +2,7 @@
  * © 2019 Match Group, LLC.
  */
 
-package com.tinder.gitquery.e2e
+package com.tinder.gitquery
 
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
@@ -31,70 +31,72 @@ class GitQueryTaskTest {
     @Test
     fun taskCreateFolderWithFilesAtRoot() {
         testProjectDir.apply {
-            newFolder("synced-src")
+            newFolder("gitquery-output")
             newFile("build.gradle").appendText(getBuildGradleSetup())
-            newFile("config.yml").appendText(getContentConfig())
+            newFile("gitquery.yml").appendText(getContentConfig())
         }
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir.root)
-            .withArguments("gitQueryTask")
+            .withArguments("gitQuery")
             .withPluginClasspath()
             .build()
-        assert(result.task(":gitQueryTask")?.outcome == TaskOutcome.SUCCESS)
+        assert(result.task(":gitQuery")?.outcome == TaskOutcome.SUCCESS)
         assert(result.output.contains("GitQuery: creating outputPath"))
-        assert(File("${testProjectDir.root}/synced-src/definitions/user.proto").exists())
+        assert(File("${testProjectDir.root}/gitquery-output/definitions/user.proto").exists())
     }
 
     @Test
     fun missingRemoteInConfigFileIsThrowingException() {
         testProjectDir.apply {
-            newFolder("synced-src")
+            newFolder("gitquery-output")
             newFile("build.gradle").appendText(getBuildGradleSetup())
-            newFile("config.yml").appendText(getContentMissingRemoteConfig())
+            newFile("gitquery.yml").appendText(getContentMissingRemoteConfig())
         }
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir.root)
-            .withArguments("gitQueryTask")
+            .withArguments("gitQuery")
             .withPluginClasspath()
             .buildAndFail()
         println(result.output)
-        assert(result.task(":gitQueryTask")?.outcome == TaskOutcome.FAILED)
-        assert(result.output.contains("Parameter remote can't be an empty string ()"))
+        assert(result.task(":gitQuery")?.outcome == TaskOutcome.FAILED)
+        assert(result.output.contains("Parameter remote may not be a blank string ()"))
     }
 
     @Test
     fun wrongConfigFormatThrowingException() {
         testProjectDir.apply {
-            newFolder("synced-src")
+            newFolder("gitquery-output")
             newFile("build.gradle").appendText(getBuildGradleSetup())
-            newFile("config.yml").appendText(getContentWrongFormat())
+            newFile("gitquery.yml").appendText(getContentWrongFormat())
         }
-
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir.root)
-            .withArguments("gitQueryTask")
+            .withArguments("gitQuery")
             .withPluginClasspath()
             .buildAndFail()
 
         assert(result.output.contains("Can't construct a java object for tag:yaml.org"))
-        assert(result.task(":gitQueryTask")?.outcome == TaskOutcome.FAILED)
+        assert(result.task(":gitQuery")?.outcome == TaskOutcome.FAILED)
     }
 
-    private fun getBuildGradleSetup() = """
+    private fun getBuildGradleSetup() =
+        """
 plugins {
   id 'com.tinder.gitquery'
 }
 
 gitQuery {
-    configFile =  "config.yml"
-    outputDir =  "synced-src"
+    configFile =  "gitquery.yml"
+    outputDir =  "gitquery-output"
     repoDir = "tmp/remote"
-}""".trimIndent()
+}
+        """.trimIndent()
 
-    private fun getContentConfig() = """
+    private fun getContentConfig() =
+        """
 ---
 schema:
   version: 1
@@ -107,9 +109,10 @@ files:
   definitions:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 
-""".trimIndent()
+        """.trimIndent()
 
-    private fun getContentMissingRemoteConfig() = """
+    private fun getContentMissingRemoteConfig() =
+        """
 ---
 schema:
   version: 1
@@ -117,10 +120,11 @@ branch: master
 files:
   definitions:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
-""".trimIndent()
+        """.trimIndent()
 
-    private fun getContentWrongFormat() = """---
+    private fun getContentWrongFormat() =
+        """---
 master{ }
 incorrectFormat
- """.trimIndent()
+        """.trimIndent()
 }

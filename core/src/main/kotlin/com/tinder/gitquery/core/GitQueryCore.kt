@@ -4,10 +4,9 @@
 
 package com.tinder.gitquery.core
 
-import org.yaml.snakeyaml.Yaml
-import org.yaml.snakeyaml.constructor.Constructor
-import java.io.File
-import java.nio.file.Files
+const val defaultConfigFilename: String = "gitquery.yml"
+const val defaultRepoDir: String = "/tmp/qitquery/repo"
+const val defaultOutputDir: String = "gitquery-out"
 
 /**
  * A utility class that given a yaml file, describing a set of files in a remote git repo, and an
@@ -16,24 +15,35 @@ import java.nio.file.Files
  * For more details see the README.md file in the root of this project.
  */
 object GitQueryCore {
+    private var verbose = false
 
     /**
-     * Sync all files.
+     * Sync all files
      *
-     * @param configFile a yaml file that describe a set of files to fetch/sync from a given repository
-     * @param repoPath where the remote repo(s) can be cloned locally and stored temporarily.
-     * @param outputPath path to a directory where the files should be synced to.
+     * @param config a yaml file that describe a set of files to fetch/sync from a given repository
+     * @param verbose if true, it will print its operations to standard out.
      */
-    fun sync(configFile: String, repoPath: String, outputPath: String) {
-        val config = loadConfig(configFile)
-        validateConfig(config.remote, config.branch)
+    fun sync(
+        config: GitQueryConfig,
+        verbose: Boolean = false
+    ) {
+        this.verbose = verbose
+        config.validate()
 
-        val actualRepoPath = "$repoPath/" +
-                config.remote.substring(config.remote.lastIndexOf("/")).removeSuffix(".git")
+        val repoPath = toAbsolutePath(config.repoDir)
+        val outputPath = toAbsolutePath(config.outputDir)
+
+        val repoName = config.remote
+            .substring(config.remote.lastIndexOf("/") + 1)
+            .removeSuffix(".git")
+        val actualRepoPath = "$repoPath/$repoName"
 
         prepareRepo(config.remote, config.branch, actualRepoPath)
 
-        prepareOutputDirectory(outputPath)
+        prepareOutputDirectory(
+            outputPath = outputPath,
+            cleanOutput = config.cleanOutput
+        )
 
         // Sync all the files in `config.files`, recursively.
         syncFiles(
@@ -47,38 +57,24 @@ object GitQueryCore {
     }
 
     /**
-     * Load the config file.
-     *
-     * @param configFile the path to the config file
+     * Checks if [path] is already absolute (starts with /), if yes return it, if not, return
+     * [prefixPath]/[path]. [prefixPath] defaults to System.getProperty("user.dir").
+     * If the path is empty, a blank string is returned.
      */
-    private fun loadConfig(configFile: String): GitQueryConfig {
-        require(configFile.isNotEmpty()) {
-            "Input configFile can't be an empty string ($configFile)"
-        }
-
-        check(0 == sh("[ -f $configFile ]")) {
-            "Config file does not exist ($configFile)"
-        }
-
-        val yaml = Yaml(Constructor(GitQueryConfig::class.java))
-        return Files.newBufferedReader(File(configFile).toPath()).use {
-            yaml.load(it)
-        }
-    }
-
-    /**
-     * Validate essential config attributes.
-     *
-     * @param remote the url to the remote git repo
-     * @param branch a branch in the remote repo
-     */
-    private fun validateConfig(remote: String, branch: String) {
-        require(remote.isNotEmpty()) {
-            "Parameter remote can't be an empty string ($remote)"
-        }
-
-        require(branch.isNotEmpty()) {
-            "Parameter branch can't be an empty string ($branch)"
+    fun toAbsolutePath(
+        path: String,
+        prefixPath: String = System.getProperty("user.dir")
+    ): String {
+        return when {
+            path.isBlank() -> {
+                ""
+            }
+            path[0] == '/' -> {
+                path
+            }
+            else -> {
+                "$prefixPath/$path"
+            }
         }
     }
 
@@ -95,9 +91,12 @@ object GitQueryCore {
 
         // If repo directory already exists, it means we have already cloned the remote repo
         if (repoExists) {
-            // since we have th repo already, fetch the right branch from origin and checkout the branch
-            exitCode =
-                sh("cd $repoDir && git checkout $branch && git pull origin $branch")
+            // Since we have th repo already, fetch the right branch from origin and checkout the branch
+            // In cases where the branch changes, `git checkout $branch` will fail silently, prompting
+            // us to do a clean single branch clone of the repe.
+            exitCode = sh(
+                "cd $repoDir && git checkout $branch &>/dev/null && git pull origin $branch"
+            )
         }
 
         // Either:
@@ -106,8 +105,7 @@ object GitQueryCore {
         // Cleanup and try a fresh clone.
         if (exitCode != 0 || !repoExists) {
             sh("rm -rf $repoDir")
-            exitCode =
-                sh("git clone --single-branch -b $branch $remote $repoDir")
+            exitCode = sh("git clone --single-branch -b $branch $remote $repoDir")
         }
 
         check(exitCode == 0) { "Error cloning/updating repo $remote into directory $repoDir" }
@@ -129,34 +127,34 @@ object GitQueryCore {
             val destDir = "$outputPath/$path"
 
             // Value is a map of filenames and directory names to shas
-            if (value is Map<*, *>) {
-                @Suppress("UNCHECKED_CAST")
-                syncFiles(
-                    commits = commits,
-                    fileMap = fileMap[filename] as Map<String, Any>,
-                    remote = remote,
-                    repoPath = repoPath,
-                    outputPath = outputPath,
-                    relativePath = path
-                )
-            }
-            // Value is expected to be the git sha
-            else {
-                val sha = if (commits.containsKey(value)) commits[value] else value
-                // Create the destination directory for each file
-                // `<outputDir>/<definition>/file.proto`,
-                // then run `git show sha:file > dest` to copy the file into the dest
-                val exitCode = sh(
-                    """
-                        (cd $repoPath && mkdir -p $outputPath/$relativePath && 
-                        echo "// DOT NOT EDIT" > $destDir && 
-                        echo "// This file is synced from remote repo:" >> $destDir && 
-                        echo "// $remote/$path@sha=$sha" >> $destDir && 
-                        echo "" >> $destDir && 
-                        git show $sha:$path >> $destDir)
-                    """.trimIndent()
-                )
-                check(exitCode == 0) { "Failed to sync: $remote/$path: exit code=$exitCode" }
+            when (value) {
+                is Map<*, *> -> {
+                    @Suppress("UNCHECKED_CAST")
+                    syncFiles(
+                        commits = commits,
+                        fileMap = fileMap[filename] as Map<String, Any>,
+                        remote = remote,
+                        repoPath = repoPath,
+                        outputPath = outputPath,
+                        relativePath = path
+                    )
+                }
+                // Value is expected to be the git sha
+                else -> {
+                    val sha = if (commits.containsKey(value)) commits[value] else value
+                    // Create the destination directory for each file
+                    // `<outputDir>/<definition>/file.proto`,
+                    // then run `git show sha:file > dest` to copy the file into the dest
+                    val exitCode = sh(
+                        """
+                        (cd $repoPath && mkdir -p $outputPath/$relativePath &&
+                        git show $sha:$path > $destDir)
+                        """.trimIndent()
+                    )
+                    check(exitCode == 0) {
+                        "Failed to sync: $remote/$path: exit code=$exitCode"
+                    }
+                }
             }
         }
     }
@@ -164,7 +162,7 @@ object GitQueryCore {
     /**
      * Check for and create the output folder - relative to projectDir. Throws exceptions if there are issues.
      */
-    private fun prepareOutputDirectory(outputPath: String) {
+    private fun prepareOutputDirectory(outputPath: String, cleanOutput: Boolean) {
         println("GitQuery: creating outputPath: $outputPath")
 
         // Either outputPath exists or we can create it
@@ -177,9 +175,11 @@ object GitQueryCore {
             "OutputDir: $outputPath does not have write permission"
         }
 
-        // Clean the output folder so that if files were removed from the config, they don't get included.
-        check(0 == sh("(cd $outputPath && rm -rf *)")) {
-            "Error cleaning outputDir with path: `$outputPath"
+        if (cleanOutput) {
+            // Clean the output folder so that if files were removed from the config, they don't get included.
+            check(0 == sh("(cd $outputPath && rm -rf *)")) {
+                "Error cleaning outputDir with path: `$outputPath"
+            }
         }
     }
 
@@ -193,20 +193,16 @@ object GitQueryCore {
     /**
      * Run a shell command.
      */
-    private fun sh(vararg cmd: String): Int {
-        return runCommand(
-            *listOf(
-                "sh",
-                "-c",
-                *cmd
-            ).toTypedArray()
-        )
-    }
+    private fun sh(vararg cmd: String): Int = runCommand(*listOf("sh", "-c", *cmd).toTypedArray())
 
     private fun runCommand(vararg cmd: String): Int {
         val processBuilder = ProcessBuilder()
             .command(*cmd)
             .redirectErrorStream(true)
+
+        if (verbose) {
+            println(processBuilder.command().toString())
+        }
 
         val process = processBuilder.start()
         val lines = process.inputStream.bufferedReader().use { reader ->
@@ -214,10 +210,11 @@ object GitQueryCore {
         }
 
         val exitCode = process.waitFor()
-        if (exitCode != 0 && lines.isNotEmpty()) {
+        if (verbose || (exitCode != 0 && lines.isNotEmpty())) {
+            println(processBuilder.command().toString())
+            println("exit code = $exitCode")
             println(lines)
         }
         return exitCode
     }
 }
-
