@@ -18,20 +18,24 @@ It is sometimes preferable to query individual files in a remote repo when:
  - we want to combine the source files of an artifact into our module.
  - we want to avoid version conflicts as possible when including pre-build artifacts. 
 
-#### Sample config.yaml
+#### Sample gitquery.yml
 
 ```yaml
+# Describe a set of files to fetch from a given repository.
+---
 schema:
   version: 1
-# remote - the remote repository to query files from.
+# remote - The remote repository to query files from.
 remote: https://github.com/aminghadersohi/ProtoExample.git
-# branch - only this branch will be cloned/pulled. `sha` values used below must be under `branch`.
+# branch - The single branch that will be cloned on first run and pulled incrementally on
+# subsequent runs. The sha values used in [commits] and [files] must be available under [branch].
 branch: master
 # A list of commit aliases that can be used in the `files` section.
 commits:
   latest: d654b510d2689e8ee56d23d03dff2be742737f86
-# Indicate the sha (in `remote/branch`) for each proto file that we want to have models generated for.
-# The structure of `files` matches the directory structure of the remote repo.
+# Specify a nested map of filenames to sha (or commit alias) included file that we
+# want to query and sync. The structure of `files` matches the directory structure of the
+# remote repo. A key whose value is a nested map is considered a directory.
 files:
   # A file at the root fo the remote repo.
   README.md: latest
@@ -39,26 +43,38 @@ files:
   definitions:
     # A file inside the definitions folder.
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
+# A directory to sync the queried files into. default: gitquery-output
+outputDir: gitquery-output
+# A directory to hold the intermediate cloned git repo. default: /tmp/qitquery/repo
+repoDir: /tmp/.gitquery
+# If true [default], cleans out the output folder prior to running sync.
+cleanOutput: true
+# A free form map of String -> Any - enabling self contained integration with various systems.
+extra:
+  attr1: value1
+  attr2: 1
 ```
 
 #### Gradle Plugin - (https://plugins.gradle.org/plugin/com.tinder.gitquery)
 `module/build.gradle:`
 ```groovy
 plugins {
-  id "com.tinder.gitquery" version "1.1.1"
+  id "com.tinder.gitquery" version "2.0.0"
 }
 
 gitQuery {
-    configFile =  "config.yml"
-    outputDir =  "synced-src"
+    configFile =  "gitquery.yml"
+    outputDir =  "gitquery-output"
     repoDir = "remote"
+    cleanOutput = true
+    verbose = false
 }
 ```
 
-This adds a task called `gitQueryTask` to the module. It can be executed like so:
+This adds a task called `gitQuery` to the module. It can be executed like so:
 
 ```
-./gradlew :module:gitQueryTask
+./gradlew :module:gitQuery
 ```
 
 #### Command line interface 
@@ -89,7 +105,7 @@ gitquery
 
 #### Sample CLI
 ```shell script
-./gitquery --config-file=./samples/sample1.yaml --repo-dir=./build/tmp/repo --output-dir=./synced-src
+./gitquery --config-file=./samples/sample1.yml --repo-dir=./build/tmp/repo --output-dir=./gitquery-output
 ```
 
 ```shell script

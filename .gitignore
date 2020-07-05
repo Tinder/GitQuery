@@ -98,7 +98,7 @@ jrebel.properties
 # Ndk
 obj/
 
-synced-src
+gitquery-output
 
 tmp
 

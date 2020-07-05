@@ -13,16 +13,7 @@ application {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    kotlinLibrary()
     implementation(project(":core"))
     implementation(Libs.clikt)
 }
-
-object Versions {
-    var clikt = "2.3.0"
-}
-
-object Libs {
-    val clikt = "com.github.ajalt:clikt:${Versions.clikt}"
-}
-

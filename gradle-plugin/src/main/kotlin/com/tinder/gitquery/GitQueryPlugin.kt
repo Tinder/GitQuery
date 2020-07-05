@@ -11,8 +11,9 @@ import org.gradle.api.Project
  * The main plugin class.
  */
 class GitQueryPlugin : Plugin<Project> {
-    override fun apply(target: Project) {
-        val extension = target.extensions.create("gitQuery", GitQueryExtension::class.java, target)
-        target.tasks.register("gitQueryTask", GitQueryTask::class.java, extension)
+    override fun apply(project: Project) {
+        val extension =
+            project.extensions.create("gitQuery", GitQueryExtension::class.java, project)
+        project.tasks.register("gitQuery", GitQueryTask::class.java, extension)
     }
 }

@@ -7,6 +7,7 @@ plugins {
     `java-gradle-plugin`
     `java-library`
     id("com.gradle.plugin-publish")
+    id("com.vanniktech.maven.publish")
 }
 
 val VERSION_NAME: String by project
@@ -39,17 +40,7 @@ pluginBundle {
     }
     mavenCoordinates {
         groupId = GROUP
-        artifactId = "gitquery-plugin"
+        artifactId = "gradle-plugin"
         version = VERSION_NAME
     }
-}
-
-object Versions {
-    const val junit = "4.12"
-    const val snakeyaml = "1.25"
-}
-
-object Libs {
-    const val junit = "junit:junit:${Versions.junit}"
-    const val snakeyaml = "org.yaml:snakeyaml:${Versions.snakeyaml}"
 }

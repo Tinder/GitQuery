@@ -9,14 +9,8 @@ plugins {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8"))
+    kotlinLibrary()
     implementation(Libs.snakeyaml)
-}
 
-object Versions {
-    val snakeyaml = "1.25"
-}
-
-object Libs {
-    val snakeyaml = "org.yaml:snakeyaml:${Versions.snakeyaml}"
+    testImplementation(Libs.junit)
 }
