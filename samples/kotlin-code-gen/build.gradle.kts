@@ -14,7 +14,7 @@ plugins {
     application
     id("com.google.protobuf") version "0.8.12"
     // Fetch/sync remote proto files prior to code gen.
-    id("com.tinder.gitquery") version "2.0.0"
+    id("com.tinder.gitquery") version "2.0.1"
 }
 
 val protoDir = "src/main/proto"
