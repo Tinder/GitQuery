@@ -9,9 +9,11 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.tinder.gitquery.core.GitQueryCore
+import com.tinder.gitquery.core.defaultCleanOutput
 import com.tinder.gitquery.core.defaultConfigFilename
 import com.tinder.gitquery.core.defaultOutputDir
 import com.tinder.gitquery.core.defaultRepoDir
+import com.tinder.gitquery.core.defaultVerbose
 import com.tinder.gitquery.core.loadConfig
 
 class Cli : CliktCommand() {
@@ -44,16 +46,16 @@ class Cli : CliktCommand() {
             help =
                 """Whether to clean (remote all files) the output folder prior to running. 
                 |If set to true, this will override a false value specified for [cleanOutput] in the [configFile]. 
-                |default: false""".trimMargin()
+                |default: $defaultCleanOutput""".trimMargin()
         )
-            .flag(default = false)
+            .flag(default = defaultCleanOutput)
     private val verbose:
         Boolean by option(
             help =
                 """Show the underlying commands and their outputs in the console.
-                |default: false""".trimMargin()
+                |default: $defaultVerbose""".trimMargin()
         )
-            .flag(default = false)
+            .flag(default = defaultVerbose)
 
     override fun run() {
         val config = loadConfig(configFile)
@@ -63,7 +65,7 @@ class Cli : CliktCommand() {
         if (outputDir.isNotBlank()) {
             config.outputDir = outputDir
         }
-        config.cleanOutput = config.cleanOutput || cleanOutput
+        config.cleanOutput = config.cleanOutput && cleanOutput
 
         GitQueryCore.sync(config = config, verbose = verbose)
     }

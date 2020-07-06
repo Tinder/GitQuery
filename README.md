@@ -114,12 +114,24 @@ gitquery
 Usage: cli [OPTIONS]
 
 Options:
-  --config-file TEXT  a yaml file that describe a set of files to fetch/sync
-                      from a given repository
-  --output-dir TEXT   path to a directory where the files should be synced to
-  --repo-dir TEXT     where the remote repo(s) can be cloned locally and
-                      stored
+  --config-file TEXT  A yaml file that describe a set of files to query and
+                      sync from a given repository. default: gitquery.yml
+  --output-dir TEXT   Path to a directory where the files should be synced to.
+                      If provided, this will override any value specified for
+                      [outputDir] in the [configFile]. default:
+                      gitquery-output
+  --repo-dir TEXT     Where the remote repo(s) can be cloned locally and
+                      stored. If provided, this will override any value
+                      specified for [repoDir] in the [configFile]. default:
+                      /tmp/qitquery/repo
+  --clean-output      Whether to clean (remote all files) the output folder
+                      prior to running. If set to true, this will override a
+                      false value specified for [cleanOutput] in the
+                      [configFile]. default: true
+  --verbose           Show the underlying commands and their outputs in the
+                      console. default: false
   -h, --help          Show this message and exit
+
 ```
 
 #### Example Use Case - Code Generation
