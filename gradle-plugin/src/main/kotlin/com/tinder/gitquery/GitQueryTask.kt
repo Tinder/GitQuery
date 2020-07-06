@@ -34,11 +34,11 @@ open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : Defa
     @Input
     val repoDir: String = extension.repoDir
 
-    // An boolean directing to clean (remote all files) the output folder prior to running.
+    // An boolean directing to clean (remote all files) the output folder prior to running. (default: true)
     @Input
     val cleanOutput: Boolean = extension.cleanOutput
 
-    // An boolean to enable showing the underlying commands and their outputs in the console
+    // An boolean to enable showing the underlying commands and their outputs in the console. (default: false)
     @Input
     val verbose: Boolean = extension.verbose
 
@@ -71,7 +71,7 @@ open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : Defa
             },
             prefixPath = "${project.projectDir}"
         )
-        config.cleanOutput = config.cleanOutput || cleanOutput
+        config.cleanOutput = config.cleanOutput && cleanOutput
         sync(
             config = config,
             verbose = verbose

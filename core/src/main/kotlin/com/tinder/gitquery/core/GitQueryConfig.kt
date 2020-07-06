@@ -32,7 +32,7 @@ data class GitQueryConfig(
     // A directory to sync the queried files into.
     var outputDir: String = defaultOutputDir,
     // If true [default], cleans out the output folder prior to running sync.
-    var cleanOutput: Boolean = false,
+    var cleanOutput: Boolean = defaultCleanOutput,
     // A map of String -> Any - enabling self contained integration with various systems.
     var extra: Map<String, Any> = emptyMap()
 )

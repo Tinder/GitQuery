@@ -36,7 +36,7 @@ files:
 outputDir: gitquery-output
 # A directory to hold the intermediate cloned git repo. default: /tmp/qitquery/repo
 repoDir: /tmp/.gitquery
-# If true [default=false], cleans out the output folder prior to running sync.
+# If true [default], cleans out the output folder prior to running sync.
 cleanOutput: false
 # A free form map of String -> Any - enabling self contained integration with various systems.
 extra:

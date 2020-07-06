@@ -7,7 +7,7 @@ package com.tinder.gitquery.core
 const val defaultConfigFilename: String = "gitquery.yml"
 const val defaultRepoDir: String = "/tmp/qitquery/repo"
 const val defaultOutputDir: String = "gitquery-output"
-
+const val defaultCleanOutput: Boolean = true
 /**
  * A utility class that given a yaml file, describing a set of files in a remote git repo, and an
  * intermediate (repo) directory, query, fetch and sync those files into a given output directory.

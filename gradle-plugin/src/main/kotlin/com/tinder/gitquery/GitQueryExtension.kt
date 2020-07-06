@@ -13,7 +13,6 @@ open class GitQueryExtension(val project: Project) {
     var configFile: String = ""
     var outputDir: String = ""
     var repoDir: String = ""
-    var files: Map<String, Any> = emptyMap()
-    var cleanOutput: Boolean = false
+    var cleanOutput: Boolean = true
     var verbose: Boolean = false
 }

@@ -44,9 +44,9 @@ class Cli : CliktCommand() {
             help =
                 """Whether to clean (remote all files) the output folder prior to running. 
                 |If set to true, this will override a false value specified for [cleanOutput] in the [configFile]. 
-                |default: false""".trimMargin()
+                |default: true""".trimMargin()
         )
-            .flag(default = false)
+            .flag(default = true)
     private val verbose:
         Boolean by option(
             help =
@@ -63,7 +63,7 @@ class Cli : CliktCommand() {
         if (outputDir.isNotBlank()) {
             config.outputDir = outputDir
         }
-        config.cleanOutput = config.cleanOutput || cleanOutput
+        config.cleanOutput = config.cleanOutput && cleanOutput
 
         GitQueryCore.sync(config = config, verbose = verbose)
     }
