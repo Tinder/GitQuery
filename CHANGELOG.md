@@ -16,7 +16,7 @@ Version in this change log adheres to [Semantic Versioning](http://semver.org/).
     - Updated circle ci file to publish snapshot and build sample
     - Replaces occurances of config.yaml with gitquery.yml to be more intuitive
     - Added a free form `extra` map to the `GitQueryConfig` to allow for custom key values for ease of integration
-    - Added `Depenendencies.kt` to `buildSrc`
+    - Added `Libs.kt` to `buildSrc`
     - More tests
     - Kotlin updated to 1.3.72
     - Add changelog, and pull request template
