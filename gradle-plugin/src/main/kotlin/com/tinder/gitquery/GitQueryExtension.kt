@@ -4,20 +4,19 @@
 
 package com.tinder.gitquery
 
-import com.tinder.gitquery.core.defaultCleanOutput
-import com.tinder.gitquery.core.defaultConfigFilename
-import com.tinder.gitquery.core.defaultGradleRepoDir
-import com.tinder.gitquery.core.defaultOutputDir
-import com.tinder.gitquery.core.defaultVerbose
+import com.tinder.gitquery.core.*
 import org.gradle.api.Project
 
 /**
  * Contains the settings for our plugin.
  */
 open class GitQueryExtension(val project: Project) {
-    var configFile: String = defaultConfigFilename
-    var outputDir: String = defaultOutputDir
-    var repoDir: String = defaultGradleRepoDir
+    var branch: String = defaultBranch
     var cleanOutput: Boolean = defaultCleanOutput
+    var configFile: String = defaultConfigFilename
+    var generateGlobs: String = defaultIncludeGlobs
+    var outputDir: String = defaultOutputDir
+    var remote: String = defaultRemote
+    var repoDir: String = defaultGradleRepoDir
     var verbose: Boolean = defaultVerbose
 }

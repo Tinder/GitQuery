@@ -103,35 +103,62 @@ To run
 gitquery
 ``` 
 
-#### Sample CLI
+#### Sample Sync 
 ```shell script
 ./gitquery --config-file=./samples/sample1.yml --repo-dir=./build/tmp/repo --output-dir=./gitquery-output
 ```
 
+#### Sample Init
 ```shell script
-./gitquery --help   
-                                                               
-Usage: cli [OPTIONS]
+./gitquery --init-config --config-file samples/sample-generate.yml \
+                  --include-globs **/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto \
+                  --exclude-globs **/ruby/**,**/proto2/**
+```
 
-Options:
-  --config-file TEXT  A yaml file that describe a set of files to query and
-                      sync from a given repository. default: gitquery.yml
-  --output-dir TEXT   Path to a directory where the files should be synced to.
-                      If provided, this will override any value specified for
-                      [outputDir] in the [configFile]. default:
-                      gitquery-output
-  --repo-dir TEXT     Where the remote repo(s) can be cloned locally and
-                      stored. If provided, this will override any value
-                      specified for [repoDir] in the [configFile]. default:
-                      /tmp/qitquery/repo
-  --clean-output      Whether to clean (remote all files) the output folder
-                      prior to running. If set to true, this will override a
-                      false value specified for [cleanOutput] in the
-                      [configFile]. default: true
-  --verbose           Show the underlying commands and their outputs in the
-                      console. default: false
-  -h, --help          Show this message and exit
+```shell script
+./gitquery --help     
 
+ Usage: cli [OPTIONS]
+ 
+ Options:
+   --config-file TEXT    A yaml file that describe a set of files to query and
+                         sync from a given repository. default: gitquery.yml
+   --remote TEXT         Remote Git repo url. If provided, this will override
+                         any value specified for [remote] in the [configFile].
+                         default:
+   --branch TEXT         Remote Git repo branch. If provided, this will
+                         override any value specified for [branch] in the
+                         [configFile]. default: master
+   --output-dir TEXT     Path to a directory where the files should be synced
+                         to. If provided, this will override any value
+                         specified for [outputDir] in the [configFile].
+                         default: gitquery-output
+   --repo-dir TEXT       Where the remote repo(s) can be cloned locally and
+                         stored. If provided, this will override any value
+                         specified for [repoDir] in the [configFile]. default:
+                         /tmp/qitquery/repo
+   --clean-output        Whether to clean (remote all files) the output folder
+                         prior to running. If set to true, this will override a
+                         false value specified for [cleanOutput] in the
+                         [configFile]. default: true
+   --init                Initialize/update the config file based on command
+                         line params. Use --include-globs and --exclude-globs.
+                         If the config-file exists, it will be updated. If the
+                         config file does not exist, it will be created with
+                         values from command line or internal defaults.
+                         default: false
+   --include-globs TEXT  A list of globs to include when generating/updating
+                         the config file. If provided, this comma, space or
+                         pipe globs in the string value of this option |will be
+                         used to generate the config's `files` map.
+   --exclude-globs TEXT  A list of globs to exclude when generating/updating
+                         the config file. If provided, this comma, space or
+                         pipe globs in the string value of this option |will be
+                         used to exclude patterns when generating the config's
+                         `files` map.
+   --verbose             Show the underlying commands and their outputs in the
+                         console. default: false
+   -h, --help            Show this message and exit
 ```
 
 #### Example Use Case - Code Generation

@@ -4,9 +4,10 @@
 
 package com.tinder.gitquery
 
+import com.tinder.gitquery.core.GitQueryConfig
+import com.tinder.gitquery.core.GitQueryCore.updateConfig
 import com.tinder.gitquery.core.GitQueryCore.sync
 import com.tinder.gitquery.core.GitQueryCore.toAbsolutePath
-import com.tinder.gitquery.core.loadConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -21,6 +22,14 @@ import javax.inject.Inject
  * @param extension [GitQueryExtension]
  */
 open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : DefaultTask() {
+
+    // The url of the remote Git repo
+    @Input
+    val remote: String = extension.remote
+
+    // The branch of the remote Git repo
+    @Input
+    val branch: String = extension.branch
 
     // The relative (to projectDir) path to a yaml file that describe a set of files to fetch/sync from a given repository.
     @Input
@@ -42,6 +51,10 @@ open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : Defa
     @Input
     val verbose: Boolean = extension.verbose
 
+    // A list of globs to use to generate the config file.
+    @Input
+    val generateGlobs: String = extension.generateGlobs
+
     init {
         group = "build"
         description = "Fetch the proto files defined in the gitquery.yml file"
@@ -49,12 +62,18 @@ open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : Defa
 
     @TaskAction
     fun syncRepo() {
-        val config = loadConfig(
+        val config = GitQueryConfig.load(
             toAbsolutePath(
                 path = configFile,
                 prefixPath = "${project.projectDir}"
             )
         )
+        if (remote.isNotBlank()) {
+            config.remote = remote
+        }
+        if (branch.isNotBlank()) {
+            config.branch = branch
+        }
         config.repoDir = toAbsolutePath(
             path = if (repoDir.isNotBlank()) {
                 repoDir
@@ -71,10 +90,11 @@ open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : Defa
             },
             prefixPath = "${project.projectDir}"
         )
-        config.cleanOutput = config.cleanOutput && cleanOutput
-        sync(
-            config = config,
-            verbose = verbose
-        )
+        if (generateGlobs.isNotBlank()) {
+            updateConfig(configFile = configFile, config = config, verbose = verbose)
+        } else {
+            config.cleanOutput = config.cleanOutput && cleanOutput
+            sync(config = config, verbose = verbose)
+        }
     }
 }

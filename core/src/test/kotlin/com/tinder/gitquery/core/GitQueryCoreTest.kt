@@ -81,6 +81,7 @@ class GitQueryCoreTest {
                 config = GitQueryConfig(
                     schema = GitQueryConfigSchema(version = "1"),
                     remote = "https://github.com/aminghadersohi/ProtoExample.git",
+                    branch = "",
                     files = mapOf(
                         "definitions" to mapOf("user.proto" to "42933446d0321958e8c12216d04b9f0c382ebf1b")
                     ),

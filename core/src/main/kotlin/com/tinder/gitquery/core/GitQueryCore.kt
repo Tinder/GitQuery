@@ -4,11 +4,21 @@
 
 package com.tinder.gitquery.core
 
+import java.io.File
+import java.nio.file.*
+import java.util.stream.Collectors.toList
+
+const val defaultCleanOutput: Boolean = true
 const val defaultConfigFilename: String = "gitquery.yml"
-const val defaultRepoDir: String = "/tmp/qitquery/repo"
+val defaultExcludeGlobs: List<String> = emptyList()
+val defaultIncludeGlobs: List<String> = emptyList()
 const val defaultGradleRepoDir: String = "tmp/qitquery/repo"
 const val defaultOutputDir: String = "gitquery-output"
-const val defaultCleanOutput: Boolean = true
+const val defaultRemote: String = ""
+const val defaultBranch: String = "master"
+const val defaultRepoDir: String = "/tmp/qitquery/repo"
+
+//const val defaultNestedOutput: Boolean = false
 const val defaultVerbose: Boolean = false
 
 /**
@@ -19,6 +29,80 @@ const val defaultVerbose: Boolean = false
  */
 object GitQueryCore {
     private var verbose = false
+
+    /**
+     * Use the generateGlob to update the config file.
+     *
+     * @param configFile path to the config file.
+     * @param config a yaml file that describe a set of files to fetch/sync from a given repository
+     * @param verbose if true, it will print its operations to standard out.
+     */
+    fun updateConfig(
+        configFile: String,
+        config: GitQueryConfig,
+        verbose: Boolean = false
+    ) {
+        this.verbose = verbose
+
+        val actualRepoDirectory = config.getActualRepoPath()
+
+        prepareRepo(config.remote, config.branch, actualRepoDirectory)
+
+        val actualRepoPath = Paths.get(actualRepoDirectory)
+        val files = HashMap<String, Any>()
+        val repoSha = repoSha(actualRepoDirectory)
+
+        val excludeMatchers = ArrayList<PathMatcher>(config.excludeGlobs.size)
+        for (excludeGlob in config.excludeGlobs) {
+            excludeMatchers.add(FileSystems.getDefault().getPathMatcher("glob:${excludeGlob}"))
+        }
+
+        for (glob in config.includeGlobs) {
+            val matcher = FileSystems.getDefault().getPathMatcher("glob:${glob}")
+            Files.walk(actualRepoPath)
+                .collect(toList())
+                .filter { it: Path? ->
+                    it?.let { path ->
+                        val matchesInclude = matcher.matches(path)
+                        var excluded = false
+                        for (excludeMatcher in excludeMatchers) {
+                            if (excluded) break
+                            excluded = excludeMatcher.matches(path)
+                        }
+                        matchesInclude && !excluded
+                    } ?: false
+                }
+                .map {
+                    if (verbose) {
+                        println(it)
+                    }
+                    val relativePath = it.toString()
+                        .substringAfter(actualRepoPath.toString())
+                        .substringAfter("/")
+//                    println(relativePath)
+//                    if (config.nestedOutput) {
+//                        insertNested(files, relativePath)
+//                    }else {
+                    files[relativePath] = repoSha
+//                    }
+                }
+        }
+
+        config.files = files.toSortedMap()
+        config.save(File(configFile))
+    }
+
+//    private fun insertNested(files: java.util.HashMap<String, Any>, relativePath: String) {
+//        val file = relativePath.substringAfterLast("/")
+//        val path = relativePath.substringBeforeLast("/")
+//        val pathParts = path.split("/")
+//        for (pathPart in pathParts) {
+//            if (files.containsKey(pathPart)){
+//                val pathDict = files[pathPart]
+//
+//            }
+//        }
+//    }
 
     /**
      * Sync all files
@@ -33,13 +117,9 @@ object GitQueryCore {
         this.verbose = verbose
         config.validate()
 
-        val repoPath = toAbsolutePath(config.repoDir)
         val outputPath = toAbsolutePath(config.outputDir)
 
-        val repoName = config.remote
-            .substring(config.remote.lastIndexOf("/") + 1)
-            .removeSuffix(".git")
-        val actualRepoPath = "$repoPath/$repoName"
+        val actualRepoPath = config.getActualRepoPath()
 
         prepareRepo(config.remote, config.branch, actualRepoPath)
 
@@ -144,13 +224,18 @@ object GitQueryCore {
                 }
                 // Value is expected to be the git sha
                 else -> {
+                    println(path)
+                    var actualRelativePath = path.substringBeforeLast("/")
+                    if (actualRelativePath == path) {
+                        actualRelativePath = relativePath
+                    }
                     val sha = if (commits.containsKey(value)) commits[value] else value
                     // Create the destination directory for each file
                     // `<outputDir>/<definition>/file.proto`,
                     // then run `git show sha:file > dest` to copy the file into the dest
                     val exitCode = sh(
                         """
-                        (cd $repoPath && mkdir -p $outputPath/$relativePath &&
+                        (cd $repoPath && mkdir -p $outputPath/$actualRelativePath &&
                         git show $sha:$path > $destDir)
                         """.trimIndent()
                     )
@@ -187,6 +272,13 @@ object GitQueryCore {
     }
 
     /**
+     * Get current sha of the repoDir.
+     */
+    private fun repoSha(repoDir: String): String {
+        return shellResult("(cd $repoDir && git rev-parse HEAD)")
+    }
+
+    /**
      * Checks the existence of the repoDir
      */
     private fun repoExists(repoDir: String): Boolean {
@@ -219,5 +311,34 @@ object GitQueryCore {
             println(lines)
         }
         return exitCode
+    }
+
+    /**
+     * Run a shell command for a value.
+     */
+    private fun shellResult(vararg cmd: String): String =
+        runCommandAndGetResult(*listOf("sh", "-c", *cmd).toTypedArray())
+
+    private fun runCommandAndGetResult(vararg cmd: String): String {
+        val processBuilder = ProcessBuilder()
+            .command(*cmd)
+            .redirectErrorStream(false)
+
+        if (verbose) {
+            println(processBuilder.command().toString())
+        }
+
+        val process = processBuilder.start()
+        val lines = process.inputStream.bufferedReader().use { reader ->
+            reader.readLines().joinToString(separator = "\n")
+        }
+
+        val exitCode = process.waitFor()
+        if ((exitCode != 0 && lines.isNotEmpty())) {
+            println(processBuilder.command().toString())
+            println("exit code = $exitCode")
+            println(lines)
+        }
+        return lines
     }
 }
