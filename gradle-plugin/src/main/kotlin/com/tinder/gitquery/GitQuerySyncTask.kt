@@ -5,7 +5,6 @@
 package com.tinder.gitquery
 
 import com.tinder.gitquery.core.GitQueryConfig
-import com.tinder.gitquery.core.GitQueryCore.updateConfig
 import com.tinder.gitquery.core.GitQueryCore.sync
 import com.tinder.gitquery.core.GitQueryCore.toAbsolutePath
 import org.gradle.api.DefaultTask
@@ -21,7 +20,7 @@ import javax.inject.Inject
  *
  * @param extension [GitQueryExtension]
  */
-open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : DefaultTask() {
+open class GitQuerySyncTask @Inject constructor(extension: GitQueryExtension) : DefaultTask() {
 
     // The url of the remote Git repo
     @Input
@@ -51,9 +50,6 @@ open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : Defa
     @Input
     val verbose: Boolean = extension.verbose
 
-    // A list of globs to use to generate the config file.
-    @Input
-    val generateGlobs: String = extension.generateGlobs
 
     init {
         group = "build"
@@ -90,11 +86,7 @@ open class GitQueryTask @Inject constructor(extension: GitQueryExtension) : Defa
             },
             prefixPath = "${project.projectDir}"
         )
-        if (generateGlobs.isNotBlank()) {
-            updateConfig(configFile = configFile, config = config, verbose = verbose)
-        } else {
-            config.cleanOutput = config.cleanOutput && cleanOutput
-            sync(config = config, verbose = verbose)
-        }
+        config.cleanOutput = config.cleanOutput && cleanOutput
+        sync(config = config, verbose = verbose)
     }
 }

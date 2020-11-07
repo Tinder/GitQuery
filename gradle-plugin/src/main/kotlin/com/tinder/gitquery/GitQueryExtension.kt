@@ -14,7 +14,6 @@ open class GitQueryExtension(val project: Project) {
     var branch: String = defaultBranch
     var cleanOutput: Boolean = defaultCleanOutput
     var configFile: String = defaultConfigFilename
-    var generateGlobs: String = defaultIncludeGlobs
     var outputDir: String = defaultOutputDir
     var remote: String = defaultRemote
     var repoDir: String = defaultGradleRepoDir
