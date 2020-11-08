@@ -6,7 +6,7 @@ Version in this change log adheres to [Semantic Versioning](http://semver.org/).
 ### 2.0.1 (2020-07-06) [#43](https://github.com/Tinder/GitQuery/pull/43) Set the default for cleanOutput to true ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
 
 ### 2.0.0 (2020-07-04) [#42](https://github.com/Tinder/GitQuery/pull/42) Version 2.0.0 ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
-    - Kotlin updated to 1.3.72
+    - Kotlin updated to 1.4.10
     - Breaking change: Gradle Plugin: Renamed gitQueryTask to gitQuery 
     - Add option to not clean output directory - cleanOutput
     - Ability to specify output and repo dirs in config file

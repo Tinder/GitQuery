@@ -13,6 +13,17 @@ import java.io.FileWriter
 import java.nio.file.Files
 import java.util.Collections.emptyMap
 
+const val defaultBranch: String = "master"
+const val defaultCleanOutput: Boolean = true
+const val defaultConfigFilename: String = "gitquery.yml"
+const val defaultGradleRepoDir: String = "tmp/qitquery/repo"
+const val defaultFlatFiles: Boolean = false
+const val defaultOutputDir: String = "gitquery-output"
+const val defaultRemote: String = ""
+const val defaultRepoDir: String = "/tmp/qitquery/repo"
+const val defaultVerbose: Boolean = false
+val defaultExcludeGlobs: List<String> = emptyList()
+val defaultIncludeGlobs: List<String> = emptyList()
 
 /**
  * A model for the config yaml file.
@@ -41,12 +52,12 @@ data class GitQueryConfig(
     var outputDir: String = defaultOutputDir,
     /* If true [default], cleans out the output folder prior to running sync. */
     var cleanOutput: Boolean = defaultCleanOutput,
-//    /*
-//    If false [default], when generate-globs is used, the files attribute
-//    in the generated config file will be a flat map of filename to sha.
-//    If true, it will be a nested map of files.
-//    */
-//    var nestedOutput: Boolean = defaultNestedOutput,
+    /*
+    If true [default], when --init-config is used, the files attribute
+    in the resulted saved config file will be a flat map of filename to sha values.
+    If false, it will be a tree of directories as parent nodes and files as leaf nodes.
+    */
+    var flatFiles: Boolean = defaultFlatFiles,
     /* A list of globs to include when generating the config file. */
     var includeGlobs: List<String> = defaultIncludeGlobs,
     /* A list of globs to exclude when generating the config file. */
@@ -74,9 +85,11 @@ data class GitQueryConfig(
             }
 
             val yaml = Yaml(Constructor(GitQueryConfig::class.java))
-            return Files.newBufferedReader(file.toPath()).use {
-                yaml.load(it)
-            }
+            return Files
+                .newBufferedReader(file.toPath())
+                .use {
+                    yaml.load(it)
+                }
         }
     }
 }
@@ -100,8 +113,8 @@ fun GitQueryConfig.save(file: File) {
  */
 fun GitQueryConfig.getActualRepoPath(): String {
     val repoPath = GitQueryCore.toAbsolutePath(this.repoDir)
-    val repoName = this.remote
-        .substring(this.remote.lastIndexOf("/") + 1)
+    val repoName = remote
+        .substring(remote.lastIndexOf("/") + 1)
         .removeSuffix(".git")
     return "$repoPath/$repoName"
 }

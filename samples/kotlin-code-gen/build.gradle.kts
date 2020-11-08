@@ -9,8 +9,8 @@ import com.google.protobuf.gradle.remove
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.72"
-    kotlin("plugin.serialization") version "1.3.72"
+    kotlin("jvm") version "1.4.10"
+    kotlin("plugin.serialization") version "1.4.10"
     application
     id("com.google.protobuf") version "0.8.12"
     // Fetch/sync remote proto files prior to code gen.

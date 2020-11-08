@@ -5,21 +5,13 @@
 package com.tinder.gitquery.core
 
 import java.io.File
-import java.nio.file.*
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.PathMatcher
+import java.nio.file.Paths
 import java.util.stream.Collectors.toList
 
-const val defaultCleanOutput: Boolean = true
-const val defaultConfigFilename: String = "gitquery.yml"
-val defaultExcludeGlobs: List<String> = emptyList()
-val defaultIncludeGlobs: List<String> = emptyList()
-const val defaultGradleRepoDir: String = "tmp/qitquery/repo"
-const val defaultOutputDir: String = "gitquery-output"
-const val defaultRemote: String = ""
-const val defaultBranch: String = "master"
-const val defaultRepoDir: String = "/tmp/qitquery/repo"
-
-//const val defaultNestedOutput: Boolean = false
-const val defaultVerbose: Boolean = false
 
 /**
  * A utility class that given a yaml file, describing a set of files in a remote git repo, and an
@@ -40,7 +32,7 @@ object GitQueryCore {
     fun updateConfig(
         configFile: String,
         config: GitQueryConfig,
-        verbose: Boolean = false
+        verbose: Boolean = false,
     ) {
         this.verbose = verbose
 
@@ -79,30 +71,47 @@ object GitQueryCore {
                     val relativePath = it.toString()
                         .substringAfter(actualRepoPath.toString())
                         .substringAfter("/")
-//                    println(relativePath)
-//                    if (config.nestedOutput) {
-//                        insertNested(files, relativePath)
-//                    }else {
-                    files[relativePath] = repoSha
-//                    }
+                    if (config.flatFiles) {
+                        insertNested(files, relativePath, repoSha)
+                    } else {
+                        files[relativePath] = repoSha
+                    }
                 }
         }
 
-        config.files = files.toSortedMap()
+        config.files = toSortedMap(files)
         config.save(File(configFile))
     }
 
-//    private fun insertNested(files: java.util.HashMap<String, Any>, relativePath: String) {
-//        val file = relativePath.substringAfterLast("/")
-//        val path = relativePath.substringBeforeLast("/")
-//        val pathParts = path.split("/")
-//        for (pathPart in pathParts) {
-//            if (files.containsKey(pathPart)){
-//                val pathDict = files[pathPart]
-//
-//            }
-//        }
-//    }
+    @Suppress("UNCHECKED_CAST")
+    private fun toSortedMap(map: java.util.HashMap<String, Any>): Map<String, Any> {
+        return map.mapValues {
+            if (it.value is HashMap<*, *>) {
+                toSortedMap(it.value as HashMap<String, Any>)
+            } else {
+                it.value
+            }
+        }.toSortedMap()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun insertNested(files: HashMap<String, Any>, relativePath: String, sha: String) {
+        val file = relativePath.substringAfterLast("/")
+        val path = relativePath.substringBeforeLast("/")
+        if (path == file) {
+            files[file] = sha
+        } else {
+            val pathFirst = path.substringBefore("/")
+            val pathFirstMap = if (files.containsKey(pathFirst) && files[pathFirst] is HashMap<*, *>) {
+                files[pathFirst] as HashMap<String, Any>
+            } else {
+                val pathFirstMap = HashMap<String, Any>()
+                files[pathFirst] = pathFirstMap
+                pathFirstMap
+            }
+            insertNested(pathFirstMap, relativePath.substringAfter("/"), sha)
+        }
+    }
 
     /**
      * Sync all files
@@ -112,7 +121,7 @@ object GitQueryCore {
      */
     fun sync(
         config: GitQueryConfig,
-        verbose: Boolean = false
+        verbose: Boolean = false,
     ) {
         this.verbose = verbose
         config.validate()
@@ -146,7 +155,7 @@ object GitQueryCore {
      */
     fun toAbsolutePath(
         path: String,
-        prefixPath: String = System.getProperty("user.dir")
+        prefixPath: String = System.getProperty("user.dir"),
     ): String {
         return when {
             path.isBlank() -> {
@@ -203,7 +212,7 @@ object GitQueryCore {
         remote: String,
         repoPath: String,
         outputPath: String,
-        relativePath: String
+        relativePath: String,
     ) {
         fileMap.forEach { (filename, value) ->
             val path = if (relativePath.isNotBlank()) "$relativePath/$filename" else filename
@@ -224,7 +233,6 @@ object GitQueryCore {
                 }
                 // Value is expected to be the git sha
                 else -> {
-                    println(path)
                     var actualRelativePath = path.substringBeforeLast("/")
                     if (actualRelativePath == path) {
                         actualRelativePath = relativePath

@@ -13,6 +13,7 @@ import com.tinder.gitquery.core.GitQueryCore
 import com.tinder.gitquery.core.defaultBranch
 import com.tinder.gitquery.core.defaultCleanOutput
 import com.tinder.gitquery.core.defaultConfigFilename
+import com.tinder.gitquery.core.defaultFlatFiles
 import com.tinder.gitquery.core.defaultOutputDir
 import com.tinder.gitquery.core.defaultRemote
 import com.tinder.gitquery.core.defaultRepoDir
@@ -75,12 +76,12 @@ class Cli : CliktCommand() {
                 |If provided, this comma, space or pipe globs in the string value of this option 
 |               |will be used to exclude patterns when generating the config's `files` map.""".trimMargin()
     ).default("")
-//    private val nestedOutput: Boolean by option(
-//        help =
-//        """When --generate-globs is used, this option helps choose if the files in
-//                |the generated config file should be in a flat map or a nest map.
-//                |default: $defaultNestedOutput""".trimMargin()
-//    ).flag(default = defaultNestedOutput)
+    private val nestedOutput: Boolean by option(
+        help =
+        """When --generate-globs is used, this option helps choose if the files in
+                |the generated config file should be in a flat map or a nest map.
+                |default: $defaultFlatFiles""".trimMargin()
+    ).flag(default = defaultFlatFiles)
     private val verbose: Boolean by option(
         help =
         """Show the underlying commands and their outputs in the console.
@@ -103,7 +104,7 @@ class Cli : CliktCommand() {
         if (initConfig && includeGlobs.isNotBlank()) {
             config.includeGlobs = includeGlobs.split(",", " ", "|")
             config.excludeGlobs = excludeGlobs.split(",", " ", "|")
-//            config.nestedOutput = nestedOutput
+            config.flatFiles = nestedOutput
             GitQueryCore.updateConfig(configFile = configFile, config = config, verbose = verbose)
         } else {
             config.cleanOutput = config.cleanOutput && cleanOutput

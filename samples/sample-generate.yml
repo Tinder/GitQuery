@@ -9,41 +9,57 @@ extra:
   attr1: value1
   attr2: 1
 files:
-  benchmarks/datasets/google_message1/proto3/benchmark_message1_proto3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message2/benchmark_message2.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message3/benchmark_message3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message3/benchmark_message3_1.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message3/benchmark_message3_2.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message3/benchmark_message3_3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message3/benchmark_message3_4.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message3/benchmark_message3_5.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message3/benchmark_message3_6.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message3/benchmark_message3_7.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message3/benchmark_message3_8.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message4/benchmark_message4.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message4/benchmark_message4_1.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message4/benchmark_message4_2.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  benchmarks/datasets/google_message4/benchmark_message4_3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/compiler/cpp/cpp_test_bad_identifiers.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/compiler/cpp/cpp_test_large_enum_value.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/compiler/plugin.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/anys.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/books.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/default_value.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/default_value_test.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/field_mask.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/maps.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/oneofs.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/proto3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/struct.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/timestamp_duration.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/internal/testdata/wrappers.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/json_format.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/json_format_proto3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
-  src/google/protobuf/util/message_differencer_unittest.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+  benchmarks:
+    datasets:
+      google_message1:
+        proto3:
+          benchmark_message1_proto3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+      google_message2:
+        benchmark_message2.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+      google_message3:
+        benchmark_message3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message3_1.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message3_2.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message3_3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message3_4.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message3_5.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message3_6.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message3_7.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message3_8.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+      google_message4:
+        benchmark_message4.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message4_1.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message4_2.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        benchmark_message4_3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+  src:
+    google:
+      protobuf:
+        compiler:
+          cpp:
+            cpp_test_bad_identifiers.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+            cpp_test_large_enum_value.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+          plugin.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+        util:
+          internal:
+            testdata:
+              anys.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+              books.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+              default_value.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+              default_value_test.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+              field_mask.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+              maps.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+              oneofs.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+              proto3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+              struct.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+              timestamp_duration.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+              wrappers.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+          json_format.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+          json_format_proto3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+          message_differencer_unittest.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
 includeGlobs:
 - '**/src/google/protobuf/**/*.proto'
 - '**/benchmarks/**/*.proto'
+nestedOutput: true
 outputDir: gitquery-output
 remote: git@github.com:protocolbuffers/protobuf.git
 repoDir: build/tmp/qitquery/repo
