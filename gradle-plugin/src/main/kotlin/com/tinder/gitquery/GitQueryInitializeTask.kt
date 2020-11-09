@@ -6,7 +6,6 @@ package com.tinder.gitquery
 
 import com.tinder.gitquery.core.GitQueryConfig
 import com.tinder.gitquery.core.GitQueryCore
-import com.tinder.gitquery.core.defaultFlatFiles
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import javax.inject.Inject
@@ -41,11 +40,15 @@ open class GitQueryInitializeTask @Inject constructor(extension: GitQueryInitial
 
     @TaskAction
     fun initialize() {
-        GitQueryCore.initializeConfig(configFile = configFileName(), config = readConfig(), verbose = verbose)
+        GitQueryCore.initializeConfig(
+            configFile = configFileName(),
+            config = readConfig(createIfNotExists = true),
+            verbose = verbose
+        )
     }
 
-    override fun readConfig(): GitQueryConfig {
-        val config = super.readConfig()
+    override fun readConfig(createIfNotExists: Boolean): GitQueryConfig {
+        val config = super.readConfig(createIfNotExists = createIfNotExists)
         if (includeGlobs.isNotEmpty()) {
             config.includeGlobs = includeGlobs
         }

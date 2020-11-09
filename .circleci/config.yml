@@ -14,14 +14,10 @@ jobs:
   build:
     executor:
       name: jvm
-
     steps:
       - checkout
-
       - run: ./gradlew test
-
       - run: mkdir -p $CIRCLE_TEST_REPORTS/junit/
-
       - run: find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
 
 #      - run:
@@ -36,31 +32,27 @@ jobs:
 #          paths:
 #            - .m2/repository
 
-#  build_samples:
-#    executor:
-#      name: jvm
-#
-#    steps:
-#      - checkout
-#
-#      - attach_workspace:
-#          at: ~/project
-#
-#      - run:
-#          name: Setup local maven repository
-#          command: mv .m2 $HOME/
-#
-#      - run:
-#          name: Build all samples
-#          command: |
-#            for d in samples/*; do
-#              set -e
-#              [ -d "$d" ] || continue
-#              echo "== $d =="
-#              pushd "$d" >/dev/null
-#              ../../gradlew build
-#              popd >/dev/null
-#            done
+  build_samples:
+    executor:
+      name: jvm
+
+    steps:
+      - checkout
+      - run:
+          name: Setup local maven repository
+          command: mv .m2 $HOME/
+
+      - run:
+          name: Build all samples
+          command: |
+            for d in samples/*; do
+              set -e
+              [ -d "$d" ] || continue
+              echo "== $d =="
+              pushd "$d" >/dev/null
+              ../../gradlew build
+              popd >/dev/null
+            done
 
 workflows:
   version: 2.1

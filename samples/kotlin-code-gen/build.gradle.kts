@@ -48,6 +48,7 @@ application {
 
 dependencies {
     implementation(kotlin("stdlib-jdk8"))
+    implementation("com.google.protobuf:protobuf-java:3.13.0")
 }
 
 protobuf {
@@ -59,11 +60,6 @@ protobuf {
         ofSourceSet("main").forEach { task ->
             if (task.name == "generateProto") {
                 task.dependsOn(tasks.getByName("gitQuery"))
-            }
-            task.builtins {
-                id("java") {
-                    option("lite_runtime=true")
-                }
             }
         }
     }

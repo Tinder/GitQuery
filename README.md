@@ -108,11 +108,20 @@ gitquery
 ./gitquery --config-file=./samples/sample1.yml --repo-dir=./build/tmp/repo --output-dir=./gitquery-output
 ```
 
-#### Sample Init
+#### Sample Init - by default a nested structure generated.
 ```shell script
-./gitquery --init-config --config-file samples/sample-generate.yml \
-                  --include-globs **/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto \
-                  --exclude-globs **/ruby/**,**/proto2/**
+./gitquery --init-config \
+           --config-file samples/sample-generate.yml \
+           --include-globs **/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto \
+           --exclude-globs **/ruby/**,**/proto2/**
+```
+
+#### Sample Init - flat file structure generated using --flat-files.
+```shell script
+./gitquery --init-config \
+           --config-file samples/sample-generate.yml --flat-files\
+           --include-globs **/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto \
+           --exclude-globs **/ruby/**,**/proto2/**
 ```
 
 ```shell script

@@ -81,6 +81,7 @@ object GitQueryCore {
 
         config.files = toSortedMap(files)
         config.save(File(configFile))
+        println("GitQuery: init complete: $configFile")
     }
 
     @Suppress("UNCHECKED_CAST")

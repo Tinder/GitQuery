@@ -7,7 +7,6 @@ package com.tinder.gitquery
 import com.tinder.gitquery.core.GitQueryConfig
 import com.tinder.gitquery.core.GitQueryCore
 import com.tinder.gitquery.core.GitQueryCore.toAbsolutePath
-import com.tinder.gitquery.core.defaultCleanOutput
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -74,8 +73,8 @@ open class GitQuerySyncTask @Inject constructor(extension: GitQuerySyncExtension
         )
     }
 
-    protected open fun readConfig() : GitQueryConfig {
-         val config = GitQueryConfig.load(configFileName())
+    protected open fun readConfig(createIfNotExists: Boolean = false): GitQueryConfig {
+         val config = GitQueryConfig.load(configFileName(), createIfNotExists = createIfNotExists)
         if (remote.isNotBlank()) {
             config.remote = remote
         }

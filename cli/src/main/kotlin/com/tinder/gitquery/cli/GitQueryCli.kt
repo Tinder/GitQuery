@@ -58,30 +58,32 @@ class Cli : CliktCommand() {
     private val dontCleanOutput: Boolean by option(
         help =
         """Whether to not clean the output folder prior to sync. 
-                |If set, the output dir will not be cleaned before files are synced . 
+                |If set, this will override the [cleanOutput] in the [configFile]
                 |default: ${!defaultCleanOutput}""".trimMargin()
     ).flag(default = !defaultCleanOutput)
 
     private val initConfig: Boolean by option(
         help =
-        """Initialize/update the config file based on command line params. Use --include-globs and --exclude-globs.
-            |If the config-file exists, it will be updated. 
-            |If the config file does not exist, it will be created with values from command line or internal defaults. 
+        """Initialize/update the config file based on command line params. 
+                |Use --include-globs and --exclude-globs.
+                |If [configFile] exists, it will be updated, else it will be created with values 
+                |from command line or internal defaults. 
                 |default: false""".trimMargin()
     ).flag(default = false)
 
     private val includeGlobs: String by option(
         help =
-        """A list of globs to include when generating/updating the config file.
-                |If provided, this comma, space or pipe globs in the string value of this option 
-|               |will be used to generate the config's `files` map.""".trimMargin()
+        """A list of globs to include when generating/updating the files attribute in [configFile].
+                |If provided, this comma, space or pipe separated list of globs will override [includeGlobs] 
+                |in [configFile] and used when initializing/updating the config's [files] map.""".trimMargin()
     ).default("")
 
     private val excludeGlobs: String by option(
         help =
-        """A list of globs to exclude when generating/updating the config file.
-                |If provided, this comma, space or pipe globs in the string value of this option 
-|               |will be used to exclude patterns when generating the config's `files` map.""".trimMargin()
+        """A list of globs to exclude when generating/updating the files attribute in [configFile].
+                |If provided, this comma, space or pipe separated list of globs will override [excludeGlobs]
+                |in [configFile] and used to exclude patterns when initializing/updating
+                |the config's [files] map.""".trimMargin()
     ).default("")
 
     private val flatFiles: Boolean by option(
@@ -98,7 +100,7 @@ class Cli : CliktCommand() {
     ).flag(default = defaultVerbose)
 
     override fun run() {
-        val config = GitQueryConfig.load(configFile, includeGlobs.isNotBlank())
+        val config = GitQueryConfig.load(configFile, initConfig)
         if (remote.isNotBlank()) {
             config.remote = remote
         }
