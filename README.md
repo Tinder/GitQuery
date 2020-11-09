@@ -30,11 +30,11 @@ remote: https://github.com/aminghadersohi/ProtoExample.git
 # branch - The single branch that will be cloned on first run and pulled incrementally on
 # subsequent runs. The sha values used in [commits] and [files] must be available under [branch].
 branch: master
-# A list of commit aliases that can be used in the `files` section.
+# A list of commit aliases that can be used in the [files] section.
 commits:
   latest: d654b510d2689e8ee56d23d03dff2be742737f86
 # Specify a nested map of filenames to sha (or commit alias) included file that we
-# want to query and sync. The structure of `files` matches the directory structure of the
+# want to query and sync. The structure of [files] matches the directory structure of the
 # remote repo. A key whose value is a nested map is considered a directory.
 files:
   # A file at the root fo the remote repo.
@@ -108,7 +108,16 @@ gitquery
 ./gitquery --config-file=./samples/sample1.yml --repo-dir=./build/tmp/repo --output-dir=./gitquery-output
 ```
 
-#### Sample Init - by default a nested structure generated.
+#### Sample Init - create config that doesn't exist, by default a nested structure generated.
+```shell script
+./gitquery --init-config \
+           --config-file samples/sample2-generate.yml \
+           --include-globs **/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto \
+           --exclude-globs **/ruby/**,**/proto2/** \
+           --remote git@github.com:protocolbuffers/protobuf.git --branch master
+```
+
+#### Sample Update - by default a nested structure generated.
 ```shell script
 ./gitquery --init-config \
            --config-file samples/sample-generate.yml \
@@ -116,7 +125,7 @@ gitquery
            --exclude-globs **/ruby/**,**/proto2/**
 ```
 
-#### Sample Init - flat file structure generated using --flat-files.
+#### Sample Update - flat file structure generated using --flat-files.
 ```shell script
 ./gitquery --init-config \
            --config-file samples/sample-generate.yml --flat-files\
@@ -159,12 +168,12 @@ gitquery
    --include-globs TEXT  A list of globs to include when generating/updating
                          the config file. If provided, this comma, space or
                          pipe globs in the string value of this option |will be
-                         used to generate the config's `files` map.
+                         used to generate the config's [files] map.
    --exclude-globs TEXT  A list of globs to exclude when generating/updating
                          the config file. If provided, this comma, space or
                          pipe globs in the string value of this option |will be
                          used to exclude patterns when generating the config's
-                         `files` map.
+                         [files] map.
    --verbose             Show the underlying commands and their outputs in the
                          console. default: false
    -h, --help            Show this message and exit
