@@ -23,13 +23,13 @@ object GitQueryCore {
     private var verbose = false
 
     /**
-     * Use the generateGlob to update the config file.
+     * Use the includeGlob and excludeGlob values to initialize or update the config file.
      *
      * @param configFile path to the config file.
      * @param config a yaml file that describe a set of files to fetch/sync from a given repository
      * @param verbose if true, it will print its operations to standard out.
      */
-    fun updateConfig(
+    fun initializeConfig(
         configFile: String,
         config: GitQueryConfig,
         verbose: Boolean = false,
@@ -72,9 +72,9 @@ object GitQueryCore {
                         .substringAfter(actualRepoPath.toString())
                         .substringAfter("/")
                     if (config.flatFiles) {
-                        insertNested(files, relativePath, repoSha)
-                    } else {
                         files[relativePath] = repoSha
+                    } else {
+                        insertNested(files, relativePath, repoSha)
                     }
                 }
         }

@@ -9,7 +9,7 @@ plugins {
 }
 
 application {
-    mainClass.set("com.tinder.gitquery.cli.MainKt")
+    mainClass.set("com.tinder.gitquery.cli.GitQueryCliKt")
 }
 
 dependencies {

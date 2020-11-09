@@ -10,12 +10,12 @@ import org.gradle.api.Project
 /**
  * Contains the settings for our plugin.
  */
-open class GitQueryExtension(val project: Project) {
-    var branch: String = defaultBranch
-    var cleanOutput: Boolean = defaultCleanOutput
+open class GitQuerySyncExtension(open val project: Project) {
     var configFile: String = defaultConfigFilename
-    var outputDir: String = defaultOutputDir
     var remote: String = defaultRemote
+    var branch: String = defaultBranch
     var repoDir: String = defaultGradleRepoDir
+    var cleanOutput: Boolean = defaultCleanOutput
+    var outputDir: String = defaultOutputDir
     var verbose: Boolean = defaultVerbose
 }

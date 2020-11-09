@@ -12,9 +12,11 @@ import org.gradle.api.Project
  */
 class GitQueryPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-        val extension = project.extensions.create("gitQuery", GitQueryExtension::class.java, project)
-        project.tasks.register("gitQuery", GitQuerySyncTask::class.java, extension)
-        // todo add option to sync automatically on build
-        // add a task to generate config maybe gitquery init
+        val syncExtension = project.extensions.create("gitQuery", GitQuerySyncExtension::class.java, project)
+        project.tasks.register("gitQuery", GitQuerySyncTask::class.java, syncExtension)
+
+        val initializeExtension = project.extensions
+            .create("gitQueryInit", GitQueryInitializeExtension::class.java, project)
+        project.tasks.register("gitQueryInit", GitQueryInitializeTask::class.java, initializeExtension)
     }
 }

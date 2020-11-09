@@ -63,13 +63,52 @@ data class GitQueryConfig(
     /* A list of globs to exclude when generating the config file. */
     var excludeGlobs: List<String> = defaultExcludeGlobs,
     /* A map of String -> Any - enabling self contained integration with various systems. */
-    var extra: Map<String, Any> = emptyMap()
+    var extra: Map<String, Any> = emptyMap(),
 ) {
+    /**
+     * Save the config to a file.
+     *
+     * @param file to save it to.
+     */
+    fun save(file: File) {
+        val writer = FileWriter(file)
+        val options = DumperOptions()
+        options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+        val yaml = Yaml(Constructor(GitQueryConfig::class.java), Representer(options), options)
+        yaml.dump(this, writer)
+        writer.flush()
+    }
+
+    /**
+     * using the repoDir and remote config attributes, return where the repo should be cloned.
+     */
+    fun getActualRepoPath(): String {
+        val repoPath = GitQueryCore.toAbsolutePath(this.repoDir)
+        val repoName = remote
+            .substring(remote.lastIndexOf("/") + 1)
+            .removeSuffix(".git")
+        return "$repoPath/$repoName"
+    }
+
+    /**
+     * Validate essential config attributes.
+     */
+    fun validate() {
+        require(remote.isNotBlank()) {
+            "Parameter remote may not be a blank string ($remote)"
+        }
+
+        require(branch.isNotBlank()) {
+            "Parameter branch may not be a blank string ($branch)"
+        }
+    }
+
     companion object {
         /**
          * Load the config file.
          *
          * @param filename the path to the config file
+         * @param createIfNotExists if the filename doesn't exist, create it with default attribute values.
          */
         fun load(filename: String, createIfNotExists: Boolean = false): GitQueryConfig {
             require(filename.isNotBlank()) {
@@ -94,40 +133,3 @@ data class GitQueryConfig(
     }
 }
 
-/**
- * Save the config to a file.
- *
- * @param file to save it to.
- */
-fun GitQueryConfig.save(file: File) {
-    val writer = FileWriter(file)
-    val options = DumperOptions()
-    options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
-    val yaml = Yaml(Constructor(GitQueryConfig::class.java), Representer(options), options)
-    yaml.dump(this, writer)
-    writer.flush()
-}
-
-/**
- * using the repoDir and remote config attributes, return where the repo should be cloned.
- */
-fun GitQueryConfig.getActualRepoPath(): String {
-    val repoPath = GitQueryCore.toAbsolutePath(this.repoDir)
-    val repoName = remote
-        .substring(remote.lastIndexOf("/") + 1)
-        .removeSuffix(".git")
-    return "$repoPath/$repoName"
-}
-
-/**
- * Validate essential config attributes.
- */
-fun GitQueryConfig.validate() {
-    require(remote.isNotBlank()) {
-        "Parameter remote may not be a blank string ($remote)"
-    }
-
-    require(branch.isNotBlank()) {
-        "Parameter branch may not be a blank string ($branch)"
-    }
-}

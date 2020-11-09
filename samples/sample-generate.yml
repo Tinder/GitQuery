@@ -56,10 +56,10 @@ files:
           json_format.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
           json_format_proto3.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
           message_differencer_unittest.proto: 5f7f389a8a784ec750013f4f8f23765229795aa8
+flatFiles: false
 includeGlobs:
 - '**/src/google/protobuf/**/*.proto'
 - '**/benchmarks/**/*.proto'
-nestedOutput: true
 outputDir: gitquery-output
 remote: git@github.com:protocolbuffers/protobuf.git
 repoDir: build/tmp/qitquery/repo

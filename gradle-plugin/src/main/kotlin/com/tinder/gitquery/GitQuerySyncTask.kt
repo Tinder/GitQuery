@@ -5,8 +5,9 @@
 package com.tinder.gitquery
 
 import com.tinder.gitquery.core.GitQueryConfig
-import com.tinder.gitquery.core.GitQueryCore.sync
+import com.tinder.gitquery.core.GitQueryCore
 import com.tinder.gitquery.core.GitQueryCore.toAbsolutePath
+import com.tinder.gitquery.core.defaultCleanOutput
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -18,52 +19,63 @@ import javax.inject.Inject
  *
  * For more details see the README.md file in the root of this project.
  *
- * @param extension [GitQueryExtension]
+ * @param extension [GitQuerySyncExtension]
  */
-open class GitQuerySyncTask @Inject constructor(extension: GitQueryExtension) : DefaultTask() {
+open class GitQuerySyncTask @Inject constructor(extension: GitQuerySyncExtension) : DefaultTask() {
 
-    // The url of the remote Git repo
-    @Input
-    val remote: String = extension.remote
-
-    // The branch of the remote Git repo
-    @Input
-    val branch: String = extension.branch
-
-    // The relative (to projectDir) path to a yaml file that describe a set of files to fetch/sync from a given repository.
+    /*
+    The relative (to projectDir) path to a yaml file that describe a set of files to fetch/sync from a given
+    repository.
+    */
     @Input
     val configFile: String = extension.configFile
 
-    // The relative (to projectDir) path to a directory where the files should be synced to.
+    /* The remote repository to query files from. */
     @Input
-    val outputDir: String = extension.outputDir
+    val remote: String = extension.remote
 
-    // An path relative to buildDir, where the remote repo(s) can be cloned locally and stored (until cleaned)
+    /*
+    The single branch that will be cloned on first run and pulled incrementally on subsequent
+    runs. The sha values used in [commits] and [files] must be available under [branch].
+    */
+    @Input
+    val branch: String = extension.branch
+
+    /* A directory to hold the intermediate cloned git repo. */
     @Input
     val repoDir: String = extension.repoDir
 
-    // An boolean directing to clean (remote all files) the output folder prior to running. (default: true)
+    /* A directory to sync the queried files into. */
+    @Input
+    val outputDir: String = extension.outputDir
+
+    /* If true [default], cleans out the output folder prior to running sync. */
     @Input
     val cleanOutput: Boolean = extension.cleanOutput
 
-    // An boolean to enable showing the underlying commands and their outputs in the console. (default: false)
+    /* An boolean to enable showing the underlying commands and their outputs in the console. (default: false) */
     @Input
     val verbose: Boolean = extension.verbose
 
-
     init {
         group = "build"
-        description = "Fetch the proto files defined in the gitquery.yml file"
+        description = "Sync the files listed in the config file"
     }
 
     @TaskAction
-    fun syncRepo() {
-        val config = GitQueryConfig.load(
-            toAbsolutePath(
-                path = configFile,
-                prefixPath = "${project.projectDir}"
-            )
+    fun sync() {
+        GitQueryCore.sync(config = readConfig(), verbose = verbose)
+    }
+
+    protected fun configFileName(): String {
+        return toAbsolutePath(
+            path = configFile,
+            prefixPath = "${project.projectDir}"
         )
+    }
+
+    protected open fun readConfig() : GitQueryConfig {
+         val config = GitQueryConfig.load(configFileName())
         if (remote.isNotBlank()) {
             config.remote = remote
         }
@@ -86,7 +98,7 @@ open class GitQuerySyncTask @Inject constructor(extension: GitQueryExtension) : 
             },
             prefixPath = "${project.projectDir}"
         )
-        config.cleanOutput = config.cleanOutput && cleanOutput
-        sync(config = config, verbose = verbose)
+        config.cleanOutput = cleanOutput
+        return config
     }
 }
