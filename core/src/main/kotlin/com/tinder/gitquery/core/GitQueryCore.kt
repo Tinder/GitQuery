@@ -35,6 +35,7 @@ object GitQueryCore {
         verbose: Boolean = false,
     ) {
         this.verbose = verbose
+        config.validate()
 
         val actualRepoDirectory = config.getActualRepoPath()
 
@@ -80,38 +81,8 @@ object GitQueryCore {
         }
 
         config.files = toSortedMap(files)
-        config.save(File(configFile))
+        config.save(configFile)
         println("GitQuery: init complete: $configFile")
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun toSortedMap(map: java.util.HashMap<String, Any>): Map<String, Any> {
-        return map.mapValues {
-            if (it.value is HashMap<*, *>) {
-                toSortedMap(it.value as HashMap<String, Any>)
-            } else {
-                it.value
-            }
-        }.toSortedMap()
-    }
-
-    @Suppress("UNCHECKED_CAST")
-    private fun insertNested(files: HashMap<String, Any>, relativePath: String, sha: String) {
-        val file = relativePath.substringAfterLast("/")
-        val path = relativePath.substringBeforeLast("/")
-        if (path == file) {
-            files[file] = sha
-        } else {
-            val pathFirst = path.substringBefore("/")
-            val pathFirstMap = if (files.containsKey(pathFirst) && files[pathFirst] is HashMap<*, *>) {
-                files[pathFirst] as HashMap<String, Any>
-            } else {
-                val pathFirstMap = HashMap<String, Any>()
-                files[pathFirst] = pathFirstMap
-                pathFirstMap
-            }
-            insertNested(pathFirstMap, relativePath.substringAfter("/"), sha)
-        }
     }
 
     /**
@@ -349,5 +320,35 @@ object GitQueryCore {
             println(lines)
         }
         return lines
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun toSortedMap(map: java.util.HashMap<String, Any>): Map<String, Any> {
+        return map.mapValues {
+            if (it.value is HashMap<*, *>) {
+                toSortedMap(it.value as HashMap<String, Any>)
+            } else {
+                it.value
+            }
+        }.toSortedMap()
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun insertNested(files: HashMap<String, Any>, relativePath: String, sha: String) {
+        val file = relativePath.substringAfterLast("/")
+        val path = relativePath.substringBeforeLast("/")
+        if (path == file) {
+            files[file] = sha
+        } else {
+            val pathFirst = path.substringBefore("/")
+            val pathFirstMap = if (files.containsKey(pathFirst) && files[pathFirst] is HashMap<*, *>) {
+                files[pathFirst] as HashMap<String, Any>
+            } else {
+                val pathFirstMap = HashMap<String, Any>()
+                files[pathFirst] = pathFirstMap
+                pathFirstMap
+            }
+            insertNested(pathFirstMap, relativePath.substringAfter("/"), sha)
+        }
     }
 }

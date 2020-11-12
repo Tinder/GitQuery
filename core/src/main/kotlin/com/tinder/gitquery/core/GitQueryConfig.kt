@@ -11,6 +11,7 @@ import org.yaml.snakeyaml.representer.Representer
 import java.io.File
 import java.io.FileWriter
 import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.Collections.emptyMap
 
 const val defaultBranch: String = "master"
@@ -68,10 +69,10 @@ data class GitQueryConfig(
     /**
      * Save the config to a file.
      *
-     * @param file to save it to.
+     * @param filename to path to save to.
      */
-    fun save(file: File) {
-        val writer = FileWriter(file)
+    fun save(filename: String) {
+        val writer = FileWriter(filename)
         val options = DumperOptions()
         options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
         val yaml = Yaml(Constructor(GitQueryConfig::class.java), Representer(options), options)
@@ -110,22 +111,22 @@ data class GitQueryConfig(
          * @param filename the path to the config file
          * @param createIfNotExists if the filename doesn't exist, create it with default attribute values.
          */
-        fun load(filename: String, createIfNotExists: Boolean = false): GitQueryConfig {
+        fun load(filename: String, createIfNotExists: Boolean): GitQueryConfig {
             require(filename.isNotBlank()) {
                 "Input filename may not be a blank string ($filename)"
             }
 
-            val file = File(filename)
-            if (!file.exists() && createIfNotExists) {
-                GitQueryConfig().save(file)
+            val filePath = Paths.get(filename)
+            if (!Files.exists(filePath) && createIfNotExists) {
+                GitQueryConfig().save(filename)
             }
-            check(file.exists()) {
+            check(Files.exists(Paths.get(filename))) {
                 "Config file does not exist ($filename)"
             }
 
             val yaml = Yaml(Constructor(GitQueryConfig::class.java))
             return Files
-                .newBufferedReader(file.toPath())
+                .newBufferedReader(filePath)
                 .use {
                     yaml.load(it)
                 }

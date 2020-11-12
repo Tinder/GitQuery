@@ -28,7 +28,7 @@ class GitQueryConfigTest {
     @Test
     fun `loadConfig - given file exists, should return config`() {
         // When
-        val config = GitQueryConfig.load("${testProjectDir.root}/gitquery.yml")
+        val config = GitQueryConfig.load("${testProjectDir.root}/gitquery.yml", false)
 
         // Then
         assert(config.remote == "https://github.com/aminghadersohi/ProtoExample.git")
@@ -49,7 +49,7 @@ class GitQueryConfigTest {
 
         // When
         val actualError = kotlin.runCatching {
-            GitQueryConfig.load(filename)
+            GitQueryConfig.load(filename, false)
         }.exceptionOrNull()
 
         require(actualError is IllegalArgumentException)
@@ -65,7 +65,7 @@ class GitQueryConfigTest {
 
         // When
         val actualError = kotlin.runCatching {
-            GitQueryConfig.load(filename)
+            GitQueryConfig.load(filename, false)
         }.exceptionOrNull()
 
         require(actualError is IllegalStateException)

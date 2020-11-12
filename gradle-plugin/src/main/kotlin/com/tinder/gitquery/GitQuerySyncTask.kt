@@ -66,15 +66,8 @@ open class GitQuerySyncTask @Inject constructor(extension: GitQuerySyncExtension
         GitQueryCore.sync(config = readConfig(), verbose = verbose)
     }
 
-    protected fun configFileName(): String {
-        return toAbsolutePath(
-            path = configFile,
-            prefixPath = "${project.projectDir}"
-        )
-    }
-
-    protected open fun readConfig(createIfNotExists: Boolean = false): GitQueryConfig {
-         val config = GitQueryConfig.load(configFileName(), createIfNotExists = createIfNotExists)
+    private fun readConfig(): GitQueryConfig {
+         val config = GitQueryConfig.load(configFileName(), createIfNotExists = false)
         if (remote.isNotBlank()) {
             config.remote = remote
         }
@@ -99,5 +92,12 @@ open class GitQuerySyncTask @Inject constructor(extension: GitQuerySyncExtension
         )
         config.cleanOutput = cleanOutput
         return config
+    }
+
+    private fun configFileName(): String {
+        return toAbsolutePath(
+            path = configFile,
+            prefixPath = "${project.projectDir}"
+        )
     }
 }
