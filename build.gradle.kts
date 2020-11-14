@@ -13,4 +13,13 @@ allprojects {
         jcenter()
         mavenCentral()
     }
+    tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile::class.java).configureEach {
+        kotlinOptions.jvmTarget = "1.8"
+    }
+}
+
+tasks.register<Exec>("installGitHooks") {
+    workingDir = project.projectDir
+
+    commandLine("./build-support/bin/install-git-hooks")
 }

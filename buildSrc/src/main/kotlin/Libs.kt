@@ -6,9 +6,11 @@ object Libs {
     object Versions {
         const val clikt = "3.0.1"
         const val dokkaGradlePlugin = "1.4.10.2"
+        const val googleJavaFormatCli = "1.8"
         const val gradlePluginPublish = "0.12.0"
         const val junit = "4.13.1"
         const val kotlin = "1.4.10"
+        const val ktlint = "0.39.0"
         const val snakeyaml = "1.26"
         const val vanniktechMavenPublish = "0.13.0"
     }

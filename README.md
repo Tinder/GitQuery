@@ -12,9 +12,9 @@ An alternative approach for defining dependencies in a build project vs importin
 
 #### Use cases: 
 It is sometimes preferable to query individual files in a remote repo when:
- - we only need a small number of files from (very) large remote (mono)repo.
+ - we only need a few files from large remote monorepo.
  - we need granular versioning for each dependency file.
- - it is hard to globally version the files in the remote repo and it would require many artifacts to be published .
+ - it is hard to globally version the files in the remote repo, or it would require many artifacts to be published.
  - we want to combine the source files of an artifact into our module.
  - we want to avoid version conflicts as possible when including pre-build artifacts. 
 
