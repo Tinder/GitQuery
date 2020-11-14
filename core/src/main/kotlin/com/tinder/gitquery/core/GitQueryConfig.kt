@@ -8,7 +8,6 @@ import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
 import org.yaml.snakeyaml.representer.Representer
-import java.io.File
 import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -22,6 +21,7 @@ const val defaultFlatFiles: Boolean = false
 const val defaultOutputDir: String = "gitquery-output"
 const val defaultRemote: String = ""
 const val defaultRepoDir: String = "/tmp/qitquery/repo"
+const val defaultSha: String = ""
 const val defaultVerbose: Boolean = false
 val defaultExcludeGlobs: List<String> = emptyList()
 val defaultIncludeGlobs: List<String> = emptyList()

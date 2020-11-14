@@ -93,6 +93,11 @@ class Cli : CliktCommand() {
                 |default: $defaultFlatFiles""".trimMargin()
     ).flag(default = defaultFlatFiles)
 
+    private val sha: String by option(
+        help =
+        """A sha to use when --init-config is used, if not provided the sha of latest [branch] is used""".trimMargin()
+    ).default("")
+
     private val verbose: Boolean by option(
         help =
         """Show the underlying commands and their outputs in the console.
@@ -121,7 +126,7 @@ class Cli : CliktCommand() {
                 config.excludeGlobs = excludeGlobs.split(",", " ", "|")
             }
             config.flatFiles = flatFiles
-            GitQueryCore.initializeConfig(configFile = configFile, config = config, verbose = verbose)
+            GitQueryCore.initializeConfig(configFile = configFile, config = config, verbose = verbose, sha = sha)
         } else {
             config.cleanOutput = !dontCleanOutput
             GitQueryCore.sync(config = config, verbose = verbose)

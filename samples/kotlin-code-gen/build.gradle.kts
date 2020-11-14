@@ -10,17 +10,29 @@ import com.google.protobuf.gradle.remove
 plugins {
     application
     id("com.google.protobuf") version "0.8.12"
-    id("com.tinder.gitquery") version "2.0.1"
+    id("com.tinder.gitquery") version "3.0.0-SNAPSHOT"
     java
 }
 
 val protoDir = "src/main/proto"
 
 gitQuery {
+    cleanOutput = true
     configFile = "gitquery.yml"
     outputDir = protoDir
     repoDir = "tmp/.gitquery"
+}
+
+gitQueryInit {
+    branch = "master"
     cleanOutput = true
+    configFile = "gitquery.yml"
+    flatFiles = false
+    includeGlobs = listOf("**/examples/addressbook.proto")
+    outputDir = protoDir
+    remote = "git@github.com:protocolbuffers/protobuf.git"
+    repoDir = "tmp/.gitquery"
+    sha = "v3.13.0.1"
 }
 
 sourceSets {

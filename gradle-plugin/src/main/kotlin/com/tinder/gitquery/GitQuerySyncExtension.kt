@@ -17,5 +17,6 @@ open class GitQuerySyncExtension(open val project: Project) {
     var repoDir: String = defaultGradleRepoDir
     var cleanOutput: Boolean = defaultCleanOutput
     var outputDir: String = defaultOutputDir
+    var sha: String = defaultSha
     var verbose: Boolean = defaultVerbose
 }

@@ -4,14 +4,12 @@
 
 package com.tinder.gitquery.core
 
-import java.io.File
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.PathMatcher
 import java.nio.file.Paths
 import java.util.stream.Collectors.toList
-
 
 /**
  * A utility class that given a yaml file, describing a set of files in a remote git repo, and an
@@ -26,12 +24,14 @@ object GitQueryCore {
      * Use the includeGlob and excludeGlob values to initialize or update the config file.
      *
      * @param configFile path to the config file.
-     * @param config a yaml file that describe a set of files to fetch/sync from a given repository
+     * @param config a yaml file that describe a set of files to fetch/sync from a given repository.
+     * @param sha the sha to default to, otherwise latest master.
      * @param verbose if true, it will print its operations to standard out.
      */
     fun initializeConfig(
         configFile: String,
         config: GitQueryConfig,
+        sha: String,
         verbose: Boolean = false,
     ) {
         this.verbose = verbose
@@ -40,10 +40,14 @@ object GitQueryCore {
         val actualRepoDirectory = config.getActualRepoPath()
 
         prepareRepo(config.remote, config.branch, actualRepoDirectory)
-
         val actualRepoPath = Paths.get(actualRepoDirectory)
+
         val files = HashMap<String, Any>()
-        val repoSha = repoSha(actualRepoDirectory)
+
+        var repoSha = sha.ifEmpty { repoSha(actualRepoDirectory) }
+        if (repoSha.toUpperCase() == "HEAD") {
+            repoSha = repoSha(actualRepoDirectory)
+        }
 
         val excludeMatchers = ArrayList<PathMatcher>(config.excludeGlobs.size)
         for (excludeGlob in config.excludeGlobs) {
@@ -56,11 +60,14 @@ object GitQueryCore {
                 .collect(toList())
                 .filter { it: Path? ->
                     it?.let { path ->
-                        val matchesInclude = matcher.matches(path)
+                        val relativePath = Paths.get(path.toString().substringAfter("$actualRepoDirectory/"))
+                        val matchesInclude = matcher.matches(path) || matcher.matches(relativePath)
                         var excluded = false
-                        for (excludeMatcher in excludeMatchers) {
-                            if (excluded) break
-                            excluded = excludeMatcher.matches(path)
+                        if (matchesInclude) {
+                            for (excludeMatcher in excludeMatchers) {
+                                if (excluded) break
+                                excluded = excludeMatcher.matches(path) || excludeMatcher.matches(relativePath)
+                            }
                         }
                         matchesInclude && !excluded
                     } ?: false
@@ -75,12 +82,12 @@ object GitQueryCore {
                     if (config.flatFiles) {
                         files[relativePath] = repoSha
                     } else {
-                        insertNested(files, relativePath, repoSha)
+                        files.insertNested(relativePath, repoSha)
                     }
                 }
         }
 
-        config.files = toSortedMap(files)
+        config.files = files.toSortedMap()
         config.save(configFile)
         println("GitQuery: init complete: $configFile")
     }
@@ -322,33 +329,5 @@ object GitQueryCore {
         return lines
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun toSortedMap(map: java.util.HashMap<String, Any>): Map<String, Any> {
-        return map.mapValues {
-            if (it.value is HashMap<*, *>) {
-                toSortedMap(it.value as HashMap<String, Any>)
-            } else {
-                it.value
-            }
-        }.toSortedMap()
-    }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun insertNested(files: HashMap<String, Any>, relativePath: String, sha: String) {
-        val file = relativePath.substringAfterLast("/")
-        val path = relativePath.substringBeforeLast("/")
-        if (path == file) {
-            files[file] = sha
-        } else {
-            val pathFirst = path.substringBefore("/")
-            val pathFirstMap = if (files.containsKey(pathFirst) && files[pathFirst] is HashMap<*, *>) {
-                files[pathFirst] as HashMap<String, Any>
-            } else {
-                val pathFirstMap = HashMap<String, Any>()
-                files[pathFirst] = pathFirstMap
-                pathFirstMap
-            }
-            insertNested(pathFirstMap, relativePath.substringAfter("/"), sha)
-        }
-    }
 }

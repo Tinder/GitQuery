@@ -67,6 +67,12 @@ open class GitQueryInitializeTask @Inject constructor(extension: GitQueryInitial
     @Input
     val flatFiles: Boolean = extension.flatFiles
 
+    /*
+    A sha under [branch], when --init-config is applied, that will be used as the default sha for files..
+    */
+    @Input
+    val sha: String = extension.sha
+
     init {
         group = "build"
         description = "Initialize or update a config file using include and exclude file globs."
@@ -77,6 +83,7 @@ open class GitQueryInitializeTask @Inject constructor(extension: GitQueryInitial
         GitQueryCore.initializeConfig(
             configFile = configFileName(),
             config = readConfig(),
+            sha = sha,
             verbose = verbose
         )
     }

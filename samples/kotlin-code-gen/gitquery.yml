@@ -1,18 +1,17 @@
-# Describe a set of files to fetch from a given repository. https://github.com/Tinder/GitQuery
----
-schema:
-  version: 1
-# remote - a remote repository to fetch Protobuf definitions from.
-remote: git@github.com:protocolbuffers/protobuf.git
-# branch - only this branch will be cloned/pulled. `sha` values used below must be under `branch`.
+!!com.tinder.gitquery.core.GitQueryConfig
 branch: master
-# a list of commit aliases that can be used in the `files` section.
-commits:
-  # This sha pertains to https://github.com/protocolbuffers/protobuf/releases/tag/v3.12.2
-  v3_12_2: 678da4f76eb9168c9965afc2149944a66cd48546
-# Indicate the sha (in remote/branch) for each proto file that we want to have models generated for.
-# The structure of `files` matches the directory structure of the remote repo.
+cleanOutput: true
+commits: &id001 {}
+excludeGlobs: []
+extra: *id001
 files:
-  # This is a directory at the root of the repo pointed to by remote.
   examples:
-    addressbook.proto: v3_12_2
+    addressbook.proto: v3.13.0dd
+flatFiles: false
+includeGlobs:
+- '**/examples/addressbook.proto'
+outputDir: /Users/aming/github/Tinder/GitQuery/samples/kotlin-code-gen/src/main/proto
+remote: git@github.com:protocolbuffers/protobuf.git
+repoDir: /Users/aming/github/Tinder/GitQuery/samples/kotlin-code-gen/build/tmp/.gitquery
+schema:
+  version: '1'
