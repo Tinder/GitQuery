@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+scriptDir=$( cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1 ; pwd -P )
+cd "$scriptDir" || exit 1
+
+echo "Installing git pre-commit hooks"
+set -x
+cp ../hooks/pre-commit ../../.git/hooks/
+chmod +x ../../.git/hooks/pre-commit

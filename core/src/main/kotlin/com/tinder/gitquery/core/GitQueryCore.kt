@@ -51,11 +51,11 @@ object GitQueryCore {
 
         val excludeMatchers = ArrayList<PathMatcher>(config.excludeGlobs.size)
         for (excludeGlob in config.excludeGlobs) {
-            excludeMatchers.add(FileSystems.getDefault().getPathMatcher("glob:${excludeGlob}"))
+            excludeMatchers.add(FileSystems.getDefault().getPathMatcher("glob:$excludeGlob"))
         }
 
         for (glob in config.includeGlobs) {
-            val matcher = FileSystems.getDefault().getPathMatcher("glob:${glob}")
+            val matcher = FileSystems.getDefault().getPathMatcher("glob:$glob")
             Files.walk(actualRepoPath)
                 .collect(toList())
                 .filter { it: Path? ->
@@ -328,6 +328,4 @@ object GitQueryCore {
         }
         return lines
     }
-
-
 }

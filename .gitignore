@@ -21,7 +21,6 @@ vendor/
 
 # generated files
 out
-bin/
 gen/
 captures/
 fastlane/*

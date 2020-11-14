@@ -44,7 +44,9 @@ jobs:
     steps:
       - checkout
       - restore_gradle_cache
-      - run: ./gradlew test
+      - run: ls -la
+      - run: ls -la build-support
+      - run: ./gradlew test --stacktrace
       - run: mkdir -p $CIRCLE_TEST_REPORTS/junit/
       - run: find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
       - run:

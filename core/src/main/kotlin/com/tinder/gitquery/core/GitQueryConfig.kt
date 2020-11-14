@@ -133,4 +133,3 @@ data class GitQueryConfig(
         }
     }
 }
-

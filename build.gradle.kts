@@ -4,6 +4,7 @@ plugins {
     id("com.vanniktech.maven.publish") version Libs.Versions.vanniktechMavenPublish apply false
     id("com.gradle.plugin-publish") version Libs.Versions.gradlePluginPublish apply false
     id("org.jetbrains.dokka") version Libs.Versions.dokkaGradlePlugin
+    id("org.jlleitschuh.gradle.ktlint") version Libs.Versions.ktlintGradlePlugin
 }
 
 allprojects {
@@ -18,8 +19,19 @@ allprojects {
     }
 }
 
+subprojects {
+    apply(plugin = "org.jlleitschuh.gradle.ktlint")
+    ktlint {
+        version.set(Libs.Versions.ktlint)
+        filter {
+            exclude("**/generated/**")
+            include("**/kotlin/**")
+        }
+    }
+}
+
 tasks.register<Exec>("installGitHooks") {
-    workingDir = project.projectDir
+    workingDir = project.rootDir
 
     commandLine("./build-support/bin/install-git-hooks")
 }
