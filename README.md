@@ -157,25 +157,30 @@ gitquery
                          stored. If provided, this will override any value
                          specified for [repoDir] in the [configFile]. default:
                          /tmp/qitquery/repo
-   --clean-output        Whether to clean (remote all files) the output folder
-                         prior to running. If set to true, this will override a
-                         false value specified for [cleanOutput] in the
-                         [configFile]. default: true
-   --init                Initialize/update the config file based on command
+   --dont-clean-output   Whether to not clean the output folder prior to sync.
+                         If set, this will override the [cleanOutput] in the
+                         [configFile] default: false
+   --init-config         Initialize/update the config file based on command
                          line params. Use --include-globs and --exclude-globs.
-                         If the config-file exists, it will be updated. If the
-                         config file does not exist, it will be created with
-                         values from command line or internal defaults.
-                         default: false
+                         If [configFile] exists, it will be updated, else it
+                         will be created with values from command line or
+                         internal defaults. default: false
    --include-globs TEXT  A list of globs to include when generating/updating
-                         the config file. If provided, this comma, space or
-                         pipe globs in the string value of this option |will be
-                         used to generate the config's [files] map.
+                         the files attribute in [configFile]. If provided, this
+                         comma, space or pipe separated list of globs will
+                         override [includeGlobs] in [configFile] and used when
+                         initializing/updating the config's [files] map.
    --exclude-globs TEXT  A list of globs to exclude when generating/updating
-                         the config file. If provided, this comma, space or
-                         pipe globs in the string value of this option |will be
-                         used to exclude patterns when generating the config's
-                         [files] map.
+                         the files attribute in [configFile]. If provided, this
+                         comma, space or pipe separated list of globs will
+                         override [excludeGlobs] in [configFile] and used to
+                         exclude patterns when initializing/updating the
+                         config's [files] map.
+   --flat-files          When --generate-globs is used, this option helps
+                         choose if the files in the generated config file
+                         should be in a flat map or a nest map. default: false
+   --sha TEXT            A sha to use when --init-config is used, if not
+                         provided the sha of latest [branch] is used
    --verbose             Show the underlying commands and their outputs in the
                          console. default: false
    -h, --help            Show this message and exit
