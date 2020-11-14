@@ -1,21 +1,21 @@
 package com.tinder.gitquery
 
-import com.tinder.gitquery.core.defaultBranch
-import com.tinder.gitquery.core.defaultCleanOutput
-import com.tinder.gitquery.core.defaultConfigFilename
-import com.tinder.gitquery.core.defaultGradleRepoDir
-import com.tinder.gitquery.core.defaultOutputDir
-import com.tinder.gitquery.core.defaultRemote
-import com.tinder.gitquery.core.defaultSha
-import com.tinder.gitquery.core.defaultVerbose
+import com.tinder.gitquery.core.DEFAULT_BRANCH
+import com.tinder.gitquery.core.DEFAULT_CLEAN_OUTPUT
+import com.tinder.gitquery.core.DEFAULT_CONFIG_FILENAME
+import com.tinder.gitquery.core.DEFAULT_GRADLE_REPO_DIR
+import com.tinder.gitquery.core.DEFAULT_OUTPUT_DIR
+import com.tinder.gitquery.core.DEFAULT_REMOTE
+import com.tinder.gitquery.core.DEFAULT_SHA
+import com.tinder.gitquery.core.DEFAULT_VERBOSE
 
 abstract class GitQueryDefaultExtension {
-    var configFile: String = defaultConfigFilename
-    var remote: String = defaultRemote
-    var branch: String = defaultBranch
-    var repoDir: String = defaultGradleRepoDir
-    var cleanOutput: Boolean = defaultCleanOutput
-    var outputDir: String = defaultOutputDir
-    var sha: String = defaultSha
-    var verbose: Boolean = defaultVerbose
+    var configFile: String = DEFAULT_CONFIG_FILENAME
+    var remote: String = DEFAULT_REMOTE
+    var branch: String = DEFAULT_BRANCH
+    var repoDir: String = DEFAULT_GRADLE_REPO_DIR
+    var cleanOutput: Boolean = DEFAULT_CLEAN_OUTPUT
+    var outputDir: String = DEFAULT_OUTPUT_DIR
+    var sha: String = DEFAULT_SHA
+    var verbose: Boolean = DEFAULT_VERBOSE
 }

@@ -4,7 +4,7 @@
 
 package com.tinder.gitquery
 
-import com.tinder.gitquery.core.defaultFlatFiles
+import com.tinder.gitquery.core.DEFAULT_FLAT_FILES
 import com.tinder.gitquery.core.defaultIncludeGlobs
 import org.gradle.api.Project
 
@@ -14,5 +14,5 @@ import org.gradle.api.Project
 open class GitQueryInitializeExtension(val project: Project) : GitQueryDefaultExtension() {
     var includeGlobs: List<String> = defaultIncludeGlobs
     var excludeGlobs: List<String> = defaultIncludeGlobs
-    var flatFiles: Boolean = defaultFlatFiles
+    var flatFiles: Boolean = DEFAULT_FLAT_FILES
 }

@@ -40,21 +40,40 @@ object GitQueryCore {
         val actualRepoDirectory = config.getActualRepoPath()
 
         prepareRepo(config.remote, config.branch, actualRepoDirectory)
+
+        config.files = initFiles(
+            includeGlobs = config.includeGlobs,
+            excludeGlobs = config.excludeGlobs,
+            actualRepoDirectory = actualRepoDirectory,
+            flatFiles = config.flatFiles,
+            sha = sha
+        ).toSortedMap()
+        config.save(configFile)
+        println("GitQuery: init complete: $configFile")
+    }
+
+    @Suppress("ComplexMethod")
+    private fun initFiles(
+        includeGlobs: List<String>,
+        excludeGlobs: List<String>,
+        actualRepoDirectory: String,
+        flatFiles: Boolean,
+        sha: String
+    ): Map<String, Any> {
         val actualRepoPath = Paths.get(actualRepoDirectory)
-
-        val files = HashMap<String, Any>()
-
         var repoSha = sha.ifEmpty { repoSha(actualRepoDirectory) }
         if (repoSha.toUpperCase() == "HEAD") {
             repoSha = repoSha(actualRepoDirectory)
         }
 
-        val excludeMatchers = ArrayList<PathMatcher>(config.excludeGlobs.size)
-        for (excludeGlob in config.excludeGlobs) {
+        val ret = HashMap<String, Any>()
+
+        val excludeMatchers = ArrayList<PathMatcher>(excludeGlobs.size)
+        for (excludeGlob in excludeGlobs) {
             excludeMatchers.add(FileSystems.getDefault().getPathMatcher("glob:$excludeGlob"))
         }
 
-        for (glob in config.includeGlobs) {
+        for (glob in includeGlobs) {
             val matcher = FileSystems.getDefault().getPathMatcher("glob:$glob")
             Files.walk(actualRepoPath)
                 .collect(toList())
@@ -79,17 +98,14 @@ object GitQueryCore {
                     val relativePath = it.toString()
                         .substringAfter(actualRepoPath.toString())
                         .substringAfter("/")
-                    if (config.flatFiles) {
-                        files[relativePath] = repoSha
+                    if (flatFiles) {
+                        ret[relativePath] = repoSha
                     } else {
-                        files.insertNested(relativePath, repoSha)
+                        ret.insertNested(relativePath, repoSha)
                     }
                 }
         }
-
-        config.files = files.toSortedMap()
-        config.save(configFile)
-        println("GitQuery: init complete: $configFile")
+        return ret
     }
 
     /**
@@ -166,6 +182,7 @@ object GitQueryCore {
             // In cases where the branch changes, `git checkout $branch` will fail silently, prompting
             // us to do a clean single branch clone of the repe.
             exitCode = sh(
+                verbose = verbose,
                 "cd $repoDir && git checkout $branch &>/dev/null && git pull origin $branch"
             )
         }
@@ -175,8 +192,8 @@ object GitQueryCore {
         // 2) or, we couldn't pull the branch that we wanted.
         // Cleanup and try a fresh clone.
         if (exitCode != 0 || !repoExists) {
-            sh("rm -rf $repoDir")
-            exitCode = sh("git clone --single-branch -b $branch $remote $repoDir")
+            sh(verbose = verbose, "rm -rf $repoDir")
+            exitCode = sh(verbose = verbose, "git clone --single-branch -b $branch $remote $repoDir")
         }
 
         check(exitCode == 0) { "Error cloning/updating repo $remote into directory $repoDir" }
@@ -185,6 +202,7 @@ object GitQueryCore {
     /**
      * Sync all files recursively.
      */
+    @Suppress("LongParameterList")
     private fun syncFiles(
         fileMap: Map<String, Any>,
         commits: Map<String, String>,
@@ -221,6 +239,7 @@ object GitQueryCore {
                     // `<outputDir>/<definition>/file.proto`,
                     // then run `git show sha:file > dest` to copy the file into the dest
                     val exitCode = sh(
+                        verbose = verbose,
                         """
                         (cd $repoPath && mkdir -p $outputPath/$actualRelativePath &&
                         git show $sha:$path > $destDir)
@@ -241,18 +260,18 @@ object GitQueryCore {
         println("GitQuery: creating outputPath: $outputPath")
 
         // Either outputPath exists or we can create it
-        check(0 == sh("[ -d $outputPath ] || mkdir -p $outputPath")) {
+        check(0 == sh(verbose = verbose, "[ -d $outputPath ] || mkdir -p $outputPath")) {
             "OutputDir: $outputPath not found and couldn't be created"
         }
 
         // Either outputPath doesn't exist, or we can write to it.
-        check(0 == sh("[ ! -d $outputPath ] || [ -w $outputPath ]")) {
+        check(0 == sh(verbose = verbose, "[ ! -d $outputPath ] || [ -w $outputPath ]")) {
             "OutputDir: $outputPath does not have write permission"
         }
 
         if (cleanOutput) {
             // Clean the output folder so that if files were removed from the config, they don't get included.
-            check(0 == sh("(cd $outputPath && rm -rf *)")) {
+            check(0 == sh(verbose = verbose, "(cd $outputPath && rm -rf *)")) {
                 "Error cleaning outputDir with path: `$outputPath"
             }
         }
@@ -262,70 +281,13 @@ object GitQueryCore {
      * Get current sha of the repoDir.
      */
     private fun repoSha(repoDir: String): String {
-        return shellResult("(cd $repoDir && git rev-parse HEAD)")
+        return shellResult(verbose = verbose, "(cd $repoDir && git rev-parse HEAD)")
     }
 
     /**
      * Checks the existence of the repoDir
      */
     private fun repoExists(repoDir: String): Boolean {
-        return 0 == sh("[ -d $repoDir ] && [ -d $repoDir/.git ]")
-    }
-
-    /**
-     * Run a shell command.
-     */
-    private fun sh(vararg cmd: String): Int = runCommand(*listOf("sh", "-c", *cmd).toTypedArray())
-
-    private fun runCommand(vararg cmd: String): Int {
-        val processBuilder = ProcessBuilder()
-            .command(*cmd)
-            .redirectErrorStream(true)
-
-        if (verbose) {
-            println(processBuilder.command().toString())
-        }
-
-        val process = processBuilder.start()
-        val lines = process.inputStream.bufferedReader().use { reader ->
-            reader.readLines().joinToString(separator = "\n")
-        }
-
-        val exitCode = process.waitFor()
-        if (verbose || (exitCode != 0 && lines.isNotEmpty())) {
-            println(processBuilder.command().toString())
-            println("exit code = $exitCode")
-            println(lines)
-        }
-        return exitCode
-    }
-
-    /**
-     * Run a shell command for a value.
-     */
-    private fun shellResult(vararg cmd: String): String =
-        runCommandAndGetResult(*listOf("sh", "-c", *cmd).toTypedArray())
-
-    private fun runCommandAndGetResult(vararg cmd: String): String {
-        val processBuilder = ProcessBuilder()
-            .command(*cmd)
-            .redirectErrorStream(false)
-
-        if (verbose) {
-            println(processBuilder.command().toString())
-        }
-
-        val process = processBuilder.start()
-        val lines = process.inputStream.bufferedReader().use { reader ->
-            reader.readLines().joinToString(separator = "\n")
-        }
-
-        val exitCode = process.waitFor()
-        if ((exitCode != 0 && lines.isNotEmpty())) {
-            println(processBuilder.command().toString())
-            println("exit code = $exitCode")
-            println(lines)
-        }
-        return lines
+        return 0 == sh(verbose = verbose, "[ -d $repoDir ] && [ -d $repoDir/.git ]")
     }
 }

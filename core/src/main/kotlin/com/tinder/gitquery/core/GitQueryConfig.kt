@@ -13,16 +13,16 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.Collections.emptyMap
 
-const val defaultBranch: String = "master"
-const val defaultCleanOutput: Boolean = true
-const val defaultConfigFilename: String = "gitquery.yml"
-const val defaultGradleRepoDir: String = "tmp/qitquery/repo"
-const val defaultFlatFiles: Boolean = false
-const val defaultOutputDir: String = "gitquery-output"
-const val defaultRemote: String = ""
-const val defaultRepoDir: String = "/tmp/qitquery/repo"
-const val defaultSha: String = ""
-const val defaultVerbose: Boolean = false
+const val DEFAULT_BRANCH: String = "master"
+const val DEFAULT_CLEAN_OUTPUT: Boolean = true
+const val DEFAULT_CONFIG_FILENAME: String = "gitquery.yml"
+const val DEFAULT_GRADLE_REPO_DIR: String = "tmp/qitquery/repo"
+const val DEFAULT_FLAT_FILES: Boolean = false
+const val DEFAULT_OUTPUT_DIR: String = "gitquery-output"
+const val DEFAULT_REMOTE: String = ""
+const val DEFAULT_REPO_DIR: String = "/tmp/qitquery/repo"
+const val DEFAULT_SHA: String = ""
+const val DEFAULT_VERBOSE: Boolean = false
 val defaultExcludeGlobs: List<String> = emptyList()
 val defaultIncludeGlobs: List<String> = emptyList()
 
@@ -33,12 +33,12 @@ data class GitQueryConfig(
     /* The version of the schema for this config. */
     var schema: GitQueryConfigSchema = GitQueryConfigSchema(),
     /* The remote repository to query files from. */
-    var remote: String = defaultRemote,
+    var remote: String = DEFAULT_REMOTE,
     /*
     The single branch that will be cloned on first run and pulled incrementally on subsequent
     runs. The sha values used in [commits] and [files] must be available under [branch].
     */
-    var branch: String = defaultBranch,
+    var branch: String = DEFAULT_BRANCH,
     /*
     Specify a nested map of filenames to sha (or commit alias) included file that we
     want to query and sync. The structure of [files] matches the directory structure of the
@@ -48,17 +48,17 @@ data class GitQueryConfig(
     /* A list of commit aliases that can be used in the [files] section. */
     var commits: Map<String, String> = emptyMap(),
     /* A directory to hold the intermediate cloned git repo. */
-    var repoDir: String = defaultRepoDir,
+    var repoDir: String = DEFAULT_REPO_DIR,
     /* A directory to sync the queried files into. */
-    var outputDir: String = defaultOutputDir,
+    var outputDir: String = DEFAULT_OUTPUT_DIR,
     /* If true [default], cleans out the output folder prior to running sync. */
-    var cleanOutput: Boolean = defaultCleanOutput,
+    var cleanOutput: Boolean = DEFAULT_CLEAN_OUTPUT,
     /*
     If true [default], when --init-config is used, the files attribute
     in the resulted saved config file will be a flat map of filename to sha values.
     If false, it will be a tree of directories as parent nodes and files as leaf nodes.
     */
-    var flatFiles: Boolean = defaultFlatFiles,
+    var flatFiles: Boolean = DEFAULT_FLAT_FILES,
     /* A list of globs to include when generating the config file. */
     var includeGlobs: List<String> = defaultIncludeGlobs,
     /* A list of globs to exclude when generating the config file. */

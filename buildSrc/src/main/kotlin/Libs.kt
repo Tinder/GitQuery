@@ -5,6 +5,7 @@
 object Libs {
     object Versions {
         const val clikt = "3.0.1"
+        const val detektGradlePlugin = "1.14.2"
         const val dokkaGradlePlugin = "1.4.10.2"
         const val googleJavaFormatCli = "1.8"
         const val gradlePluginPublish = "0.12.0"
