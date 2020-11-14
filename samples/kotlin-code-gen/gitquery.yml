@@ -6,7 +6,7 @@ excludeGlobs: []
 extra: *id001
 files:
   examples:
-    addressbook.proto: v3.13.0dd
+    addressbook.proto: v3.13.0.1
 flatFiles: false
 includeGlobs:
 - '**/examples/addressbook.proto'

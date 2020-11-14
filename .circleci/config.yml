@@ -58,7 +58,7 @@ jobs:
           root: /home/circleci
           paths:
             - .m2/repository
-            -
+
       - save_gradle_cache
 
   build_samples:
@@ -71,43 +71,43 @@ jobs:
       - attach_workspace:
           at: ~/project
 
-#      - run:
-#          name: Setup local maven repository
-#          command: mv .m2 $HOME/
-#
-#      - run:
-#          name: Collect files for dependencies cache key
-#          command: |
-#            find ./samples -name '*.gradle*' -type f -print0 \
-#            | sort -z \
-#            | xargs -0 cat \
-#            > /tmp/circleci_cache_key
-#
-#      - restore_cache:
-#          name: Restore dependencies cache
-#          keys:
-#            - v1-samples-dependencies-{{ checksum "/tmp/circleci_cache_key" }}
-#            # fallback to using the latest cache if no exact match is found
-#            - v1-samples-dependencies-
-#            -
-#      - run:
-#          name: Build all samples
-#          command: |
-#            for d in samples/*; do
-#              set -e
-#              [ -d "$d" ] || continue
-#              echo "== $d =="
-#              pushd "$d" >/dev/null
-#              ../../gradlew build
-#              popd >/dev/null
-#            done
-#
-#      - save_cache:
-#          name: Save dependencies cache
-#          paths:
-#            - ~/.gradle
-#          key: v1-samples-dependencies-{{ checksum "/tmp/circleci_cache_key" }}
-#          when: always
+      - run:
+          name: Setup local maven repository
+          command: mv .m2 $HOME/
+
+      - run:
+          name: Collect files for dependencies cache key
+          command: |
+            find ./samples -name '*.gradle*' -type f -print0 \
+            | sort -z \
+            | xargs -0 cat \
+            > /tmp/circleci_cache_key
+
+      - restore_cache:
+          name: Restore dependencies cache
+          keys:
+            - v1-samples-dependencies-{{ checksum "/tmp/circleci_cache_key" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-samples-dependencies-
+
+      - run:
+          name: Build all samples
+          command: |
+            for d in samples/*; do
+              set -e
+              [ -d "$d" ] || continue
+              echo "== $d =="
+              pushd "$d" >/dev/null
+              ../../gradlew build
+              popd >/dev/null
+            done
+
+      - save_cache:
+          name: Save dependencies cache
+          paths:
+            - ~/.gradle
+          key: v1-samples-dependencies-{{ checksum "/tmp/circleci_cache_key" }}
+          when: always
 
 workflows:
   version: 2.1
