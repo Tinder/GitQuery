@@ -38,6 +38,22 @@ commands:
           when: always
 
 jobs:
+  detekt:
+    executor:
+      name: jvm
+    steps:
+      - checkout
+      - restore_gradle_cache
+      - run: ./gradlew ktlintCheck
+
+  lint:
+    executor:
+      name: jvm
+    steps:
+      - checkout
+      - restore_gradle_cache
+      - run: ./gradlew detekt
+
   build:
     executor:
       name: jvm
@@ -113,7 +129,14 @@ workflows:
   version: 2.1
   build:
     jobs:
-      - build
+      - detekt
+      - lint:
+          requires:
+            - detekt
+      - build:
+          requires:
+            - detekt
+            - lint
       - build_samples:
           requires:
             - build

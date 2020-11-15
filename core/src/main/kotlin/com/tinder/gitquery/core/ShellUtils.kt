@@ -35,7 +35,7 @@ internal fun runCommand(verbose: Boolean = false, vararg cmd: String): Int {
 internal fun shellResult(verbose: Boolean = false, vararg cmd: String): String =
     runCommandAndGetResult(verbose = verbose, "sh", "-c", *cmd)
 
-internal fun runCommandAndGetResult(verbose: Boolean = false, vararg cmd: String): String {
+private fun runCommandAndGetResult(verbose: Boolean = false, vararg cmd: String): String {
     val processBuilder = ProcessBuilder()
         .command(*cmd)
         .redirectErrorStream(false)
