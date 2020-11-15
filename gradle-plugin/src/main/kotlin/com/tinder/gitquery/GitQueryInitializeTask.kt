@@ -14,7 +14,9 @@ import javax.inject.Inject
  *
  * @param extension [GitQueryInitializeExtension]
  */
-open class GitQueryInitializeTask @Inject constructor(extension: GitQueryInitializeExtension) : GitQueryDefaultTask(extension) {
+open class GitQueryInitializeTask @Inject constructor(
+    extension: GitQueryInitializeExtension
+) : GitQueryDefaultTask(extension) {
 
     /* A list of globs to include when generating the config file. */
     @Input

@@ -9,7 +9,7 @@ import com.tinder.gitquery.core.DEFAULT_REMOTE
 import com.tinder.gitquery.core.DEFAULT_SHA
 import com.tinder.gitquery.core.DEFAULT_VERBOSE
 
-abstract class GitQueryDefaultExtension {
+open class GitQueryDefaultExtension {
     var configFile: String = DEFAULT_CONFIG_FILENAME
     var remote: String = DEFAULT_REMOTE
     var branch: String = DEFAULT_BRANCH
