@@ -31,7 +31,13 @@ open class GitQuerySyncTask @Inject constructor(extension: GitQuerySyncExtension
     }
 
     private fun readConfig(): GitQueryConfig {
-        val config = GitQueryConfig.load(configFileName(), createIfNotExists = false)
+        val config = GitQueryConfig.load(
+            filename = toAbsolutePath(
+                path = configFile,
+                prefixPath = "${project.projectDir}"
+            ),
+            createIfNotExists = false
+        )
         if (remote.isNotBlank()) {
             config.remote = remote
         }
@@ -56,12 +62,5 @@ open class GitQuerySyncTask @Inject constructor(extension: GitQuerySyncExtension
         )
         config.cleanOutput = cleanOutput
         return config
-    }
-
-    private fun configFileName(): String {
-        return toAbsolutePath(
-            path = configFile,
-            prefixPath = "${project.projectDir}"
-        )
     }
 }

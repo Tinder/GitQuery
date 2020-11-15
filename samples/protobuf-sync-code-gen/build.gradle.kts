@@ -1,15 +1,14 @@
-import com.google.protobuf.gradle.builtins
+
 import com.google.protobuf.gradle.generateProtoTasks
 import com.google.protobuf.gradle.id
 import com.google.protobuf.gradle.ofSourceSet
 import com.google.protobuf.gradle.plugins
 import com.google.protobuf.gradle.protobuf
 import com.google.protobuf.gradle.protoc
-import com.google.protobuf.gradle.remove
 
 plugins {
     application
-    id("com.google.protobuf") version "0.8.12"
+    id("com.google.protobuf") version "0.8.13"
     id("com.tinder.gitquery") version "3.0.0-SNAPSHOT"
     java
 }
@@ -17,6 +16,7 @@ plugins {
 val protoDir = "src/main/proto"
 
 gitQuery {
+    autoSync = true
     cleanOutput = true
     configFile = "gitquery.yml"
     outputDir = protoDir
@@ -32,7 +32,7 @@ gitQueryInit {
     outputDir = protoDir
     remote = "git@github.com:protocolbuffers/protobuf.git"
     repoDir = "tmp/.gitquery"
-    sha = "v3.13.0.1"
+    sha = "v3.14.0"
 }
 
 sourceSets {
@@ -41,7 +41,7 @@ sourceSets {
     }
 }
 
-val protobufVersion by extra("3.13.0")
+val protobufVersion by extra("3.14.0")
 
 repositories {
     jcenter()
@@ -57,7 +57,7 @@ application {
 }
 
 dependencies {
-    implementation("com.google.protobuf:protobuf-java:3.13.0")
+    implementation("com.google.protobuf:protobuf-java:3.14.0")
 }
 
 protobuf {

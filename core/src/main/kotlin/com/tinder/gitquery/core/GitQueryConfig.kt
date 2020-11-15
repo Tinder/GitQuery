@@ -13,14 +13,15 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.Collections.emptyMap
 
+const val DEFAULT_AUTO_SYNC: Boolean = false
 const val DEFAULT_BRANCH: String = "master"
 const val DEFAULT_CLEAN_OUTPUT: Boolean = true
 const val DEFAULT_CONFIG_FILENAME: String = "gitquery.yml"
-const val DEFAULT_GRADLE_REPO_DIR: String = "tmp/qitquery/repo"
+const val DEFAULT_GRADLE_REPO_DIR: String = "tmp/gitquery/repo"
 const val DEFAULT_FLAT_FILES: Boolean = false
 const val DEFAULT_OUTPUT_DIR: String = "gitquery-output"
 const val DEFAULT_REMOTE: String = ""
-const val DEFAULT_REPO_DIR: String = "/tmp/qitquery/repo"
+const val DEFAULT_REPO_DIR: String = "/tmp/gitquery/repo"
 const val DEFAULT_SHA: String = ""
 const val DEFAULT_VERBOSE: Boolean = false
 val defaultExcludeGlobs: List<String> = emptyList()

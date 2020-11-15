@@ -6,12 +6,12 @@ excludeGlobs: []
 extra: *id001
 files:
   examples:
-    addressbook.proto: v3.13.0.1
+    addressbook.proto: v3.14.0
 flatFiles: false
 includeGlobs:
 - '**/examples/addressbook.proto'
-outputDir: /Users/aming/github/Tinder/GitQuery/samples/kotlin-code-gen/src/main/proto
+outputDir: /Users/aming/github/Tinder/GitQuery/samples/protobuf-sync-code-gen/src/main/proto
 remote: git@github.com:protocolbuffers/protobuf.git
-repoDir: /Users/aming/github/Tinder/GitQuery/samples/kotlin-code-gen/build/tmp/.gitquery
+repoDir: /Users/aming/github/Tinder/GitQuery/samples/protobuf-sync-code-gen/build/tmp/.gitquery
 schema:
   version: '1'

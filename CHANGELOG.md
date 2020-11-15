@@ -3,6 +3,23 @@ All notable changes to this library will be documented in this file.
 
 Version in this change log adheres to [Semantic Versioning](http://semver.org/).
 
+### 3.0.0 (2020-11-14) [#45](https://github.com/Tinder/GitQuery/pull/45) GitQuery 3 ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+    - New `init-config` command line parameter
+    - New Gradle task `gitQueryInit` 
+    - Supprt for tags as well as already supported shas
+    - `autoSync` option for `gitQuery` task
+    - New `version` command line parameter that prints the version of GitQuery
+    - Added Detekt
+    - Added KtLint
+    - Added pre-commit git hook and Gradle task `installGitHooks` for installing it
+    - Updated dependencies
+    - Updated samples 
+    - Updated circleci to use cache, run lint and build samples
+    - Updated README.md
+    - Unit tests
+    - Lots of code cleanup
+
+
 ### 2.0.1 (2020-07-06) [#43](https://github.com/Tinder/GitQuery/pull/43) Set the default for cleanOutput to true ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
 
 ### 2.0.0 (2020-07-04) [#42](https://github.com/Tinder/GitQuery/pull/42) Version 2.0.0 ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)

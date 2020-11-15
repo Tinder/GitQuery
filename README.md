@@ -45,7 +45,7 @@ files:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 # A directory to sync the queried files into. default: gitquery-output
 outputDir: gitquery-output
-# A directory to hold the intermediate cloned git repo. default: /tmp/qitquery/repo
+# A directory to hold the intermediate cloned git repo. default: /tmp/gitquery/repo
 repoDir: /tmp/.gitquery
 # If true [default], cleans out the output folder prior to running sync.
 cleanOutput: true
@@ -156,7 +156,7 @@ gitquery
    --repo-dir TEXT       Where the remote repo(s) can be cloned locally and
                          stored. If provided, this will override any value
                          specified for [repoDir] in the [configFile]. default:
-                         /tmp/qitquery/repo
+                         /tmp/gitquery/repo
    --dont-clean-output   Whether to not clean the output folder prior to sync.
                          If set, this will override the [cleanOutput] in the
                          [configFile] default: false

@@ -114,7 +114,7 @@ jobs:
               [ -d "$d" ] || continue
               echo "== $d =="
               pushd "$d" >/dev/null
-              ../../gradlew gitQueryInit gitQuery build
+              ../../gradlew gitQueryInit build
               popd >/dev/null
             done
 

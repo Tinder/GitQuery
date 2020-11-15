@@ -47,7 +47,8 @@ object GitQueryCore {
             actualRepoDirectory = actualRepoDirectory,
             flatFiles = config.flatFiles,
             sha = sha
-        ).toSortedMap()
+        ).sortMap()
+
         config.save(configFile)
         println("GitQuery: init complete: $configFile")
     }
@@ -59,7 +60,7 @@ object GitQueryCore {
         actualRepoDirectory: String,
         flatFiles: Boolean,
         sha: String
-    ): Map<String, Any> {
+    ): HashMap<String, Any> {
         val actualRepoPath = Paths.get(actualRepoDirectory)
         var repoSha = sha.ifEmpty { repoSha(actualRepoDirectory) }
         if (repoSha.toUpperCase() == "HEAD") {
@@ -180,10 +181,10 @@ object GitQueryCore {
         if (repoExists) {
             // Since we have th repo already, fetch the right branch from origin and checkout the branch
             // In cases where the branch changes, `git checkout $branch` will fail silently, prompting
-            // us to do a clean single branch clone of the repe.
+            // us to do a clean single branch clone of the repository.
             exitCode = sh(
                 verbose = verbose,
-                "cd $repoDir && git checkout $branch &>/dev/null && git pull origin $branch"
+                "cd $repoDir && git checkout $branch &>/dev/null && git pull origin $branch --tags"
             )
         }
 

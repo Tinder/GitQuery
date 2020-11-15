@@ -18,5 +18,11 @@ class GitQueryPlugin : Plugin<Project> {
         val initializeExtension = project.extensions
             .create("gitQueryInit", GitQueryInitializeExtension::class.java, project)
         project.tasks.register("gitQueryInit", GitQueryInitializeTask::class.java, initializeExtension)
+
+        project.afterEvaluate {
+            if (syncExtension.autoSync) {
+                project.tasks.getByName("assemble").dependsOn("gitQuery")
+            }
+        }
     }
 }
