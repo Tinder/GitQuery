@@ -44,7 +44,7 @@ jobs:
     steps:
       - checkout
       - restore_gradle_cache
-      - run: ./gradlew detek
+      - run: ./gradlew detekt
 
   lint:
     executor:
