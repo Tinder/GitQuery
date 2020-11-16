@@ -63,24 +63,13 @@ open class GitQueryInitializeTask @Inject constructor(
         if (branch.isNotBlank()) {
             config.branch = branch
         }
-        config.repoDir = GitQueryCore.toAbsolutePath(
-            path = if (repoDir.isNotBlank()) {
-                repoDir
-            } else {
-                config.repoDir
-            },
-            prefixPath = "${project.buildDir}"
-        )
-        config.outputDir = GitQueryCore.toAbsolutePath(
-            path = if (outputDir.isNotBlank()) {
-                outputDir
-            } else {
-                config.outputDir
-            },
-            prefixPath = "${project.projectDir}"
-        )
+        if (repoDir.isNotBlank()) {
+            config.repoDir = repoDir
+        }
+        if (outputDir.isNotBlank()) {
+            config.outputDir = outputDir
+        }
         config.cleanOutput = cleanOutput
-
         if (includeGlobs.isNotEmpty()) {
             config.includeGlobs = includeGlobs
         }

@@ -113,6 +113,7 @@ class GitQueryCli : CliktCommand() {
         if (outputDir.isNotBlank()) {
             config.outputDir = outputDir
         }
+        config.cleanOutput = !dontCleanOutput
         if (initConfig) {
             if (includeGlobs.isNotBlank()) {
                 config.includeGlobs = includeGlobs.split(",", " ", "|")
@@ -123,7 +124,6 @@ class GitQueryCli : CliktCommand() {
             config.flatFiles = flatFiles
             GitQueryCore.initializeConfig(configFile = configFile, config = config, verbose = verbose, sha = sha)
         } else {
-            config.cleanOutput = !dontCleanOutput
             GitQueryCore.sync(config = config, verbose = verbose)
         }
     }

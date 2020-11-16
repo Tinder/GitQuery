@@ -10,8 +10,8 @@ files:
 flatFiles: false
 includeGlobs:
 - '**/examples/addressbook.proto'
-outputDir: /Users/aming/github/Tinder/GitQuery/samples/protobuf-sync-code-gen/src/main/proto
+outputDir: src/main/proto
 remote: git@github.com:protocolbuffers/protobuf.git
-repoDir: /Users/aming/github/Tinder/GitQuery/samples/protobuf-sync-code-gen/build/tmp/.gitquery
+repoDir: tmp/.gitquery
 schema:
   version: '1'
