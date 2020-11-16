@@ -44,7 +44,7 @@ jobs:
     steps:
       - checkout
       - restore_gradle_cache
-      - run: ./gradlew ktlintCheck
+      - run: ./gradlew detek
 
   lint:
     executor:
@@ -52,7 +52,7 @@ jobs:
     steps:
       - checkout
       - restore_gradle_cache
-      - run: ./gradlew detekt
+      - run: ./gradlew ktlintCheck
 
   build:
     executor:
