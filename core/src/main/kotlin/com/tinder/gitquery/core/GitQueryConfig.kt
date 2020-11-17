@@ -86,10 +86,9 @@ data class GitQueryConfig(
      */
     fun getActualRepoPath(): String {
         val repoPath = GitQueryCore.toAbsolutePath(this.repoDir)
-        val repoName = remote
-            .substring(remote.lastIndexOf("/") + 1)
-            .removeSuffix(".git")
-        return "$repoPath/$repoName"
+        val repoFullname = remote.substringAfter("git@github.com:")
+            .substringBefore(".git")
+        return "$repoPath/$repoFullname"
     }
 
     /**

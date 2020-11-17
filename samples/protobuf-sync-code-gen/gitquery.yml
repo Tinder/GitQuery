@@ -13,6 +13,6 @@ includeGlobs:
 - '**/examples/addressbook.proto'
 outputDir: src/main/proto
 remote: git@github.com:protocolbuffers/protobuf.git
-repoDir: tmp/.gitquery
+repoDir: /Users/aminghadersohi/Tinder/Tinder/GitQuery/samples/protobuf-sync-code-gen/build/tmp/.gitquery
 schema:
   version: '1'

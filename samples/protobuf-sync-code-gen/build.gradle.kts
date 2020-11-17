@@ -20,7 +20,7 @@ gitQuery {
     cleanOutput = true
     configFile = "gitquery.yml"
     outputDir = protoDir
-    repoDir = "tmp/.gitquery"
+    repoDir = "${project.buildDir}/tmp/.gitquery"
 }
 
 gitQueryInit {
@@ -32,7 +32,7 @@ gitQueryInit {
     excludeGlobs = listOf("**/generated/**/*.proto")
     outputDir = protoDir
     remote = "git@github.com:protocolbuffers/protobuf.git"
-    repoDir = "tmp/.gitquery"
+    repoDir = "${project.buildDir}/tmp/.gitquery"
     sha = "v3.14.0"
 }
 
