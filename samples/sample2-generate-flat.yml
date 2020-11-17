@@ -7,7 +7,6 @@ excludeGlobs:
 - '**/proto2/**'
 extra: *id001
 files:
-  README.md: v3.14.0
   benchmarks/datasets/google_message1/proto3/benchmark_message1_proto3.proto: v3.14.0
   benchmarks/datasets/google_message2/benchmark_message2.proto: v3.14.0
   benchmarks/datasets/google_message3/benchmark_message3.proto: v3.14.0
@@ -44,7 +43,6 @@ flatFiles: true
 includeGlobs:
 - '**/src/google/protobuf/**/*.proto'
 - '**/benchmarks/**/*.proto'
-- README.md
 outputDir: gitquery-output
 remote: git@github.com:protocolbuffers/protobuf.git
 repoDir: /tmp/gitquery/repo

@@ -29,6 +29,7 @@ gitQueryInit {
     configFile = "gitquery.yml"
     flatFiles = false
     includeGlobs = listOf("**/examples/addressbook.proto")
+    excludeGlobs = listOf("**/generated/**/*.proto")
     outputDir = protoDir
     remote = "git@github.com:protocolbuffers/protobuf.git"
     repoDir = "tmp/.gitquery"

@@ -2,7 +2,8 @@
 branch: master
 cleanOutput: true
 commits: &id001 {}
-excludeGlobs: []
+excludeGlobs:
+- '**/generated/**/*.proto'
 extra: *id001
 files:
   examples:

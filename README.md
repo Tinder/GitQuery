@@ -112,27 +112,29 @@ gitquery
 ```shell script
 ./gitquery --init-config \
            --config-file samples/sample1-generate-nested.yml \
-           --include-globs **/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto,README.md,benchmarks/Makefile.am \
-           --exclude-globs **/ruby/**,**/proto2/** \
+           --include-globs "**/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto,README.md,benchmarks/Makefile.am" \
+           --exclude-globs "**/ruby/**,**/proto2/**" \
            --remote git@github.com:protocolbuffers/protobuf.git \
            --branch master \
-           --sha 012fe854acc5b2a23bf4bef4a3c0b634c65c058e
+           --sha v3.14.0
 ```
 
 #### Sample Update - by default a nested structure generated.
 ```shell script
 ./gitquery --init-config \
            --config-file samples/sample2-generate-nested.yml \
-           --include-globs **/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto \
-           --exclude-globs **/ruby/**,**/proto2/**
+           --include-globs "**/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto,README.md" \
+           --exclude-globs "**/ruby/**,**/proto2/**" \
+           --sha v3.14.0
 ```
 
 #### Sample Update - flat file structure generated using --flat-files.
 ```shell script
 ./gitquery --init-config \
            --config-file samples/sample2-generate-flat.yml --flat-files \
-           --include-globs **/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto \
-           --exclude-globs **/ruby/**,**/proto2/**
+           --include-globs "**/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto" \
+           --exclude-globs "**/ruby/**,**/proto2/**"\
+           --sha v3.14.0
 ```
 
 ```shell script
