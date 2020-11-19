@@ -5,13 +5,13 @@ schema:
 # remote - The remote repository to query files from.
 remote: git@github.com:protocolbuffers/protobuf.git
 # branch - The single branch that will be cloned on first run and pulled incrementally on
-# subsequent runs. The sha values used in [commits] and [files] must be available under [branch].
+# subsequent runs. The revision values used in [commits] and [files] must be available under [branch].
 branch: master
-# A list of commit aliases that can be used in the `files` section. The value can be a sha or tag.
+# A list of commit aliases that can be used in the `files` section. The value can be a revision: sha-1 or tag.
 commits:
   # https://github.com/protocolbuffers/protobuf/releases/tag/v3.12.2
   v3_12_2: v3.12.2
-# Specify a nested map of filenames to sha (or commit alias) included file that we
+# Specify a nested map of filenames to revision (or commit alias) included file that we
 # want to query and sync. The structure of `files` matches the directory structure of the
 # remote repo. A key whose value is a nested map is considered a directory.
 files:

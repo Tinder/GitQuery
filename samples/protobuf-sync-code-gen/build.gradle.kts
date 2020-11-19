@@ -23,17 +23,12 @@ gitQuery {
     repoDir = "${project.buildDir}/tmp/.gitquery"
 }
 
+// This will init/update the config file every time the gitQuery task runs.
 gitQueryInit {
-    branch = "master"
-    cleanOutput = true
-    configFile = "gitquery.yml"
     flatFiles = false
     includeGlobs = listOf("**/examples/addressbook.proto")
     excludeGlobs = listOf("**/generated/**/*.proto")
-    outputDir = protoDir
-    remote = "git@github.com:protocolbuffers/protobuf.git"
-    repoDir = "${project.buildDir}/tmp/.gitquery"
-    sha = "v3.14.0"
+    revision = "v3.14.0"
 }
 
 sourceSets {

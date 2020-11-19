@@ -1,4 +1,4 @@
-package com.tinder.gitquery.core
+package com.tinder.gitquery.core.utils
 
 @Suppress("UNCHECKED_CAST")
 internal fun HashMap<String, Any>.sortMap(): Map<String, Any> {
@@ -12,11 +12,11 @@ internal fun HashMap<String, Any>.sortMap(): Map<String, Any> {
 }
 
 @Suppress("UNCHECKED_CAST")
-internal fun HashMap<String, Any>.insertNested(relativePath: String, sha: String) {
+internal fun HashMap<String, Any>.insertNested(relativePath: String, revision: String) {
     val file = relativePath.substringAfterLast("/")
     val path = relativePath.substringBeforeLast("/")
     if (path == file) {
-        this[file] = sha
+        this[file] = revision
     } else {
         val pathFirst = path.substringBefore("/")
         val pathFirstMap = if (this.containsKey(pathFirst) && this[pathFirst] is HashMap<*, *>) {
@@ -26,6 +26,6 @@ internal fun HashMap<String, Any>.insertNested(relativePath: String, sha: String
             this[pathFirst] = pathFirstMap
             pathFirstMap
         }
-        pathFirstMap.insertNested(relativePath.substringAfter("/"), sha)
+        pathFirstMap.insertNested(relativePath.substringAfter("/"), revision)
     }
 }

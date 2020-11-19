@@ -28,14 +28,14 @@ schema:
 # remote - The remote repository to query files from.
 remote: https://github.com/aminghadersohi/ProtoExample.git
 # branch - The single branch that will be cloned on first run and pulled incrementally on
-# subsequent runs. The sha values used in [commits] and [files] must be available under [branch].
+# subsequent runs. The revision values used in [commits] and [files] must be available under [branch].
 branch: master
 # A list of commit aliases that can be used in the [files] section.
 commits:
   latest: d654b510d2689e8ee56d23d03dff2be742737f86
-# Specify a nested map of filenames to sha (or commit alias) included file that we
-# want to query and sync. The structure of [files] matches the directory structure of the
-# remote repo. A key whose value is a nested map is considered a directory.
+# Specify a nested map of filenames to revisions (or commit alias) that we want to sync to [outputDir].
+# The structure of [files] matches the directory structure of the remote repo. A key whose value is a 
+# nested map is considered a directory.
 files:
   # A file at the root fo the remote repo.
   README.md: latest
@@ -53,6 +53,7 @@ cleanOutput: true
 extra:
   attr1: value1
   attr2: 1
+# 
 ```
 
 #### Gradle Plugin - (https://plugins.gradle.org/plugin/com.tinder.gitquery)
@@ -68,6 +69,14 @@ gitQuery {
     repoDir = "remote"
     cleanOutput = true
     verbose = false
+}
+
+// This will init/update the config file every time the gitQuery task runs.
+gitQueryInit {
+    flatFiles = false
+    includeGlobs = listOf("**/examples/addressbook.proto")
+    excludeGlobs = listOf("**/generated/**/*.proto")
+    revision = "v3.14.0"
 }
 ```
 
@@ -116,7 +125,7 @@ gitquery
            --exclude-globs "**/ruby/**,**/proto2/**" \
            --remote git@github.com:protocolbuffers/protobuf.git \
            --branch master \
-           --sha v3.14.0
+           --revision v3.14.0
 ```
 
 #### Sample Update - by default a nested structure generated.
@@ -125,7 +134,7 @@ gitquery
            --config-file samples/sample2-generate-nested.yml \
            --include-globs "**/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto,README.md" \
            --exclude-globs "**/ruby/**,**/proto2/**" \
-           --sha v3.14.0
+           --revision v3.14.0
 ```
 
 #### Sample Update - flat file structure generated using --flat-files.
@@ -134,7 +143,7 @@ gitquery
            --config-file samples/sample2-generate-flat.yml --flat-files \
            --include-globs "**/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto" \
            --exclude-globs "**/ruby/**,**/proto2/**"\
-           --sha v3.14.0
+           --revision v3.14.0
 ```
 
 ```shell script
@@ -181,8 +190,8 @@ gitquery
    --flat-files          When --generate-globs is used, this option helps
                          choose if the files in the generated config file
                          should be in a flat map or a nest map. default: false
-   --sha TEXT            A sha to use when --init-config is used, if not
-                         provided the sha of latest [branch] is used
+   --revision TEXT            A revision to use when --init-config is used, if not
+                         provided the revision of latest [branch] is used
    --verbose             Show the underlying commands and their outputs in the
                          console. default: false
    -h, --help            Show this message and exit

@@ -2,8 +2,9 @@
  * © 2019 Match Group, LLC.
  */
 
-package com.tinder.gitquery.core
+package com.tinder.gitquery.core.config
 
+import com.tinder.gitquery.core.utils.toAbsolutePath
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
@@ -22,7 +23,7 @@ const val DEFAULT_FLAT_FILES: Boolean = false
 const val DEFAULT_OUTPUT_DIR: String = "gitquery-output"
 const val DEFAULT_REMOTE: String = ""
 const val DEFAULT_REPO_DIR: String = "/tmp/gitquery/repo"
-const val DEFAULT_SHA: String = ""
+const val DEFAULT_REVISION: String = ""
 const val DEFAULT_VERBOSE: Boolean = false
 val defaultExcludeGlobs: List<String> = emptyList()
 val defaultIncludeGlobs: List<String> = emptyList()
@@ -31,40 +32,41 @@ val defaultIncludeGlobs: List<String> = emptyList()
  * A model for the config yaml file.
  */
 data class GitQueryConfig(
-    /* The version of the schema for this config. */
+    /** The version of the schema for this config. */
     var schema: GitQueryConfigSchema = GitQueryConfigSchema(),
-    /* The remote repository to query files from. */
+
+    /** Encapsulate attributes related to init-config. */
+    var initConfig: GitQueryInitConfig = GitQueryInitConfig(),
+
+    /** The remote repository to query files from. */
     var remote: String = DEFAULT_REMOTE,
-    /*
-    The single branch that will be cloned on first run and pulled incrementally on subsequent
-    runs. The sha values used in [commits] and [files] must be available under [branch].
-    */
+
+    /**
+     * The single branch that will be cloned on first run and pulled incrementally on subsequent
+     * runs. The revisions used in [commits] and [files] must be available under [branch].
+     */
     var branch: String = DEFAULT_BRANCH,
-    /*
-    Specify a nested map of filenames to sha (or commit alias) included file that we
-    want to query and sync. The structure of [files] matches the directory structure of the
-    remote repo. A key whose value is a nested map is considered a directory.
-    */
+
+    /**
+     * Specify a nested map of directories to files and file to revisions (or commit alias) included file
+     * that we want to query and sync. The structure of [files] matches the directory structure of the
+     * remote repo. A key whose value is a nested map is considered a directory.
+     */
     var files: Map<String, Any> = emptyMap(),
-    /* A list of commit aliases that can be used in the [files] section. */
+
+    /** A list of commit aliases that can be used in the [files] section. */
     var commits: Map<String, String> = emptyMap(),
-    /* A directory to hold the intermediate cloned git repo. */
+
+    /** A directory to hold the intermediate cloned git repo. */
     var repoDir: String = DEFAULT_REPO_DIR,
-    /* A directory to sync the queried files into. */
+
+    /** A directory to sync the queried files into. */
     var outputDir: String = DEFAULT_OUTPUT_DIR,
-    /* If true [default], cleans out the output folder prior to running sync. */
+
+    /** If true [default], cleans out the output folder prior to running sync. */
     var cleanOutput: Boolean = DEFAULT_CLEAN_OUTPUT,
-    /*
-    If true [default], when --init-config is used, the files attribute
-    in the resulted saved config file will be a flat map of filename to sha values.
-    If false, it will be a tree of directories as parent nodes and files as leaf nodes.
-    */
-    var flatFiles: Boolean = DEFAULT_FLAT_FILES,
-    /* A list of globs to include when generating the config file. */
-    var includeGlobs: List<String> = defaultIncludeGlobs,
-    /* A list of globs to exclude when generating the config file. */
-    var excludeGlobs: List<String> = defaultExcludeGlobs,
-    /* A map of String -> Any - enabling self contained integration with various systems. */
+
+    /** A map of String -> Any - enabling self contained integration with various systems. */
     var extra: Map<String, Any> = emptyMap(),
 ) {
     /**
@@ -85,7 +87,7 @@ data class GitQueryConfig(
      * using the repoDir and remote config attributes, return where the repo should be cloned.
      */
     fun getActualRepoPath(): String {
-        val repoPath = GitQueryCore.toAbsolutePath(this.repoDir)
+        val repoPath = toAbsolutePath(this.repoDir)
         val repoFullname = remote.substringAfter("git@github.com:")
             .substringBefore(".git")
         return "$repoPath/$repoFullname"

@@ -1,5 +1,7 @@
 package com.tinder.gitquery.core
 
+import com.tinder.gitquery.core.config.GitQueryConfig
+import com.tinder.gitquery.core.config.GitQueryConfigSchema
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -8,7 +10,7 @@ import org.junit.rules.TemporaryFolder
 import java.io.File
 import java.lang.IllegalArgumentException
 
-class GitQueryCoreTest {
+class GitQuerySyncTest {
     @get:Rule
     val testProjectDir = TemporaryFolder()
 
@@ -28,7 +30,7 @@ class GitQueryCoreTest {
     @Test
     fun `sync - given valid parameters, should succeed`() {
         // When
-        GitQueryCore.sync(
+        GitQuerySync.sync(
             config = GitQueryConfig(
                 schema = GitQueryConfigSchema(version = "1"),
                 remote = "https://github.com/aminghadersohi/ProtoExample.git",
@@ -52,7 +54,7 @@ class GitQueryCoreTest {
     fun `sync - given missing remote, should fail`() {
         // When
         val actualError = kotlin.runCatching {
-            GitQueryCore.sync(
+            GitQuerySync.sync(
                 config = GitQueryConfig(
                     schema = GitQueryConfigSchema(version = "1"),
                     branch = "master",
@@ -77,7 +79,7 @@ class GitQueryCoreTest {
     fun `sync - given missing branch, should fail`() {
         // When
         val actualError = kotlin.runCatching {
-            GitQueryCore.sync(
+            GitQuerySync.sync(
                 config = GitQueryConfig(
                     schema = GitQueryConfigSchema(version = "1"),
                     remote = "https://github.com/aminghadersohi/ProtoExample.git",

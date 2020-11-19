@@ -9,17 +9,18 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.options.versionOption
-import com.tinder.gitquery.core.DEFAULT_BRANCH
-import com.tinder.gitquery.core.DEFAULT_CLEAN_OUTPUT
-import com.tinder.gitquery.core.DEFAULT_CONFIG_FILENAME
-import com.tinder.gitquery.core.DEFAULT_FLAT_FILES
-import com.tinder.gitquery.core.DEFAULT_OUTPUT_DIR
-import com.tinder.gitquery.core.DEFAULT_REMOTE
-import com.tinder.gitquery.core.DEFAULT_REPO_DIR
-import com.tinder.gitquery.core.DEFAULT_VERBOSE
 import com.tinder.gitquery.core.GIT_QUERY_VERSION
-import com.tinder.gitquery.core.GitQueryConfig
-import com.tinder.gitquery.core.GitQueryCore
+import com.tinder.gitquery.core.GitQueryInit
+import com.tinder.gitquery.core.GitQuerySync
+import com.tinder.gitquery.core.config.DEFAULT_BRANCH
+import com.tinder.gitquery.core.config.DEFAULT_CLEAN_OUTPUT
+import com.tinder.gitquery.core.config.DEFAULT_CONFIG_FILENAME
+import com.tinder.gitquery.core.config.DEFAULT_FLAT_FILES
+import com.tinder.gitquery.core.config.DEFAULT_OUTPUT_DIR
+import com.tinder.gitquery.core.config.DEFAULT_REMOTE
+import com.tinder.gitquery.core.config.DEFAULT_REPO_DIR
+import com.tinder.gitquery.core.config.DEFAULT_VERBOSE
+import com.tinder.gitquery.core.config.GitQueryConfig
 
 class GitQueryCli : CliktCommand() {
     init {
@@ -89,9 +90,9 @@ class GitQueryCli : CliktCommand() {
                 |default: $DEFAULT_FLAT_FILES""".trimMargin()
     ).flag(default = DEFAULT_FLAT_FILES)
 
-    private val sha: String by option(
-        help = """A sha to use when --init-config is used, 
-                |if not provided the sha of latest [branch] is used""".trimMargin()
+    private val revision: String by option(
+        help = """A revision to use when --init-config is used, 
+                |if not provided the revision of latest [branch] is used""".trimMargin()
     ).default("")
 
     private val verbose: Boolean by option(
@@ -116,15 +117,19 @@ class GitQueryCli : CliktCommand() {
         config.cleanOutput = !dontCleanOutput
         if (initConfig) {
             if (includeGlobs.isNotBlank()) {
-                config.includeGlobs = includeGlobs.split(",", " ", "|")
+                config.initConfig.includeGlobs = includeGlobs.split(",", " ", "|")
             }
             if (excludeGlobs.isNotBlank()) {
-                config.excludeGlobs = excludeGlobs.split(",", " ", "|")
+                config.initConfig.excludeGlobs = excludeGlobs.split(",", " ", "|")
             }
-            config.flatFiles = flatFiles
-            GitQueryCore.initializeConfig(configFile = configFile, config = config, verbose = verbose, sha = sha)
+            if (revision.isNotBlank()) {
+                config.initConfig.revision = revision
+            }
+            config.initConfig.flatFiles = flatFiles
+
+            GitQueryInit.initConfig(configFile = configFile, config = config, verbose = verbose)
         } else {
-            GitQueryCore.sync(config = config, verbose = verbose)
+            GitQuerySync.sync(config = config, verbose = verbose)
         }
     }
 }

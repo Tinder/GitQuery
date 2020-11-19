@@ -1,4 +1,4 @@
-package com.tinder.gitquery.core
+package com.tinder.gitquery.core.utils
 
 /**
  * Run a shell command.

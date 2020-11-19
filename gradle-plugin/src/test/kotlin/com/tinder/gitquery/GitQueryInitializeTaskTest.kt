@@ -32,15 +32,15 @@ class GitQueryInitializeTaskTest {
     fun taskGitQueryInitShouldCreateGitQueryConfig() {
         testProjectDir.apply {
             newFile("build.gradle").appendText(getBuildGradleSetup())
-//            newFile("gitquery.yml").appendText(getContentConfig())
         }
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir.root)
-            .withArguments("gitQueryInit")
+            .withArguments("gitQuery")
             .withPluginClasspath()
             .build()
-        assert(result.task(":gitQueryInit")?.outcome == TaskOutcome.SUCCESS)
+
+        assert(result.task(":gitQuery")?.outcome == TaskOutcome.SUCCESS)
         assert(result.output.contains("GitQuery: init complete"))
         assert(File("${testProjectDir.root}/gitquery.yml").exists())
     }
@@ -54,10 +54,10 @@ class GitQueryInitializeTaskTest {
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir.root)
-            .withArguments("gitQueryInit")
+            .withArguments("gitQuery")
             .withPluginClasspath()
             .build()
-        assert(result.task(":gitQueryInit")?.outcome == TaskOutcome.SUCCESS)
+        assert(result.task(":gitQuery")?.outcome == TaskOutcome.SUCCESS)
         assert(result.output.contains("GitQuery: init complete"))
         assert(File("${testProjectDir.root}/gitquery.yml").exists())
     }
@@ -68,11 +68,14 @@ plugins {
   id 'com.tinder.gitquery'
 }
 
-gitQueryInit {
+gitQuery {
     configFile =  "gitquery.yml"
     repoDir = "tmp/remote"
-    includeGlobs = ["**/*.proto"]
     remote = "https://github.com/aminghadersohi/ProtoExample.git"
+}
+
+gitQueryInit {
+    includeGlobs = ["**/*.proto"]
 }
         """.trimIndent()
 

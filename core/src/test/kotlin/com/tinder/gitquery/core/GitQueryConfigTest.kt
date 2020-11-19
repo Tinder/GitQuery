@@ -1,5 +1,6 @@
 package com.tinder.gitquery.core
 
+import com.tinder.gitquery.core.config.GitQueryConfig
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

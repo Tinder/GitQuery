@@ -2,9 +2,14 @@
 branch: master
 cleanOutput: true
 commits: &id001 {}
-excludeGlobs:
-- '**/ruby/**'
-- '**/proto2/**'
+initConfig:
+  excludeGlobs:
+  - '**/ruby/**'
+  - '**/proto2/**'
+  flatFiles: true
+  includeGlobs:
+    - '**/src/google/protobuf/**/*.proto'
+    - '**/benchmarks/**/*.proto'
 extra: *id001
 files:
   benchmarks/datasets/google_message1/proto3/benchmark_message1_proto3.proto: v3.14.0
@@ -39,10 +44,7 @@ files:
   src/google/protobuf/util/json_format.proto: v3.14.0
   src/google/protobuf/util/json_format_proto3.proto: v3.14.0
   src/google/protobuf/util/message_differencer_unittest.proto: v3.14.0
-flatFiles: true
-includeGlobs:
-- '**/src/google/protobuf/**/*.proto'
-- '**/benchmarks/**/*.proto'
+
 outputDir: gitquery-output
 remote: git@github.com:protocolbuffers/protobuf.git
 repoDir: /tmp/gitquery/repo
