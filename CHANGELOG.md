@@ -5,7 +5,7 @@ Version in this change log adheres to [Semantic Versioning](http://semver.org/).
 
 ### 3.0.0 (2020-11-14) [#45](https://github.com/Tinder/GitQuery/pull/45) GitQuery 3 ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
     - New `init-config` command line parameter
-    - New Gradle task `gitQueryInit` 
+    - New Gradle extension `gitQueryInit` 
     - Supprt for tags as well as already supported shas
     - `autoSync` option for `gitQuery` task
     - New `version` command line parameter that prints the version of GitQuery

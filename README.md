@@ -60,15 +60,15 @@ extra:
 `module/build.gradle:`
 ```groovy
 plugins {
-  id "com.tinder.gitquery" version "2.0.1"
+    id "com.tinder.gitquery" version "3.0.0"
 }
 
 gitQuery {
-    configFile =  "gitquery.yml"
-    outputDir =  "gitquery-output"
-    repoDir = "remote"
+    autoSync = true
     cleanOutput = true
-    verbose = false
+    configFile = "gitquery.yml"
+    outputDir = protoDir
+    repoDir = "${project.buildDir}/tmp/.gitquery"
 }
 
 // This will init/update the config file every time the gitQuery task runs.
@@ -149,52 +149,53 @@ gitquery
 ```shell script
 ./gitquery --help     
 
- Usage: cli [OPTIONS]
- 
- Options:
-   --config-file TEXT    A yaml file that describe a set of files to query and
-                         sync from a given repository. default: gitquery.yml
-   --remote TEXT         Remote Git repo url. If provided, this will override
-                         any value specified for [remote] in the [configFile].
-                         default:
-   --branch TEXT         Remote Git repo branch. If provided, this will
-                         override any value specified for [branch] in the
-                         [configFile]. default: master
-   --output-dir TEXT     Path to a directory where the files should be synced
-                         to. If provided, this will override any value
-                         specified for [outputDir] in the [configFile].
-                         default: gitquery-output
-   --repo-dir TEXT       Where the remote repo(s) can be cloned locally and
-                         stored. If provided, this will override any value
-                         specified for [repoDir] in the [configFile]. default:
-                         /tmp/gitquery/repo
-   --dont-clean-output   Whether to not clean the output folder prior to sync.
-                         If set, this will override the [cleanOutput] in the
-                         [configFile] default: false
-   --init-config         Initialize/update the config file based on command
-                         line params. Use --include-globs and --exclude-globs.
-                         If [configFile] exists, it will be updated, else it
-                         will be created with values from command line or
-                         internal defaults. default: false
-   --include-globs TEXT  A list of globs to include when generating/updating
-                         the files attribute in [configFile]. If provided, this
-                         comma, space or pipe separated list of globs will
-                         override [includeGlobs] in [configFile] and used when
-                         initializing/updating the config's [files] map.
-   --exclude-globs TEXT  A list of globs to exclude when generating/updating
-                         the files attribute in [configFile]. If provided, this
-                         comma, space or pipe separated list of globs will
-                         override [excludeGlobs] in [configFile] and used to
-                         exclude patterns when initializing/updating the
-                         config's [files] map.
-   --flat-files          When --generate-globs is used, this option helps
-                         choose if the files in the generated config file
-                         should be in a flat map or a nest map. default: false
-   --revision TEXT            A revision to use when --init-config is used, if not
-                         provided the revision of latest [branch] is used
-   --verbose             Show the underlying commands and their outputs in the
-                         console. default: false
-   -h, --help            Show this message and exit
+Usage: git-query-cli [OPTIONS]
+
+Options:
+  --version             Show the version and exit
+  --config-file TEXT    A yaml file that describe a set of files to query and
+                        sync from a given repository. default: gitquery.yml
+  --remote TEXT         Remote Git repo url. If provided, this will override
+                        any value specified for [remote] in the [configFile].
+                        default:
+  --branch TEXT         Remote Git repo branch. If provided, this will
+                        override any value specified for [branch] in the
+                        [configFile]. default: master
+  --output-dir TEXT     Path to a directory where the files should be synced
+                        to. If provided, this will override any value
+                        specified for [outputDir] in the [configFile].
+                        default: gitquery-output
+  --repo-dir TEXT       Where the remote repo(s) can be cloned locally and
+                        stored. If provided, this will override any value
+                        specified for [repoDir] in the [configFile]. default:
+                        /tmp/gitquery/repo
+  --dont-clean-output   Whether to not clean the output folder prior to sync.
+                        If set, this will override the [cleanOutput] in the
+                        [configFile] default: false
+  --init-config         Initialize/update the config file based on command
+                        line params. Use --include-globs and --exclude-globs.
+                        If [configFile] exists, it will be updated, else it
+                        will be created with values from command line or
+                        internal defaults. default: false
+  --include-globs TEXT  A list of globs to include when generating/updating
+                        the files attribute in [configFile]. If provided, this
+                        comma, space or pipe separated list of globs will
+                        override [includeGlobs] in [configFile] and used when
+                        initializing/updating the config's [files] map.
+  --exclude-globs TEXT  A list of globs to exclude when generating/updating
+                        the files attribute in [configFile]. If provided, this
+                        comma, space or pipe separated list of globs will
+                        override [excludeGlobs] in [configFile] and used to
+                        exclude patterns when initializing/updating the
+                        config's [files] map.
+  --flat-files          When --generate-globs is used, this option helps
+                        choose if the files in the generated config file
+                        should be in a flat map or a nest map. default: false
+  --revision TEXT       A revision to use when --init-config is used, if not
+                        provided the revision of latest [branch] is used
+  --verbose             Show the underlying commands and their outputs in the
+                        console. default: false
+  -h, --help            Show this message and exit
 ```
 
 #### Example Use Case - Code Generation
