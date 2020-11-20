@@ -13,7 +13,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-class GitQueryTaskTest {
+class GitQuerySyncTaskTest {
 
     @get:Rule
     val testProjectDir = TemporaryFolder()
@@ -41,6 +41,7 @@ class GitQueryTaskTest {
             .withArguments("gitQuery")
             .withPluginClasspath()
             .build()
+
         assert(result.task(":gitQuery")?.outcome == TaskOutcome.SUCCESS)
         assert(result.output.contains("GitQuery: creating outputPath"))
         assert(File("${testProjectDir.root}/gitquery-output/definitions/user.proto").exists())
@@ -59,6 +60,7 @@ class GitQueryTaskTest {
             .withArguments("gitQuery")
             .withPluginClasspath()
             .buildAndFail()
+
         println(result.output)
         assert(result.task(":gitQuery")?.outcome == TaskOutcome.FAILED)
         assert(result.output.contains("Parameter remote may not be a blank string ()"))
