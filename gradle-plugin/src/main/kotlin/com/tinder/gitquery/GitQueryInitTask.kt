@@ -5,9 +5,6 @@
 package com.tinder.gitquery
 
 import com.tinder.gitquery.core.GitQueryInit.initConfig
-import com.tinder.gitquery.core.config.GitQueryConfig
-import com.tinder.gitquery.core.utils.toAbsolutePath
-import org.gradle.api.DefaultTask
 import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -35,7 +32,7 @@ open class GitQueryInitTask @Inject constructor(
     val excludeGlobs: List<String> = initExtension.excludeGlobs
 
     /*
-     * If true [default], when --init-config is used, the files attribute
+     * If true (default), when --init-config is used, the files attribute
      * in the resulted saved config file will be a flat map of filename to sha values.
      * If false, it will be a tree of directories as parent nodes and files as leaf nodes.
      */
@@ -70,10 +67,8 @@ open class GitQueryInitTask @Inject constructor(
                     initConfig.revision = revision
                 }
                 initConfig.flatFiles = flatFiles
-
             },
             verbose = verbose
         )
-
     }
 }

@@ -37,7 +37,7 @@ open class GitQuerySyncTask @Inject constructor(
 
     /**
      * The single branch that will be cloned on first run and pulled incrementally on subsequent
-     * runs. The revision values used in [commits] and [files] must be available under [branch].
+     * runs. The revision values used in [commits] and [files] must exist under [branch].
      */
     @Input
     val branch: String = syncExtension.branch
@@ -50,7 +50,7 @@ open class GitQuerySyncTask @Inject constructor(
     @Input
     val outputDir: String = syncExtension.outputDir
 
-    /** If true [default], cleans out the output folder prior to running sync. */
+    /** If true (default), cleans out the output folder prior to running sync. */
     @Input
     val cleanOutput: Boolean = syncExtension.cleanOutput
 
@@ -75,30 +75,30 @@ open class GitQuerySyncTask @Inject constructor(
         return GitQueryConfig.load(
             filename = configFileName(),
             createIfNotExists = createIfNotExists
-        ).apply {
+        ).also {
             if (remote.isNotBlank()) {
-                this.remote = remote
+                it.remote = remote
             }
             if (branch.isNotBlank()) {
-                this.branch = branch
+                it.branch = branch
             }
-            this.repoDir = toAbsolutePath(
+            it.repoDir = toAbsolutePath(
                 path = if (repoDir.isNotBlank()) {
                     repoDir
                 } else {
-                    this.repoDir
+                    it.repoDir
                 },
                 prefixPath = "${project.buildDir}"
             )
-            this.outputDir = toAbsolutePath(
+            it.outputDir = toAbsolutePath(
                 path = if (outputDir.isNotBlank()) {
                     outputDir
                 } else {
-                    this.outputDir
+                    it.outputDir
                 },
                 prefixPath = "${project.projectDir}"
             )
-            this.cleanOutput = cleanOutput
+            it.cleanOutput = cleanOutput
         }
     }
 

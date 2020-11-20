@@ -65,10 +65,7 @@ jobs:
       - run: find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
       - run:
           name: Publish artifacts to local maven repository
-          command: |
-            ./gradlew publishToMavenLocal
-            echo "Published files:"
-            find $HOME/.m2/repository -type f
+          command: ./build-support/bin/publish-snapshot-local
 
       - persist_to_workspace:
           root: /home/circleci

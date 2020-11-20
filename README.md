@@ -141,7 +141,7 @@ gitquery
 ```shell script
 ./gitquery --init-config \
            --config-file samples/sample2-generate-flat.yml --flat-files \
-           --include-globs "**/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto" \
+           --include-globs "**/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto,README.md" \
            --exclude-globs "**/ruby/**,**/proto2/**"\
            --revision v3.14.0
 ```

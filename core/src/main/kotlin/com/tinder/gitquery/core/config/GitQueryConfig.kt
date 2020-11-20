@@ -98,7 +98,7 @@ data class GitQueryConfig(
      */
     fun validate() {
         require(remote.isNotBlank()) {
-            "Parameter remote may not be a blank string ($remote) {$this}"
+            "Parameter remote may not be a blank string ($remote)"
         }
 
         require(branch.isNotBlank()) {

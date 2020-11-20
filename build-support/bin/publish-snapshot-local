@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+scriptDir=$( cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1 ; pwd -P )
+
+propertiesFile=gradle.properties
+
+function getProperty {
+    PROP_KEY=$1
+    PROP_VALUE=`cat $propertiesFile | grep "$PROP_KEY" | cut -d'=' -f2`
+    echo $PROP_VALUE
+}
+
+version=$(getProperty "VERSION_NAME")
+
+if [[ "$version" == *SNAPSHOT ]]; then
+    ./gradlew publishToMavenLocal
+                echo "Published files:"
+                find $HOME/.m2/repository -type f
+else
+    echo "Snapshot publish skipped for release version $version"
+fi

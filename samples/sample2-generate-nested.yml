@@ -1,16 +1,7 @@
-!!com.tinder.gitquery.core.GitQueryConfig
+!!com.tinder.gitquery.core.config.GitQueryConfig
 branch: master
 cleanOutput: true
 commits: &id001 {}
-initConfig:
-  excludeGlobs:
-  - '**/ruby/**'
-  - '**/proto2/**'
-  flatFiles: false
-  includeGlobs:
-    - '**/src/google/protobuf/**/*.proto'
-    - '**/benchmarks/**/*.proto'
-    - README.md
 extra: *id001
 files:
   README.md: v3.14.0
@@ -61,7 +52,16 @@ files:
           json_format.proto: v3.14.0
           json_format_proto3.proto: v3.14.0
           message_differencer_unittest.proto: v3.14.0
-
+initConfig:
+  excludeGlobs:
+  - '**/ruby/**'
+  - '**/proto2/**'
+  flatFiles: false
+  includeGlobs:
+  - '**/src/google/protobuf/**/*.proto'
+  - '**/benchmarks/**/*.proto'
+  - README.md
+  revision: v3.14.0
 outputDir: gitquery-output
 remote: git@github.com:protocolbuffers/protobuf.git
 repoDir: /tmp/gitquery/repo

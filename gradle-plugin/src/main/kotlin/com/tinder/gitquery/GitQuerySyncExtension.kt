@@ -12,7 +12,6 @@ import com.tinder.gitquery.core.config.DEFAULT_GRADLE_REPO_DIR
 import com.tinder.gitquery.core.config.DEFAULT_OUTPUT_DIR
 import com.tinder.gitquery.core.config.DEFAULT_REMOTE
 import com.tinder.gitquery.core.config.DEFAULT_VERBOSE
-import com.tinder.gitquery.core.config.GitQueryInitConfig
 import org.gradle.api.Project
 
 /**
