@@ -17,5 +17,6 @@ if [[ "$version" == *SNAPSHOT ]]; then
                 echo "Published files:"
                 find $HOME/.m2/repository -type f
 else
+    mkdir -p $HOME/.m2/repository && cat > $HOME/.m2/repository/README.md
     echo "Snapshot publish skipped for release version $version"
 fi
