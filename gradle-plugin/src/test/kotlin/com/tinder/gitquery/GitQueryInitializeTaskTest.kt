@@ -36,11 +36,11 @@ class GitQueryInitializeTaskTest {
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir.root)
-            .withArguments("gitQuery")
+            .withArguments("gitQueryInit")
             .withPluginClasspath()
             .build()
 
-        assert(result.task(":gitQuery")?.outcome == TaskOutcome.SUCCESS)
+        assert(result.task(":gitQueryInit")?.outcome == TaskOutcome.SUCCESS)
         assert(result.output.contains("GitQuery: init complete"))
         assert(File("${testProjectDir.root}/gitquery.yml").exists())
     }
@@ -54,10 +54,11 @@ class GitQueryInitializeTaskTest {
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir.root)
-            .withArguments("gitQuery")
+            .withArguments("gitQueryInit")
             .withPluginClasspath()
             .build()
-        assert(result.task(":gitQuery")?.outcome == TaskOutcome.SUCCESS)
+
+        assert(result.task(":gitQueryInit")?.outcome == TaskOutcome.SUCCESS)
         assert(result.output.contains("GitQuery: init complete"))
         assert(File("${testProjectDir.root}/gitquery.yml").exists())
     }

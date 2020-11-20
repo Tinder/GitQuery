@@ -17,10 +17,7 @@ import java.nio.file.Paths
 import java.util.stream.Collectors.toList
 
 /**
- * A utility class that given a yaml file, describing a set of files in a remote git repo, and an
- * intermediate (repo) directory, query, fetch and sync those files into a given output directory.
- *
- * For more details see the README.md file in the root of this project.
+ * A utility class to help initialize or update [GitQueryConfig] objects saved in a file.
  */
 object GitQueryInit {
     private var verbose = false

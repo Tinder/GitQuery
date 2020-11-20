@@ -18,14 +18,13 @@ import org.gradle.api.Project
 /**
  * Contains the settings for our plugin.
  */
-open class GitQueryExtension(open val project: Project) {
-    var initConfig: GitQueryInitConfig = GitQueryInitConfig()
-    var configFile: String = DEFAULT_CONFIG_FILENAME
-    var remote: String = DEFAULT_REMOTE
-    var branch: String = DEFAULT_BRANCH
-    var repoDir: String = DEFAULT_GRADLE_REPO_DIR
-    var cleanOutput: Boolean = DEFAULT_CLEAN_OUTPUT
-    var outputDir: String = DEFAULT_OUTPUT_DIR
-    var verbose: Boolean = DEFAULT_VERBOSE
+open class GitQuerySyncExtension(open val project: Project) {
     var autoSync: Boolean = DEFAULT_AUTO_SYNC
+    var branch: String = DEFAULT_BRANCH
+    var cleanOutput: Boolean = DEFAULT_CLEAN_OUTPUT
+    var configFile: String = DEFAULT_CONFIG_FILENAME
+    var outputDir: String = DEFAULT_OUTPUT_DIR
+    var remote: String = DEFAULT_REMOTE
+    var repoDir: String = DEFAULT_GRADLE_REPO_DIR
+    var verbose: Boolean = DEFAULT_VERBOSE
 }
