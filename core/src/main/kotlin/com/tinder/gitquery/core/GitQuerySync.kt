@@ -99,7 +99,7 @@ object GitQuerySync {
                         verbose = verbose,
                         """
                         (cd $repoPath && mkdir -p $outputPath/$actualRelativePath &&
-                        git show $revision:$path > $destDir)
+                        (git show $revision:$path > $destDir))
                         """.trimIndent()
                     )
                     check(exitCode == 0) {
