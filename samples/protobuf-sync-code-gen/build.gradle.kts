@@ -9,7 +9,7 @@ import com.google.protobuf.gradle.protoc
 plugins {
     application
     id("com.google.protobuf") version "0.8.13"
-    id("com.tinder.gitquery") version "3.0.0"
+    id("com.tinder.gitquery") version "3.0.0-SNAPSHOT"
     java
 }
 
