@@ -125,5 +125,7 @@ class GitQuerySyncTest {
             actualError.message == "Failed to sync: " +
                 "https://github.com/aminghadersohi/ProtoExample.git/definitions/notexist.proto: exit code=128"
         )
+
+        assert(!File("${testProjectDir.root}/gitquery-output/definitions/notexist.proto").exists())
     }
 }

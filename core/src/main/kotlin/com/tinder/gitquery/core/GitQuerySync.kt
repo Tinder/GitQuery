@@ -103,6 +103,8 @@ object GitQuerySync {
                         """.trimIndent()
                     )
                     check(exitCode == 0) {
+                        // Prevent from an empty file in place of the failed synced file.
+                        sh(verbose = verbose, "rm $destDir")
                         "Failed to sync: $remote/$path: exit code=$exitCode"
                     }
                 }
