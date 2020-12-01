@@ -1,0 +1,7 @@
+#!/bin/sh
+
+# Check if the hook core library is there before calling it. If not just write an error and exit
+# with 0 to not interrupt the commit flow as this is likely a branch that hasn't been rebased yet.
+if hash ./build-support/hooks/pre-commit-core &> /dev/null; then
+  . ./build-support/hooks/pre-commit-core
+fi

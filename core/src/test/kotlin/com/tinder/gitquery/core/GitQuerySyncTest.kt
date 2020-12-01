@@ -1,14 +1,16 @@
 package com.tinder.gitquery.core
 
+import com.tinder.gitquery.core.config.GitQueryConfig
+import com.tinder.gitquery.core.config.GitQueryConfigSchema
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
-import java.lang.IllegalArgumentException
+import java.lang.IllegalStateException
 
-class GitQueryCoreTest {
+class GitQuerySyncTest {
     @get:Rule
     val testProjectDir = TemporaryFolder()
 
@@ -28,7 +30,7 @@ class GitQueryCoreTest {
     @Test
     fun `sync - given valid parameters, should succeed`() {
         // When
-        GitQueryCore.sync(
+        GitQuerySync.sync(
             config = GitQueryConfig(
                 schema = GitQueryConfigSchema(version = "1"),
                 remote = "https://github.com/aminghadersohi/ProtoExample.git",
@@ -52,7 +54,7 @@ class GitQueryCoreTest {
     fun `sync - given missing remote, should fail`() {
         // When
         val actualError = kotlin.runCatching {
-            GitQueryCore.sync(
+            GitQuerySync.sync(
                 config = GitQueryConfig(
                     schema = GitQueryConfigSchema(version = "1"),
                     branch = "master",
@@ -77,10 +79,11 @@ class GitQueryCoreTest {
     fun `sync - given missing branch, should fail`() {
         // When
         val actualError = kotlin.runCatching {
-            GitQueryCore.sync(
+            GitQuerySync.sync(
                 config = GitQueryConfig(
                     schema = GitQueryConfigSchema(version = "1"),
                     remote = "https://github.com/aminghadersohi/ProtoExample.git",
+                    branch = "",
                     files = mapOf(
                         "definitions" to mapOf("user.proto" to "42933446d0321958e8c12216d04b9f0c382ebf1b")
                     ),
@@ -96,5 +99,33 @@ class GitQueryCoreTest {
 
         assert(!File("${testProjectDir.root}/gitquery-output/definitions/user.proto").exists())
         assert(!File("${testProjectDir.root}/gitquery-output/README.md").exists())
+    }
+
+    @Test
+    fun `sync - given non-existent file, should fail`() {
+        // When
+        val actualError = kotlin.runCatching {
+            GitQuerySync.sync(
+                config = GitQueryConfig(
+                    schema = GitQueryConfigSchema(version = "1"),
+                    remote = "https://github.com/aminghadersohi/ProtoExample.git",
+                    branch = "master",
+                    files = mapOf(
+                        "definitions" to mapOf("notexist.proto" to "42933446d0321958e8c12216d04b9f0c382ebf1b")
+                    ),
+                    repoDir = "${testProjectDir.root}/tmp/remote",
+                    outputDir = "${testProjectDir.root}/gitquery-output"
+                )
+            )
+        }.exceptionOrNull()
+
+        // Then
+        require(actualError is IllegalStateException)
+        assert(
+            actualError.message == "Failed to sync: " +
+                "https://github.com/aminghadersohi/ProtoExample.git/definitions/notexist.proto: exit code=128"
+        )
+
+        assert(!File("${testProjectDir.root}/gitquery-output/definitions/notexist.proto").exists())
     }
 }

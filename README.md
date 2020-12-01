@@ -12,9 +12,9 @@ An alternative approach for defining dependencies in a build project vs importin
 
 #### Use cases: 
 It is sometimes preferable to query individual files in a remote repo when:
- - we only need a small number of files from (very) large remote (mono)repo.
+ - we only need a few files from large remote monorepo.
  - we need granular versioning for each dependency file.
- - it is hard to globally version the files in the remote repo and it would require many artifacts to be published .
+ - it is hard to globally version the files in the remote repo, or it would require many artifacts to be published.
  - we want to combine the source files of an artifact into our module.
  - we want to avoid version conflicts as possible when including pre-build artifacts. 
 
@@ -28,14 +28,14 @@ schema:
 # remote - The remote repository to query files from.
 remote: https://github.com/aminghadersohi/ProtoExample.git
 # branch - The single branch that will be cloned on first run and pulled incrementally on
-# subsequent runs. The sha values used in [commits] and [files] must be available under [branch].
+# subsequent runs. The revision values used in [commits] and [files] must be available under [branch].
 branch: master
-# A list of commit aliases that can be used in the `files` section.
+# A list of commit aliases that can be used in the [files] section.
 commits:
   latest: d654b510d2689e8ee56d23d03dff2be742737f86
-# Specify a nested map of filenames to sha (or commit alias) included file that we
-# want to query and sync. The structure of `files` matches the directory structure of the
-# remote repo. A key whose value is a nested map is considered a directory.
+# Specify a nested map of filenames to revisions (or commit alias) that we want to sync to [outputDir].
+# The structure of [files] matches the directory structure of the remote repo. A key whose value is a 
+# nested map is considered a directory.
 files:
   # A file at the root fo the remote repo.
   README.md: latest
@@ -45,7 +45,7 @@ files:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 # A directory to sync the queried files into. default: gitquery-output
 outputDir: gitquery-output
-# A directory to hold the intermediate cloned git repo. default: /tmp/qitquery/repo
+# A directory to hold the intermediate cloned git repo. default: /tmp/gitquery/repo
 repoDir: /tmp/.gitquery
 # If true [default], cleans out the output folder prior to running sync.
 cleanOutput: true
@@ -53,21 +53,30 @@ cleanOutput: true
 extra:
   attr1: value1
   attr2: 1
+# 
 ```
 
 #### Gradle Plugin - (https://plugins.gradle.org/plugin/com.tinder.gitquery)
 `module/build.gradle:`
 ```groovy
 plugins {
-  id "com.tinder.gitquery" version "2.0.1"
+    id "com.tinder.gitquery" version "3.0.0"
 }
 
 gitQuery {
-    configFile =  "gitquery.yml"
-    outputDir =  "gitquery-output"
-    repoDir = "remote"
+    autoSync = true
     cleanOutput = true
-    verbose = false
+    configFile = "gitquery.yml"
+    outputDir = protoDir
+    repoDir = "${project.buildDir}/tmp/.gitquery"
+}
+
+// This will init/update the config file every time the gitQuery task runs.
+gitQueryInit {
+    flatFiles = false
+    includeGlobs = listOf("**/examples/addressbook.proto")
+    excludeGlobs = listOf("**/generated/**/*.proto")
+    revision = "v3.14.0"
 }
 ```
 
@@ -103,35 +112,90 @@ To run
 gitquery
 ``` 
 
-#### Sample CLI
+#### Sample Sync 
 ```shell script
 ./gitquery --config-file=./samples/sample1.yml --repo-dir=./build/tmp/repo --output-dir=./gitquery-output
 ```
 
+#### Sample Init - create config that doesn't exist, by default a nested structure generated.
 ```shell script
-./gitquery --help   
-                                                               
-Usage: cli [OPTIONS]
+./gitquery --init-config \
+           --config-file samples/sample1-generate-nested.yml \
+           --include-globs "**/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto,README.md,benchmarks/Makefile.am" \
+           --exclude-globs "**/ruby/**,**/proto2/**" \
+           --remote git@github.com:protocolbuffers/protobuf.git \
+           --branch master \
+           --revision v3.14.0
+```
+
+#### Sample Update - by default a nested structure generated.
+```shell script
+./gitquery --init-config \
+           --config-file samples/sample2-generate-nested.yml \
+           --include-globs "**/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto,README.md" \
+           --exclude-globs "**/ruby/**,**/proto2/**" \
+           --revision v3.14.0
+```
+
+#### Sample Update - flat file structure generated using --flat-files.
+```shell script
+./gitquery --init-config \
+           --config-file samples/sample2-generate-flat.yml --flat-files \
+           --include-globs "**/src/google/protobuf/**/*.proto,**/benchmarks/**/*.proto,README.md" \
+           --exclude-globs "**/ruby/**,**/proto2/**"\
+           --revision v3.14.0
+```
+
+```shell script
+./gitquery --help     
+
+Usage: git-query-cli [OPTIONS]
 
 Options:
-  --config-file TEXT  A yaml file that describe a set of files to query and
-                      sync from a given repository. default: gitquery.yml
-  --output-dir TEXT   Path to a directory where the files should be synced to.
-                      If provided, this will override any value specified for
-                      [outputDir] in the [configFile]. default:
-                      gitquery-output
-  --repo-dir TEXT     Where the remote repo(s) can be cloned locally and
-                      stored. If provided, this will override any value
-                      specified for [repoDir] in the [configFile]. default:
-                      /tmp/qitquery/repo
-  --clean-output      Whether to clean (remote all files) the output folder
-                      prior to running. If set to true, this will override a
-                      false value specified for [cleanOutput] in the
-                      [configFile]. default: true
-  --verbose           Show the underlying commands and their outputs in the
-                      console. default: false
-  -h, --help          Show this message and exit
-
+  --version             Show the version and exit
+  --config-file TEXT    A yaml file that describe a set of files to query and
+                        sync from a given repository. default: gitquery.yml
+  --remote TEXT         Remote Git repo url. If provided, this will override
+                        any value specified for [remote] in the [configFile].
+                        default:
+  --branch TEXT         Remote Git repo branch. If provided, this will
+                        override any value specified for [branch] in the
+                        [configFile]. default: master
+  --output-dir TEXT     Path to a directory where the files should be synced
+                        to. If provided, this will override any value
+                        specified for [outputDir] in the [configFile].
+                        default: gitquery-output
+  --repo-dir TEXT       Where the remote repo(s) can be cloned locally and
+                        stored. If provided, this will override any value
+                        specified for [repoDir] in the [configFile]. default:
+                        /tmp/gitquery/repo
+  --dont-clean-output   Whether to not clean the output folder prior to sync.
+                        If set, this will override the [cleanOutput] in the
+                        [configFile] default: false
+  --init-config         Initialize/update the config file based on command
+                        line params. Use --include-globs and --exclude-globs.
+                        If [configFile] exists, it will be updated, else it
+                        will be created with values from command line or
+                        internal defaults. default: false
+  --include-globs TEXT  A list of globs to include when generating/updating
+                        the files attribute in [configFile]. If provided, this
+                        comma, space or pipe separated list of globs will
+                        override [includeGlobs] in [configFile] and used when
+                        initializing/updating the config's [files] map.
+  --exclude-globs TEXT  A list of globs to exclude when generating/updating
+                        the files attribute in [configFile]. If provided, this
+                        comma, space or pipe separated list of globs will
+                        override [excludeGlobs] in [configFile] and used to
+                        exclude patterns when initializing/updating the
+                        config's [files] map.
+  --flat-files          When --generate-globs is used, this option helps
+                        choose if the files in the generated config file
+                        should be in a flat map or a nest map. default: false
+  --revision TEXT       A revision to use when --init-config is used, if not
+                        provided the revision of latest [branch] is used
+  --verbose             Show the underlying commands and their outputs in the
+                        console. default: false
+  -h, --help            Show this message and exit
 ```
 
 #### Example Use Case - Code Generation

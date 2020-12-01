@@ -3,3 +3,10 @@ include(
     "core",
     "gradle-plugin"
 )
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        jcenter()
+    }
+}

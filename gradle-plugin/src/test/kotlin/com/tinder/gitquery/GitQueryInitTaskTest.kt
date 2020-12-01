@@ -13,7 +13,7 @@ import org.junit.Test
 import org.junit.rules.TemporaryFolder
 import java.io.File
 
-class GitQueryTaskTest {
+class GitQueryInitTaskTest {
 
     @get:Rule
     val testProjectDir = TemporaryFolder()
@@ -29,57 +29,38 @@ class GitQueryTaskTest {
     }
 
     @Test
-    fun taskCreateFolderWithFilesAtRoot() {
+    fun taskGitQueryInitShouldCreateGitQueryConfig() {
         testProjectDir.apply {
-            newFolder("gitquery-output")
+            newFile("build.gradle").appendText(getBuildGradleSetup())
+        }
+
+        val result = GradleRunner.create()
+            .withProjectDir(testProjectDir.root)
+            .withArguments("gitQueryInit")
+            .withPluginClasspath()
+            .build()
+
+        assert(result.task(":gitQueryInit")?.outcome == TaskOutcome.SUCCESS)
+        assert(result.output.contains("GitQuery: init complete"))
+        assert(File("${testProjectDir.root}/gitquery.yml").exists())
+    }
+
+    @Test
+    fun taskGitQueryInitShouldUpdateGitQueryConfig() {
+        testProjectDir.apply {
             newFile("build.gradle").appendText(getBuildGradleSetup())
             newFile("gitquery.yml").appendText(getContentConfig())
         }
 
         val result = GradleRunner.create()
             .withProjectDir(testProjectDir.root)
-            .withArguments("gitQuery")
+            .withArguments("gitQueryInit")
             .withPluginClasspath()
             .build()
-        assert(result.task(":gitQuery")?.outcome == TaskOutcome.SUCCESS)
-        assert(result.output.contains("GitQuery: creating outputPath"))
-        assert(File("${testProjectDir.root}/gitquery-output/definitions/user.proto").exists())
-    }
 
-    @Test
-    fun missingRemoteInConfigFileIsThrowingException() {
-        testProjectDir.apply {
-            newFolder("gitquery-output")
-            newFile("build.gradle").appendText(getBuildGradleSetup())
-            newFile("gitquery.yml").appendText(getContentMissingRemoteConfig())
-        }
-
-        val result = GradleRunner.create()
-            .withProjectDir(testProjectDir.root)
-            .withArguments("gitQuery")
-            .withPluginClasspath()
-            .buildAndFail()
-        println(result.output)
-        assert(result.task(":gitQuery")?.outcome == TaskOutcome.FAILED)
-        assert(result.output.contains("Parameter remote may not be a blank string ()"))
-    }
-
-    @Test
-    fun wrongConfigFormatThrowingException() {
-        testProjectDir.apply {
-            newFolder("gitquery-output")
-            newFile("build.gradle").appendText(getBuildGradleSetup())
-            newFile("gitquery.yml").appendText(getContentWrongFormat())
-        }
-
-        val result = GradleRunner.create()
-            .withProjectDir(testProjectDir.root)
-            .withArguments("gitQuery")
-            .withPluginClasspath()
-            .buildAndFail()
-
-        assert(result.output.contains("Can't construct a java object for tag:yaml.org"))
-        assert(result.task(":gitQuery")?.outcome == TaskOutcome.FAILED)
+        assert(result.task(":gitQueryInit")?.outcome == TaskOutcome.SUCCESS)
+        assert(result.output.contains("GitQuery: init complete"))
+        assert(File("${testProjectDir.root}/gitquery.yml").exists())
     }
 
     private fun getBuildGradleSetup() =
@@ -90,8 +71,12 @@ plugins {
 
 gitQuery {
     configFile =  "gitquery.yml"
-    outputDir =  "gitquery-output"
     repoDir = "tmp/remote"
+    remote = "https://github.com/aminghadersohi/ProtoExample.git"
+}
+
+gitQueryInit {
+    includeGlobs = ["**/*.proto"]
 }
         """.trimIndent()
 

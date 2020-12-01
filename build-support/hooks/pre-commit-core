@@ -1,0 +1,108 @@
+#!/bin/sh
+
+# The current approach leaves at least one use case of git worth thinking about. This pre-commit
+# hook assumes that the user wants to lint all files, whether they are in the index or not. Some
+# people like to only add a partial set of files and commit them without the hook linting the
+# un-staged files.
+# A future iteration of this script can detect these un-staged files, stash them, format the added
+# files, and unstash the stashed files before exiting.
+
+# https://stackoverflow.com/questions/4023830/how-to-compare-two-strings-in-dot-separated-version-format-in-bash
+verlte() {
+  [ "$1" = "$(echo -e "$1\n$2" | sort -V | head -n1)" ]
+}
+
+# Where we can expect to find the versions of our dependencies, such as ktlint and Google Java Format.
+depsFile=buildSrc/src/main/kotlin/Libs.kt
+ktlintVersionRegex='const val ktlint = "[^"]*"'
+gJFVersionRegex='const val googleJavaFormatCli = "[^"]*"'
+valueRegex='"[^"]*"'
+defaultKtlintVersion=0.3.72
+defaultGJFVersion=1.7
+
+# Determine the version of ktlint that we need to use.
+ktlintTargetVersion=$(grep -o "$ktlintVersionRegex" $depsFile | grep -o "$valueRegex" -m 1 | tr -d '"')
+if [ -z "$ktlintTargetVersion" ]; then
+  ktlintTargetVersion=$defaultKtlintVersion
+  echo "Warning: pre-commit hook could not read the target version of ktlint from $depsFile. Defaulting to $ktlintTargetVersion"
+fi
+
+# Determine the version of ktlint that the user may already have installed, or blank if they don't.
+ktlintUserVersion=$(ktlint --version 2>&1)
+
+ktlintBinary=/usr/local/bin/ktlint
+
+# If the ktlint binary doesn't exist, or the target version is greater than the current user version, install it.
+if (! hash ktlint /dev/null 2>&1) || (! verlte $ktlintTargetVersion "$ktlintUserVersion"); then
+  echo "Installing ktlint@$ktlintTargetVersion to /usr/local/bin"
+  curl -o $ktlintBinary -sSLO https://github.com/pinterest/ktlint/releases/download/$ktlintTargetVersion/ktlint && chmod a+x $ktlintBinary
+fi
+
+# Determine the version of google java format that we need to use.
+gJFTargetVersion=$(grep -o "$gJFVersionRegex" $depsFile | grep -o "$valueRegex" -m 1 | tr -d '"')
+if [ -z "$gJFTargetVersion" ]; then
+  gJFTargetVersion=$defaultGJFVersion
+  echo "Warning: pre-commit hook could not read the target version of googleJavaFormat from $depsFile. Defaulting to $gJFTargetVersion"
+fi
+
+gJFBinary=/usr/local/bin/google-java-format.jar
+
+# Determine the version of google java format that the user may already have installed, or blank if they don't.
+gJFUserVersion=$(java -jar $gJFBinary --version 2>&1 | grep -io 'Version [0-9]*\.[0-9]*' | grep -io '[0-9]*\.[0-9]*')
+
+# If the gJF binary doesn't exist, or the target version is greater than the current user version, install it.
+if [ ! -f $gJFBinary ] || (! verlte $gJFTargetVersion "$gJFUserVersion"); then
+  echo "Installing google-java-format-$gJFTargetVersion.jar to /usr/local/bin"
+  curl -o $gJFBinary -sSLO https://github.com/google/google-java-format/releases/download/google-java-format-$gJFTargetVersion/google-java-format-$gJFTargetVersion-all-deps.jar  && chmod a+x $gJFBinary
+fi
+
+#  Set the maximum number of files to lint at a time.
+LINT_BATCH_SIZE=1000
+
+# Get a list of kt files that changed since last commit. Kotlin first.
+ktFiles=$(git --no-pager diff --diff-filter=d --name-only HEAD | grep '\.kt[s"]\?$')
+
+if [ -n "$ktFiles" ]; then
+  echo "Formatting modified Kotlin files."
+  echo "If you would like to skip next time use  --no-verify or delete .git/hooks/pre-commit"
+
+  echo "$ktFiles" | xargs -n $LINT_BATCH_SIZE ktlint -F
+
+  if [ $? -ne 0 ]; then
+    echo "There are Kotlin lint or style issues. Please fix before committing, or skip by adding --no-verify to your git commit command"
+    exit 1
+  fi
+
+  # Add the formatted files to the index prior to the commit
+  echo "$ktFiles" | xargs -n $LINT_BATCH_SIZE git add
+fi
+
+# Get a list of Java files that changed since last commit
+javaFiles=$(git --no-pager diff --diff-filter=d --name-only HEAD | grep '\.java$')
+
+if [ -n "$javaFiles" ]; then
+  echo "Formatting modified Java files."
+  echo "If you would like to skip next time use --no-verify or delete .git/hooks/pre-commit"
+
+  echo "$javaFiles" | xargs -n $LINT_BATCH_SIZE java -jar $gJFBinary --replace
+
+  if [ $? -ne 0 ]; then
+    echo "There are Java lint or style issues. Please fix before committing, or skip by adding --no-verify to your git commit command"
+    exit 1
+  fi
+
+  # Add the formatted files to the index prior to the commit
+  echo "$javaFiles" | xargs -n $LINT_BATCH_SIZE git add
+fi
+
+# If there were no kt or java files just exit quietly successfully.
+if [ -z "$javaFiles" ] && [ -z "$ktFiles" ]; then
+  exit 0
+fi
+
+# Detect if the commit would be empty because all changes were undone by formatting.
+stagedFiles=$(git --no-pager diff --name-only HEAD)
+if [ -z "$stagedFiles" ]; then
+  echo "The resulting commit would be empty. Aborting."
+  exit 1
+fi

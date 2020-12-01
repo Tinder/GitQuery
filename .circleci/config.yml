@@ -10,63 +10,125 @@ executors:
       GRADLE_OPTS: '-Dorg.gradle.parallel=false -Dorg.gradle.daemon=false'
       CIRCLE_TEST_REPORTS: test-reports
 
+commands:
+  restore_gradle_cache:
+    steps:
+      - run:
+          name: Collect files for dependencies cache key
+          command: |
+            find . -path ./samples -prune -o -name '*.gradle*' -type f -print0 \
+            | sort -z \
+            | xargs -0 cat \
+            > /tmp/circleci_cache_key
+      - restore_cache:
+          name: Restore dependencies cache
+          keys:
+            - v2-dependencies-{{ checksum "/tmp/circleci_cache_key" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
+
+
+  save_gradle_cache:
+    steps:
+      - save_cache:
+          name: Save dependencies cache
+          paths:
+            - ~/.gradle
+          key: v2-dependencies-{{ checksum "/tmp/circleci_cache_key" }}
+          when: always
+
 jobs:
+  detekt:
+    executor:
+      name: jvm
+    steps:
+      - checkout
+      - restore_gradle_cache
+      - run: ./gradlew detekt
+
+  lint:
+    executor:
+      name: jvm
+    steps:
+      - checkout
+      - restore_gradle_cache
+      - run: ./gradlew ktlintCheck
+
   build:
+    executor:
+      name: jvm
+    steps:
+      - checkout
+      - restore_gradle_cache
+      - run: ./gradlew test --stacktrace
+      - run: mkdir -p $CIRCLE_TEST_REPORTS/junit/
+      - run: find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+      - run:
+          name: Publish artifacts to local maven repository
+          command: ./build-support/bin/publish-snapshot-local
+
+      - persist_to_workspace:
+          root: /home/circleci
+          paths:
+            - .m2/repository
+
+      - save_gradle_cache
+
+  build_samples:
     executor:
       name: jvm
 
     steps:
       - checkout
 
-      - run: ./gradlew test
+      - attach_workspace:
+          at: ~/project
 
-      - run: mkdir -p $CIRCLE_TEST_REPORTS/junit/
+      - run:
+          name: Setup local maven repository
+          command: mv .m2 $HOME/
 
-      - run: find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+      - run:
+          name: Collect files for dependencies cache key
+          command: |
+            find ./samples -name '*.gradle*' -type f -print0 \
+            | sort -z \
+            | xargs -0 cat \
+            > /tmp/circleci_cache_key
 
-#      - run:
-#          name: Publish artifacts to local maven repository
-#          command: |
-#            ./gradlew publishToMavenLocal
-#            echo "Published files:"
-#            find $HOME/.m2/repository -type f
-#
-#      - persist_to_workspace:
-#          root: /home/circleci
-#          paths:
-#            - .m2/repository
+      - restore_cache:
+          name: Restore dependencies cache
+          keys:
+            - v1-samples-dependencies-{{ checksum "/tmp/circleci_cache_key" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-samples-dependencies-
 
-#  build_samples:
-#    executor:
-#      name: jvm
-#
-#    steps:
-#      - checkout
-#
-#      - attach_workspace:
-#          at: ~/project
-#
-#      - run:
-#          name: Setup local maven repository
-#          command: mv .m2 $HOME/
-#
-#      - run:
-#          name: Build all samples
-#          command: |
-#            for d in samples/*; do
-#              set -e
-#              [ -d "$d" ] || continue
-#              echo "== $d =="
-#              pushd "$d" >/dev/null
-#              ../../gradlew build
-#              popd >/dev/null
-#            done
+      - run:
+          name: Build all samples
+          command: |
+            for d in samples/*; do
+              set -e
+              [ -d "$d" ] || continue
+              echo "== $d =="
+              pushd "$d" >/dev/null
+              ../../gradlew gitQueryInit build
+              popd >/dev/null
+            done
+
+      - save_cache:
+          name: Save dependencies cache
+          paths:
+            - ~/.gradle
+          key: v1-samples-dependencies-{{ checksum "/tmp/circleci_cache_key" }}
+          when: always
 
 workflows:
   version: 2.1
   build:
     jobs:
+      - detekt
+      - lint
       - build
-#      - build_samples:
-#          requires:
-#            - build
+      - build_samples:
+          requires:
+            - build

@@ -1,0 +1,20 @@
+!!com.tinder.gitquery.core.GitQueryConfig
+branch: master
+cleanOutput: true
+commits: &id001 {}
+extra: *id001
+files:
+  examples:
+    addressbook.proto: v3.14.0
+initConfig:
+  excludeGlobs:
+  - '**/generated/**/*.proto'
+  flatFiles: false
+  includeGlobs:
+  - '**/examples/addressbook.proto'
+  revision: v3.14.0
+outputDir: /Users/aming/github/Tinder/GitQuery/samples/protobuf-sync-code-gen/src/main/proto
+remote: git@github.com:protocolbuffers/protobuf.git
+repoDir: /Users/aming/github/Tinder/GitQuery/samples/protobuf-sync-code-gen/build/tmp/.gitquery
+schema:
+  version: '1'

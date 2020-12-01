@@ -14,3 +14,11 @@ dependencies {
 
     testImplementation(Libs.junit)
 }
+
+val generateVersionClass by tasks.register<Exec>("generateVersionClass") {
+    workingDir(project.rootDir)
+    println("rootDir=${project.rootDir}")
+    commandLine("./build-support/bin/write-version-class")
+}
+
+tasks.getByName("compileKotlin").dependsOn(generateVersionClass)

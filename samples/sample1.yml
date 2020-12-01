@@ -5,13 +5,13 @@ schema:
 # remote - The remote repository to query files from.
 remote: git@github.com:protocolbuffers/protobuf.git
 # branch - The single branch that will be cloned on first run and pulled incrementally on
-# subsequent runs. The sha values used in [commits] and [files] must be available under [branch].
+# subsequent runs. The revision values used in [commits] and [files] must be available under [branch].
 branch: master
-# A list of commit aliases that can be used in the `files` section.
+# A list of commit aliases that can be used in the `files` section. The value can be a revision: sha-1 or tag.
 commits:
-  # This sha pertains to https://github.com/protocolbuffers/protobuf/releases/tag/v3.12.2
-  v3_12_2: 678da4f76eb9168c9965afc2149944a66cd48546
-# Specify a nested map of filenames to sha (or commit alias) included file that we
+  # https://github.com/protocolbuffers/protobuf/releases/tag/v3.12.2
+  v3_12_2: v3.12.2
+# Specify a nested map of filenames to revision (or commit alias) included file that we
 # want to query and sync. The structure of `files` matches the directory structure of the
 # remote repo. A key whose value is a nested map is considered a directory.
 files:
@@ -34,7 +34,7 @@ files:
           plugin.proto: v3_12_2
 # A directory to sync the queried files into. default: gitquery-output
 outputDir: gitquery-output
-# A directory to hold the intermediate cloned git repo. default: /tmp/qitquery/repo
+# A directory to hold the intermediate cloned git repo. default: /tmp/gitquery/repo
 repoDir: /tmp/.gitquery
 # If true [default], cleans out the output folder prior to running sync.
 cleanOutput: false

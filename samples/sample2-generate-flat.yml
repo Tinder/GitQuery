@@ -1,0 +1,54 @@
+!!com.tinder.gitquery.core.config.GitQueryConfig
+branch: master
+cleanOutput: true
+commits: &id001 {}
+extra: *id001
+files:
+  README.md: v3.14.0
+  benchmarks/datasets/google_message1/proto3/benchmark_message1_proto3.proto: v3.14.0
+  benchmarks/datasets/google_message2/benchmark_message2.proto: v3.14.0
+  benchmarks/datasets/google_message3/benchmark_message3.proto: v3.14.0
+  benchmarks/datasets/google_message3/benchmark_message3_1.proto: v3.14.0
+  benchmarks/datasets/google_message3/benchmark_message3_2.proto: v3.14.0
+  benchmarks/datasets/google_message3/benchmark_message3_3.proto: v3.14.0
+  benchmarks/datasets/google_message3/benchmark_message3_4.proto: v3.14.0
+  benchmarks/datasets/google_message3/benchmark_message3_5.proto: v3.14.0
+  benchmarks/datasets/google_message3/benchmark_message3_6.proto: v3.14.0
+  benchmarks/datasets/google_message3/benchmark_message3_7.proto: v3.14.0
+  benchmarks/datasets/google_message3/benchmark_message3_8.proto: v3.14.0
+  benchmarks/datasets/google_message4/benchmark_message4.proto: v3.14.0
+  benchmarks/datasets/google_message4/benchmark_message4_1.proto: v3.14.0
+  benchmarks/datasets/google_message4/benchmark_message4_2.proto: v3.14.0
+  benchmarks/datasets/google_message4/benchmark_message4_3.proto: v3.14.0
+  src/google/protobuf/compiler/cpp/cpp_test_bad_identifiers.proto: v3.14.0
+  src/google/protobuf/compiler/cpp/cpp_test_large_enum_value.proto: v3.14.0
+  src/google/protobuf/compiler/plugin.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/anys.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/books.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/default_value.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/default_value_test.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/field_mask.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/maps.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/oneofs.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/proto3.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/struct.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/timestamp_duration.proto: v3.14.0
+  src/google/protobuf/util/internal/testdata/wrappers.proto: v3.14.0
+  src/google/protobuf/util/json_format.proto: v3.14.0
+  src/google/protobuf/util/json_format_proto3.proto: v3.14.0
+  src/google/protobuf/util/message_differencer_unittest.proto: v3.14.0
+initConfig:
+  excludeGlobs:
+  - '**/ruby/**'
+  - '**/proto2/**'
+  flatFiles: true
+  includeGlobs:
+  - '**/src/google/protobuf/**/*.proto'
+  - '**/benchmarks/**/*.proto'
+  - README.md
+  revision: v3.14.0
+outputDir: gitquery-output
+remote: git@github.com:protocolbuffers/protobuf.git
+repoDir: /tmp/gitquery/repo
+schema:
+  version: ''

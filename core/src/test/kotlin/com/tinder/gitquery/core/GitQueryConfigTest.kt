@@ -1,5 +1,6 @@
 package com.tinder.gitquery.core
 
+import com.tinder.gitquery.core.config.GitQueryConfig
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -28,7 +29,7 @@ class GitQueryConfigTest {
     @Test
     fun `loadConfig - given file exists, should return config`() {
         // When
-        val config = loadConfig("${testProjectDir.root}/gitquery.yml")
+        val config = GitQueryConfig.load("${testProjectDir.root}/gitquery.yml", false)
 
         // Then
         assert(config.remote == "https://github.com/aminghadersohi/ProtoExample.git")
@@ -49,7 +50,7 @@ class GitQueryConfigTest {
 
         // When
         val actualError = kotlin.runCatching {
-            loadConfig(filename)
+            GitQueryConfig.load(filename, false)
         }.exceptionOrNull()
 
         require(actualError is IllegalArgumentException)
@@ -65,7 +66,7 @@ class GitQueryConfigTest {
 
         // When
         val actualError = kotlin.runCatching {
-            loadConfig(filename)
+            GitQueryConfig.load(filename, false)
         }.exceptionOrNull()
 
         require(actualError is IllegalStateException)
