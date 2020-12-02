@@ -8,7 +8,6 @@ import com.tinder.gitquery.core.utils.toAbsolutePath
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
-import org.yaml.snakeyaml.representer.Representer
 import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Paths
