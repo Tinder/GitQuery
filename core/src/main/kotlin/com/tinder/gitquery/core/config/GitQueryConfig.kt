@@ -78,7 +78,7 @@ data class GitQueryConfig(
         val writer = FileWriter(filename)
         val options = DumperOptions()
         options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
-        val yaml = Yaml(Constructor(GitQueryConfig::class.java), Representer(options), options)
+        val yaml = Yaml(options)
         yaml.dump(this, writer)
         writer.flush()
     }

@@ -1,26 +1,35 @@
 plugins {
     id("java")
-    id("com.tinder.gitquery") version "3.0.1"
+    id("com.tinder.gitquery") version "3.0.2-SNAPSHOT"
 }
 
 def protoDir = "src/main/proto"
 
 gitQuery {
-    autoSync = true
-    cleanOutput = true
+    remote = "git@github.com:TinderApp/proto.git"
+    branch = "master"
     configFile = "gitquery.yml"
     outputDir = protoDir
-    repoDir = "tmp/.gitquery"
+    repoDir = "tmp/remote"
 }
 
-// This will init/update the config file every time the gitQueryInit task runs.
+
 gitQueryInit {
-    flatFiles = false
-    includeGlobs = ["**/examples/addressbook.proto"]
-    excludeGlobs = ["**/generated/**/*.proto"]
-    revision = "v3.14.0"
+    revision = "5.19.0"
+    includeGlobs = [
+            "analytics/model/app/*.proto",
+            "**/analytics/model/legacy/app/*.proto",
+            "**/events/model/app/**/*.proto",
+            "**/events/model/app/*.proto",
+            "**/events/service/app.proto",
+            "**/analytics/model/legacy/*.proto",
+            "**/analytics/model/legacy/shared/*.proto",
+            "**/events/model/adapter/*.proto",
+            "**/events/model/common/*.proto",
+            "**/events/service/publish_any.proto",
+            "**/events/service/publish.proto"
+    ]
 }
-
 
 repositories {
     jcenter()

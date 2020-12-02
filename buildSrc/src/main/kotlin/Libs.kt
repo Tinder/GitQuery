@@ -13,7 +13,7 @@ object Libs {
         const val kotlin = "1.4.10"
         const val ktlint = "0.39.0"
         const val ktlintGradlePlugin = "9.4.1"
-        const val snakeyaml = "1.26"
+        const val snakeyaml = "1.27"
         const val vanniktechMavenPublish = "0.13.0"
     }
 
