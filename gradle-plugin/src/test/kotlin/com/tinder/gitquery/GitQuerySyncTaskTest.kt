@@ -91,8 +91,8 @@ plugins {
 }
 
 gitQuery {
-    configFile =  "gitquery.yml"
-    outputDir =  "gitquery-output"
+    configFile = "gitquery.yml"
+    outputDir = "gitquery-output"
     repoDir = "tmp/remote"
 }
         """.trimIndent()

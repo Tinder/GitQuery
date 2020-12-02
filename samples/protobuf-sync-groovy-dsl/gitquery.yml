@@ -5,6 +5,7 @@ commits: &id001 {}
 extra: *id001
 files:
   examples:
+    README.md: v3.14.0
     addressbook.proto: v3.14.0
 initConfig:
   excludeGlobs:
@@ -12,6 +13,7 @@ initConfig:
   flatFiles: false
   includeGlobs:
   - '**/examples/addressbook.proto'
+  - '**/examples/README.md'
   revision: v3.14.0
 outputDir: src/main/proto
 remote: git@github.com:protocolbuffers/protobuf.git

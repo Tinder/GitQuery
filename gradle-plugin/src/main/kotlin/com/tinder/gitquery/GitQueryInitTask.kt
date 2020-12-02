@@ -68,7 +68,8 @@ open class GitQueryInitTask @Inject constructor(
                 }
                 initConfig.flatFiles = flatFiles
             },
-            verbose = verbose
+            verbose = verbose,
+            buildDir = project.buildDir.path
         )
     }
 }

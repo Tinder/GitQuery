@@ -1,0 +1,31 @@
+plugins {
+    id("java")
+    id("com.tinder.gitquery") version "3.0.1-SNAPSHOT"
+}
+
+def protoDir = "src/main/proto"
+
+gitQuery {
+    autoSync = true
+    cleanOutput = true
+    configFile = "gitquery.yml"
+    outputDir = protoDir
+    repoDir = "tmp/.gitquery"
+}
+
+// This will init/update the config file every time the gitQueryInit task runs.
+gitQueryInit {
+    flatFiles = false
+    includeGlobs = ["**/examples/addressbook.proto"]
+    excludeGlobs = ["**/generated/**/*.proto"]
+    revision = "v3.14.0"
+}
+
+
+repositories {
+    jcenter()
+    if (System.getenv("CI") == "true") {
+        mavenLocal()
+    }
+    mavenCentral()
+}

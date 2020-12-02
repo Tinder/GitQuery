@@ -9,7 +9,7 @@ import com.google.protobuf.gradle.protoc
 plugins {
     application
     id("com.google.protobuf") version "0.8.13"
-    id("com.tinder.gitquery") version "3.0.0"
+    id("com.tinder.gitquery") version "3.0.1-SNAPSHOT"
     java
 }
 
@@ -17,13 +17,15 @@ val protoDir = "src/main/proto"
 
 gitQuery {
     autoSync = true
+    branch = "master"
     cleanOutput = true
     configFile = "gitquery.yml"
     outputDir = protoDir
-    repoDir = "${project.buildDir}/tmp/.gitquery"
+    remote = "git@github.com:protocolbuffers/protobuf.git"
+    repoDir = "tmp/.gitquery"
 }
 
-// This will init/update the config file every time the gitQuery task runs.
+// This will init/update the config file every time the gitQueryInit task runs.
 gitQueryInit {
     flatFiles = false
     includeGlobs = listOf("**/examples/addressbook.proto")

@@ -86,8 +86,8 @@ data class GitQueryConfig(
     /**
      * using the repoDir and remote config attributes, return where the repo should be cloned.
      */
-    fun getActualRepoPath(): String {
-        val repoPath = toAbsolutePath(this.repoDir)
+    fun getActualRepoPath(pathPrefix: String): String {
+        val repoPath = toAbsolutePath(path = this.repoDir, prefixPath = pathPrefix)
         val repoFullname = remote.substringAfter("git@github.com:")
             .substringBefore(".git")
         return "$repoPath/$repoFullname"

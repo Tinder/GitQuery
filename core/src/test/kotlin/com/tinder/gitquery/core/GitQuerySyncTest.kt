@@ -42,7 +42,9 @@ class GitQuerySyncTest {
                 ),
                 repoDir = "${testProjectDir.root}/tmp/remote",
                 outputDir = "${testProjectDir.root}/gitquery-output"
-            )
+            ),
+            projectDir = testProjectDir.root.path,
+            buildDir = testProjectDir.root.path
         )
 
         // Then
@@ -63,7 +65,9 @@ class GitQuerySyncTest {
                     ),
                     repoDir = "${testProjectDir.root}/tmp/remote",
                     outputDir = "${testProjectDir.root}/gitquery-output"
-                )
+                ),
+                projectDir = testProjectDir.root.path,
+                buildDir = testProjectDir.root.path
             )
         }.exceptionOrNull()
 
@@ -89,7 +93,9 @@ class GitQuerySyncTest {
                     ),
                     repoDir = "${testProjectDir.root}/tmp/remote",
                     outputDir = "${testProjectDir.root}/gitquery-output"
-                )
+                ),
+                projectDir = testProjectDir.root.path,
+                buildDir = testProjectDir.root.path
             )
         }.exceptionOrNull()
 
@@ -115,7 +121,9 @@ class GitQuerySyncTest {
                     ),
                     repoDir = "${testProjectDir.root}/tmp/remote",
                     outputDir = "${testProjectDir.root}/gitquery-output"
-                )
+                ),
+                projectDir = testProjectDir.root.path,
+                buildDir = testProjectDir.root.path
             )
         }.exceptionOrNull()
 
