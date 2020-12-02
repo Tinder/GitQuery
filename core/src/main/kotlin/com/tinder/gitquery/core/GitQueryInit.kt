@@ -38,6 +38,9 @@ object GitQueryInit {
     ) {
         this.verbose = verbose
         config.validate()
+        require(config.initConfig.includeGlobs.isNotEmpty()) {
+            "Failed to init config: includeGlobs is empty"
+        }
 
         val actualRepoDirectory = config.getActualRepoPath(buildDir)
 
