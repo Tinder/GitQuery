@@ -3,6 +3,8 @@ All notable changes to this library will be documented in this file.
 
 Version in this change log adheres to [Semantic Versioning](http://semver.org/).
 
+### 3.0.5 (2020-12-02) [#49](https://github.com/Tinder/GitQuery/pull/49) Init Config: Throw illegal arg exception when include globs is empty ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+
 ### 3.0.4 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Fix cli bug prefixing / to path ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
 
 ### 3.0.3 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Allow init-config to use includeGlobs in config ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
