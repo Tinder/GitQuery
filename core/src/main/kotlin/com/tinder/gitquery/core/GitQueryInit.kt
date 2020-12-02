@@ -34,7 +34,7 @@ object GitQueryInit {
         configFile: String,
         config: GitQueryConfig,
         verbose: Boolean = false,
-        buildDir: String = ""
+        buildDir: String = System.getProperty("user.dir") + "/build"
     ) {
         this.verbose = verbose
         config.validate()

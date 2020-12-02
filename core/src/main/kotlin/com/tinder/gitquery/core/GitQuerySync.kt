@@ -27,8 +27,8 @@ object GitQuerySync {
     fun sync(
         config: GitQueryConfig,
         verbose: Boolean = false,
-        projectDir: String = "",
-        buildDir: String = "",
+        projectDir: String = System.getProperty("user.dir"),
+        buildDir: String = System.getProperty("user.dir") + "/build"
     ) {
         config.validate()
 

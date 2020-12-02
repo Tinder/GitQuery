@@ -13,7 +13,7 @@ fun toAbsolutePath(
         path.isBlank() -> {
             ""
         }
-        path[0] == '/' -> {
+        path[0] == '/' || prefixPath.isBlank() -> {
             path
         }
         else -> {
