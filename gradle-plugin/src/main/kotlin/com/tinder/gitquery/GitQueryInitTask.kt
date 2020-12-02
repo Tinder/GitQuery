@@ -5,7 +5,6 @@
 package com.tinder.gitquery
 
 import com.tinder.gitquery.core.GitQueryInit.initConfig
-import org.gradle.api.logging.LogLevel
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import javax.inject.Inject
@@ -52,14 +51,12 @@ open class GitQueryInitTask @Inject constructor(
 
     @TaskAction
     override fun taskAction() {
-        if (includeGlobs.isEmpty()) {
-            logger.log(LogLevel.WARN, "GitQueryInit skipped - includeGlobs is empty.")
-            return
-        }
         initConfig(
             configFile = configFileName(),
             config = readConfig(createIfNotExists = true).apply {
-                initConfig.includeGlobs = includeGlobs
+                if (includeGlobs.isNotEmpty()) {
+                    initConfig.includeGlobs = includeGlobs
+                }
                 if (excludeGlobs.isNotEmpty()) {
                     initConfig.excludeGlobs = excludeGlobs
                 }

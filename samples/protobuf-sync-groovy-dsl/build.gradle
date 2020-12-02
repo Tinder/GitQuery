@@ -1,34 +1,15 @@
 plugins {
     id("java")
-    id("com.tinder.gitquery") version "3.0.2"
+    id("com.tinder.gitquery") version "3.0.3"
 }
 
 def protoDir = "src/main/proto"
 
 gitQuery {
-    remote = "git@github.com:TinderApp/proto.git"
-    branch = "master"
+    autoSync = true
     configFile = "gitquery.yml"
     outputDir = protoDir
-    repoDir = "tmp/remote"
-}
-
-
-gitQueryInit {
-    revision = "5.19.0"
-    includeGlobs = [
-            "analytics/model/app/*.proto",
-            "**/analytics/model/legacy/app/*.proto",
-            "**/events/model/app/**/*.proto",
-            "**/events/model/app/*.proto",
-            "**/events/service/app.proto",
-            "**/analytics/model/legacy/*.proto",
-            "**/analytics/model/legacy/shared/*.proto",
-            "**/events/model/adapter/*.proto",
-            "**/events/model/common/*.proto",
-            "**/events/service/publish_any.proto",
-            "**/events/service/publish.proto"
-    ]
+    repoDir = "tmp/.gitquery"
 }
 
 repositories {
