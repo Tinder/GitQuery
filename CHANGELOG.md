@@ -3,7 +3,7 @@ All notable changes to this library will be documented in this file.
 
 Version in this change log adheres to [Semantic Versioning](http://semver.org/).
 
-### 3.0.1 (2020-12-01) [#45](https://github.com/Tinder/GitQuery/pull/46) Bug Fix - init config ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 3.0.1 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Bug Fix - init config ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
     - Fix a bug related to the gradle plugin init config writing absolute path where relative is desired. 
     
 ### 3.0.0 (2020-11-14) [#45](https://github.com/Tinder/GitQuery/pull/45) GitQuery 3 ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
