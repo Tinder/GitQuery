@@ -1,0 +1,21 @@
+plugins {
+    id("java")
+    id("com.tinder.gitquery") version "3.0.4"
+}
+
+def protoDir = "src/main/proto"
+
+gitQuery {
+    autoSync = true
+    configFile = "gitquery.yml"
+    outputDir = protoDir
+    repoDir = "tmp/.gitquery"
+}
+
+repositories {
+    jcenter()
+    if (System.getenv("CI") == "true") {
+        mavenLocal()
+    }
+    mavenCentral()
+}

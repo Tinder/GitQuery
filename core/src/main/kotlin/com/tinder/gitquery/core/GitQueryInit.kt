@@ -34,11 +34,12 @@ object GitQueryInit {
         configFile: String,
         config: GitQueryConfig,
         verbose: Boolean = false,
+        buildDir: String = System.getProperty("user.dir") + "/build"
     ) {
         this.verbose = verbose
         config.validate()
 
-        val actualRepoDirectory = config.getActualRepoPath()
+        val actualRepoDirectory = config.getActualRepoPath(buildDir)
 
         prepareRepo(config.remote, config.branch, actualRepoDirectory, verbose = verbose)
 

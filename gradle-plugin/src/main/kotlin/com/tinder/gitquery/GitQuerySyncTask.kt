@@ -67,7 +67,9 @@ open class GitQuerySyncTask @Inject constructor(
     open fun taskAction() {
         GitQuerySync.sync(
             config = readConfig(createIfNotExists = false),
-            verbose = verbose
+            verbose = verbose,
+            projectDir = project.projectDir.path,
+            buildDir = project.buildDir.path
         )
     }
 
@@ -82,22 +84,12 @@ open class GitQuerySyncTask @Inject constructor(
             if (branch.isNotBlank()) {
                 it.branch = branch
             }
-            it.repoDir = toAbsolutePath(
-                path = if (repoDir.isNotBlank()) {
-                    repoDir
-                } else {
-                    it.repoDir
-                },
-                prefixPath = "${project.buildDir}"
-            )
-            it.outputDir = toAbsolutePath(
-                path = if (outputDir.isNotBlank()) {
-                    outputDir
-                } else {
-                    it.outputDir
-                },
-                prefixPath = "${project.projectDir}"
-            )
+            if (repoDir.isNotBlank()) {
+                it.repoDir = repoDir
+            }
+            if (outputDir.isNotBlank()) {
+                it.outputDir = outputDir
+            }
             it.cleanOutput = cleanOutput
         }
     }

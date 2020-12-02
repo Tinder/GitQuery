@@ -8,7 +8,6 @@ import com.tinder.gitquery.core.utils.toAbsolutePath
 import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import org.yaml.snakeyaml.constructor.Constructor
-import org.yaml.snakeyaml.representer.Representer
 import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -78,7 +77,7 @@ data class GitQueryConfig(
         val writer = FileWriter(filename)
         val options = DumperOptions()
         options.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
-        val yaml = Yaml(Constructor(GitQueryConfig::class.java), Representer(options), options)
+        val yaml = Yaml(options)
         yaml.dump(this, writer)
         writer.flush()
     }
@@ -86,8 +85,8 @@ data class GitQueryConfig(
     /**
      * using the repoDir and remote config attributes, return where the repo should be cloned.
      */
-    fun getActualRepoPath(): String {
-        val repoPath = toAbsolutePath(this.repoDir)
+    fun getActualRepoPath(pathPrefix: String): String {
+        val repoPath = toAbsolutePath(path = this.repoDir, prefixPath = pathPrefix)
         val repoFullname = remote.substringAfter("git@github.com:")
             .substringBefore(".git")
         return "$repoPath/$repoFullname"

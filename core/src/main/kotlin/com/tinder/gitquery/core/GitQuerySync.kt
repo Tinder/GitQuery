@@ -27,12 +27,17 @@ object GitQuerySync {
     fun sync(
         config: GitQueryConfig,
         verbose: Boolean = false,
+        projectDir: String = System.getProperty("user.dir"),
+        buildDir: String = System.getProperty("user.dir") + "/build"
     ) {
         config.validate()
 
-        val outputPath = toAbsolutePath(config.outputDir)
+        val outputPath = toAbsolutePath(
+            path = config.outputDir,
+            prefixPath = projectDir
+        )
 
-        val actualRepoPath = config.getActualRepoPath()
+        val actualRepoPath = config.getActualRepoPath(buildDir)
 
         prepareRepo(config.remote, config.branch, actualRepoPath, verbose = verbose)
 

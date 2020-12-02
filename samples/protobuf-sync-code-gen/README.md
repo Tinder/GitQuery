@@ -1,8 +1,7 @@
-## Gradle Proto to Kotlin Code Gen 
+## Sync Protobuf and generate Java from it
 
-Taken from the the [streem/pbandk](https://github.com/streem/pbandk), this example uses git query to sync the address 
-book example in the [protobuf repository](https://github.com/google/protobuf) and use [streem/pbandk](https://github.com/streem/pbandk)
- to generate Kotlin. 
+This example uses GitQuery to sync the addressbook example in the [protobuf repository](https://github.com/google/protobuf) and use [streem/pbandk](https://github.com/streem/pbandk)
+ to generate Java. 
  
 For this example the synced proto and generated code has been committed to show what it looks like.
 
