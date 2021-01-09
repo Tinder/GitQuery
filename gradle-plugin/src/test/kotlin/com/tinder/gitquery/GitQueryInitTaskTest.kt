@@ -72,6 +72,7 @@ plugins {
 gitQuery {
     configFile =  "gitquery.yml"
     repoDir = "tmp/remote"
+    branch = "master"
     remote = "https://github.com/aminghadersohi/ProtoExample.git"
 }
 
