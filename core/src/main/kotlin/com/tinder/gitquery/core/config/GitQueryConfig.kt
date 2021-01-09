@@ -14,7 +14,7 @@ import java.nio.file.Paths
 import java.util.Collections.emptyMap
 
 const val DEFAULT_AUTO_SYNC: Boolean = false
-const val DEFAULT_BRANCH: String = "master"
+const val DEFAULT_BRANCH: String = ""
 const val DEFAULT_CLEAN_OUTPUT: Boolean = true
 const val DEFAULT_CONFIG_FILENAME: String = "gitquery.yml"
 const val DEFAULT_GRADLE_REPO_DIR: String = "tmp/gitquery/repo"
