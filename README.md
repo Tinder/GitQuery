@@ -60,7 +60,7 @@ extra:
 `module/build.gradle:`
 ```groovy
 plugins {
-    id "com.tinder.gitquery" version "3.0.0"
+    id "com.tinder.gitquery" version "3.0.6"
 }
 
 gitQuery {
