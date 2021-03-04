@@ -9,7 +9,11 @@ import com.tinder.gitquery.core.utils.insertNested
 import com.tinder.gitquery.core.utils.prepareRepo
 import com.tinder.gitquery.core.utils.repoHeadRevision
 import com.tinder.gitquery.core.utils.sortMap
-import java.nio.file.*
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
+import java.nio.file.PathMatcher
+import java.nio.file.Paths
 import java.util.stream.Collectors.toList
 
 /**
