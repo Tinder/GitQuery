@@ -3,6 +3,8 @@ All notable changes to this library will be documented in this file.
 
 Version in this change log adheres to [Semantic Versioning](http://semver.org/).
 
+### 3.0.6 (2021-01-08) [#54](https://github.com/Tinder/GitQuery/pull/54) Fixing a gitquery init bug that was not looking at the right revision ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+
 ### 3.0.6 (2021-01-08) [#53](https://github.com/Tinder/GitQuery/pull/53) Set the default branch value to empty string ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
 
 ### 3.0.5 (2020-12-02) [#49](https://github.com/Tinder/GitQuery/pull/49) Init Config: Throw illegal arg exception when include globs is empty ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
