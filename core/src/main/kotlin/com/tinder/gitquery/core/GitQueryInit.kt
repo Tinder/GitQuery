@@ -44,9 +44,15 @@ object GitQueryInit {
 
         val actualRepoDirectory = config.getActualRepoPath(buildDir)
 
-        prepareRepo(config.remote, config.branch, actualRepoDirectory, verbose = verbose)
-
         val initConfig = config.initConfig
+
+        prepareRepo(
+            config.remote,
+            if (initConfig.revision.isEmpty()) config.branch else initConfig.revision,
+            actualRepoDirectory,
+            verbose = verbose
+        )
+
         config.files = initFiles(
             includeGlobs = initConfig.includeGlobs,
             excludeGlobs = initConfig.excludeGlobs,
