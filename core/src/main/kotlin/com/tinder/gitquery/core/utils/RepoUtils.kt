@@ -25,7 +25,7 @@ internal fun prepareRepo(remote: String, branch: String, repoDir: String, verbos
         // In cases where the branch changes, `git checkout $branch` will fail silently, prompting
         // us to do a clean single branch clone of the repository.
         exitCode = sh(
-            verbose = verbose,
+            verbose,
             "cd $repoDir && git checkout $branch &>/dev/null && git pull origin $branch --tags"
         )
     }
@@ -35,8 +35,8 @@ internal fun prepareRepo(remote: String, branch: String, repoDir: String, verbos
     // 2) or, we couldn't pull the branch that we wanted.
     // Cleanup and try a fresh clone.
     if (exitCode != 0 || !repoExists) {
-        sh(verbose = verbose, "rm -rf $repoDir")
-        exitCode = sh(verbose = verbose, "git clone --single-branch -b $branch $remote $repoDir")
+        sh(verbose, "rm -rf $repoDir")
+        exitCode = sh(verbose, "git clone --single-branch -b $branch $remote $repoDir")
     }
 
     check(exitCode == 0) { "Error cloning/updating repo $remote into directory $repoDir" }
@@ -46,12 +46,12 @@ internal fun prepareRepo(remote: String, branch: String, repoDir: String, verbos
  * Get current revision of the repoDir.
  */
 internal fun repoHeadRevision(repoDir: String, verbose: Boolean): String {
-    return shellResult(verbose = verbose, "(cd $repoDir && git rev-parse HEAD)")
+    return shellResult(verbose, "(cd $repoDir && git rev-parse HEAD)")
 }
 
 /**
  * Checks the existence of the repoDir
  */
 internal fun repoExists(repoDir: String, verbose: Boolean): Boolean {
-    return 0 == sh(verbose = verbose, "[ -d $repoDir ] && [ -d $repoDir/.git ]")
+    return 0 == sh(verbose, "[ -d $repoDir ] && [ -d $repoDir/.git ]")
 }
