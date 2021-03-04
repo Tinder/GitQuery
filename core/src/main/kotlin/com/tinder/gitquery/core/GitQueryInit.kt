@@ -9,11 +9,7 @@ import com.tinder.gitquery.core.utils.insertNested
 import com.tinder.gitquery.core.utils.prepareRepo
 import com.tinder.gitquery.core.utils.repoHeadRevision
 import com.tinder.gitquery.core.utils.sortMap
-import java.nio.file.FileSystems
-import java.nio.file.Files
-import java.nio.file.Path
-import java.nio.file.PathMatcher
-import java.nio.file.Paths
+import java.nio.file.*
 import java.util.stream.Collectors.toList
 
 /**
@@ -46,7 +42,12 @@ object GitQueryInit {
 
         val initConfig = config.initConfig
 
-        prepareRepo(config.remote, initConfig.revision, actualRepoDirectory, verbose = verbose)
+        prepareRepo(
+            config.remote,
+            if (initConfig.revision.isEmpty()) config.branch else initConfig.revision,
+            actualRepoDirectory,
+            verbose = verbose
+        )
 
         config.files = initFiles(
             includeGlobs = initConfig.includeGlobs,
