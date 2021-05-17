@@ -3,6 +3,8 @@ All notable changes to this library will be documented in this file.
 
 Version in this change log adheres to [Semantic Versioning](http://semver.org/).
 
+### 3.0.9 (2021-05-17) [#58](https://github.com/Tinder/GitQuery/pull/58) Bazel Support - rename BUILD to BUILD.bazel (gradle clean was deleting BUILD) ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
+
 ### 3.0.8 (2021-05-17) [#57](https://github.com/Tinder/GitQuery/pull/57) Bazel Support ([tinder-maxwellelliott](https://github.com/tinder-maxwellelliott))
 
 ### 3.0.7 (2021-03-04) [#54](https://github.com/Tinder/GitQuery/pull/54) Fixing a gitquery init bug that was not looking at the right revision ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
