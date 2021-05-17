@@ -5,24 +5,24 @@ Version in this change log adheres to [Semantic Versioning](http://semver.org/).
 
 ### 3.0.8 (2021-05-17) [#57](https://github.com/Tinder/GitQuery/pull/57) Bazel Support ([tinder-maxwellelliott](https://github.com/tinder-maxwellelliott))
 
-### 3.0.7 (2021-03-04) [#54](https://github.com/Tinder/GitQuery/pull/54) Fixing a gitquery init bug that was not looking at the right revision ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 3.0.7 (2021-03-04) [#54](https://github.com/Tinder/GitQuery/pull/54) Fixing a gitquery init bug that was not looking at the right revision ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
 
-### 3.0.6 (2021-01-08) [#53](https://github.com/Tinder/GitQuery/pull/53) Set the default branch value to empty string ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 3.0.6 (2021-01-08) [#53](https://github.com/Tinder/GitQuery/pull/53) Set the default branch value to empty string ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
 
-### 3.0.5 (2020-12-02) [#49](https://github.com/Tinder/GitQuery/pull/49) Init Config: Throw illegal arg exception when include globs is empty ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 3.0.5 (2020-12-02) [#49](https://github.com/Tinder/GitQuery/pull/49) Init Config: Throw illegal arg exception when include globs is empty ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
 
-### 3.0.4 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Fix cli bug prefixing / to path ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 3.0.4 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Fix cli bug prefixing / to path ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
 
-### 3.0.3 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Allow init-config to use includeGlobs in config ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 3.0.3 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Allow init-config to use includeGlobs in config ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
     
-### 3.0.2 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Bug Fix - Snakeyaml constructor call ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 3.0.2 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Bug Fix - Snakeyaml constructor call ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
     - Upgrade to Snakeyaml 1.27 
     - Simplify constructor call for Yaml to avoid this error: `org.yaml.snakeyaml.representer.Representer.<init>(Lorg/yaml/snakeyaml/DumperOptions;)V`
     
-### 3.0.1 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Bug Fix - init config ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 3.0.1 (2020-12-01) [#48](https://github.com/Tinder/GitQuery/pull/48) Bug Fix - init config ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
     - Fix a bug related to the gradle plugin init config writing absolute path where relative is desired. 
     
-### 3.0.0 (2020-11-14) [#45](https://github.com/Tinder/GitQuery/pull/45) GitQuery 3 ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 3.0.0 (2020-11-14) [#45](https://github.com/Tinder/GitQuery/pull/45) GitQuery 3 ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
     - New `init-config` command line parameter
     - New Gradle extension `gitQueryInit` 
     - Supprt for tags as well as already supported shas
@@ -39,9 +39,9 @@ Version in this change log adheres to [Semantic Versioning](http://semver.org/).
     - Lots of code cleanup
 
 
-### 2.0.1 (2020-07-06) [#43](https://github.com/Tinder/GitQuery/pull/43) Set the default for cleanOutput to true ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 2.0.1 (2020-07-06) [#43](https://github.com/Tinder/GitQuery/pull/43) Set the default for cleanOutput to true ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
 
-### 2.0.0 (2020-07-04) [#42](https://github.com/Tinder/GitQuery/pull/42) Version 2.0.0 ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi)
+### 2.0.0 (2020-07-04) [#42](https://github.com/Tinder/GitQuery/pull/42) Version 2.0.0 ([tinder-aminghadersohi](https://github.com/tinder-aminghadersohi))
     - Kotlin updated to 1.4.10
     - Breaking change: Gradle Plugin: Renamed gitQueryTask to gitQuery 
     - Add option to not clean output directory - cleanOutput
