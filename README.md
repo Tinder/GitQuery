@@ -82,13 +82,44 @@ gitQueryInit {
 
 This adds a task called `gitQuery` to the module. It can be executed like so:
 
-```
+```terminal
 ./gradlew :module:gitQuery
 ```
 
 #### Bazel
 
-Add the needed dependencies from the `WORKSPACE` file and then run:
+Add the needed dependencies to your `WORKSPACE` file:
+
+```WORKSPACE
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+  name = "GitQuery",
+  url = "RELEASE_URL",
+  sha256 = "UPDATE_ME"
+)
+
+load("@GitQuery//bazel_support:repositories.bzl", "gitquery_dependencies")
+load("@GitQuery//bazel_support:constants.bzl", "MAVEN_ARTIFACTS")
+
+gitquery_dependencies()
+
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
+kotlin_repositories()
+kt_register_toolchains()
+
+load("@rules_jvm_external//:defs.bzl", "maven_install")
+
+maven_install(
+    artifacts = MAVEN_ARTIFACTS,
+    repositories = [
+        "https://maven.google.com",
+        "https://repo1.maven.org/maven2",
+    ],
+)
+```
+
+Then run
 
 ```terminal
 bazel run //:GitQuery -- -h
