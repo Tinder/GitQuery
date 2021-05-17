@@ -36,6 +36,7 @@ encodings.xml
 vcs.xml
 
 build
+!BUILD
 
 ### Android template
 # Built application files
@@ -103,3 +104,5 @@ tmp
 
 samples/sample1-generate-nested.yml
 
+# Bazel
+bazel-*

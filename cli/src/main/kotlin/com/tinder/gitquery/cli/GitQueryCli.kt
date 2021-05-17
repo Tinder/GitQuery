@@ -28,52 +28,52 @@ class GitQueryCli : CliktCommand() {
     }
 
     private val configFile: String by option(
-        help = """A yaml file that describe a set of files to query and sync from a given repository. 
+        help = """A yaml file that describe a set of files to query and sync from a given repository.
                 |default: $DEFAULT_CONFIG_FILENAME""".trimMargin()
     ).default(DEFAULT_CONFIG_FILENAME)
 
     // Override attributes. The following attributes override the same value in config is they are defined.
     private val remote: String by option(
-        help = """Remote Git repo url. 
-                |If provided, this will override any value specified for [remote] in the [configFile].  
+        help = """Remote Git repo url.
+                |If provided, this will override any value specified for [remote] in the [configFile].
                 |default: $DEFAULT_REMOTE""".trimMargin()
     ).default("")
 
     private val branch: String by option(
-        help = """Remote Git repo branch. 
-                |If provided, this will override any value specified for [branch] in the [configFile].  
+        help = """Remote Git repo branch.
+                |If provided, this will override any value specified for [branch] in the [configFile].
                 |default: $DEFAULT_BRANCH""".trimMargin()
     ).default("")
 
     private val outputDir: String by option(
-        help = """Path to a directory where the files should be synced to. 
-                |If provided, this will override any value specified for [outputDir] in the [configFile]. 
+        help = """Path to a directory where the files should be synced to.
+                |If provided, this will override any value specified for [outputDir] in the [configFile].
                 |default: $DEFAULT_OUTPUT_DIR""".trimMargin()
     ).default("")
 
     private val repoDir: String by option(
-        help = """Where the remote repo(s) can be cloned locally and stored. 
-                |If provided, this will override any value specified for [repoDir] in the [configFile].  
+        help = """Where the remote repo(s) can be cloned locally and stored.
+                |If provided, this will override any value specified for [repoDir] in the [configFile].
                 |default: $DEFAULT_REPO_DIR""".trimMargin()
     ).default("")
 
     private val dontCleanOutput: Boolean by option(
-        help = """Whether to not clean the output folder prior to sync. 
+        help = """Whether to not clean the output folder prior to sync.
                 |If set, this will override the [cleanOutput] in the [configFile]
                 |default: ${!DEFAULT_CLEAN_OUTPUT}""".trimMargin()
     ).flag(default = !DEFAULT_CLEAN_OUTPUT)
 
     private val initConfig: Boolean by option(
-        help = """Initialize/update the config file based on command line params. 
+        help = """Initialize/update the config file based on command line params.
                 |Use --include-globs and --exclude-globs.
-                |If [configFile] exists, it will be updated, else it will be created with values 
-                |from command line or internal defaults. 
+                |If [configFile] exists, it will be updated, else it will be created with values
+                |from command line or internal defaults.
                 |default: false""".trimMargin()
     ).flag(default = false)
 
     private val includeGlobs: String by option(
         help = """A list of globs to include when generating/updating the files attribute in [configFile].
-                |If provided, this comma, space or pipe separated list of globs will override [includeGlobs] 
+                |If provided, this comma, space or pipe separated list of globs will override [includeGlobs]
                 |in [configFile] and used when initializing/updating the config's [files] map.""".trimMargin()
     ).default("")
 
@@ -91,7 +91,7 @@ class GitQueryCli : CliktCommand() {
     ).flag(default = DEFAULT_FLAT_FILES)
 
     private val revision: String by option(
-        help = """A revision to use when --init-config is used, 
+        help = """A revision to use when --init-config is used,
                 |if not provided the revision of latest [branch] is used""".trimMargin()
     ).default("")
 

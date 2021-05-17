@@ -8,15 +8,15 @@ Fast and incremental query and sync of files in a remote git repository.
  - Command line interface
  - Gradle plugin
 
-An alternative approach for defining dependencies in a build project vs importing of pre-built and published artifacts. 
+An alternative approach for defining dependencies in a build project vs importing of pre-built and published artifacts.
 
-#### Use cases: 
+#### Use cases:
 It is sometimes preferable to query individual files in a remote repo when:
  - we only need a few files from large remote monorepo.
  - we need granular versioning for each dependency file.
  - it is hard to globally version the files in the remote repo, or it would require many artifacts to be published.
  - we want to combine the source files of an artifact into our module.
- - we want to avoid version conflicts as possible when including pre-build artifacts. 
+ - we want to avoid version conflicts as possible when including pre-build artifacts.
 
 #### Sample gitquery.yml
 
@@ -34,7 +34,7 @@ branch: master
 commits:
   latest: d654b510d2689e8ee56d23d03dff2be742737f86
 # Specify a nested map of filenames to revisions (or commit alias) that we want to sync to [outputDir].
-# The structure of [files] matches the directory structure of the remote repo. A key whose value is a 
+# The structure of [files] matches the directory structure of the remote repo. A key whose value is a
 # nested map is considered a directory.
 files:
   # A file at the root fo the remote repo.
@@ -53,7 +53,7 @@ cleanOutput: true
 extra:
   attr1: value1
   attr2: 1
-# 
+#
 ```
 
 #### Gradle Plugin - (https://plugins.gradle.org/plugin/com.tinder.gitquery)
@@ -82,14 +82,55 @@ gitQueryInit {
 
 This adds a task called `gitQuery` to the module. It can be executed like so:
 
-```
+```terminal
 ./gradlew :module:gitQuery
 ```
 
-#### Command line interface 
+#### Bazel
+
+Add the needed dependencies to your `WORKSPACE` file:
+
+```WORKSPACE
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+http_archive(
+  name = "GitQuery",
+  url = "RELEASE_URL",
+  sha256 = "UPDATE_ME"
+)
+
+load("@GitQuery//bazel_support:repositories.bzl", "gitquery_dependencies")
+load("@GitQuery//bazel_support:constants.bzl", "MAVEN_ARTIFACTS")
+
+gitquery_dependencies()
+
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
+kotlin_repositories()
+kt_register_toolchains()
+
+load("@rules_jvm_external//:defs.bzl", "maven_install")
+
+maven_install(
+    artifacts = MAVEN_ARTIFACTS,
+    repositories = [
+        "https://maven.google.com",
+        "https://repo1.maven.org/maven2",
+    ],
+)
+```
+
+Then run
+
+```terminal
+bazel run //:GitQuery -- -h
+```
+
+to get started.
+
+#### Command line interface
 Install using brew (https://github.com/Tinder/homebrew-tap):
 ```
-brew tap Tinder/tap 
+brew tap Tinder/tap
 brew install gitquery
 ```
 or
@@ -99,20 +140,20 @@ brew install Tinder/tap/gitquery
 
 If you need Java 1.8:
 ```
-brew cask install homebrew/cask-versions/adoptopenjdk8 
+brew cask install homebrew/cask-versions/adoptopenjdk8
 ```
 
 To install from source:
 ```shell script
 ./install
-``` 
+```
 
-To run 
+To run
 ```shell script
 gitquery
-``` 
+```
 
-#### Sample Sync 
+#### Sample Sync
 ```shell script
 ./gitquery --config-file=./samples/sample1.yml --repo-dir=./build/tmp/repo --output-dir=./gitquery-output
 ```
@@ -147,7 +188,7 @@ gitquery
 ```
 
 ```shell script
-./gitquery --help     
+./gitquery --help
 
 Usage: git-query-cli [OPTIONS]
 
@@ -199,7 +240,7 @@ Options:
 ```
 
 #### Example Use Case - Code Generation
-We have a tech stack with many mobile/web apps and services with many developers actively working on them. We want to avoid duplicating and handwriting our models and service interfaces, so we decide to store definitions of models and service interfaces in a central idl repo. 
+We have a tech stack with many mobile/web apps and services with many developers actively working on them. We want to avoid duplicating and handwriting our models and service interfaces, so we decide to store definitions of models and service interfaces in a central idl repo.
 
 We can choose to build a single artifact for each language that we support in our tech stack or even build many of them. However, since each of our apps or services just needs a couple of files from the idl repo. We can avoid including unneccesary files, in pre-built artifacts, by using GitQuery to pull and sync the idl files that we want. This allows them to be staged for our build. From there we can use our code generation tools, the sames ones we were using to generate code and build them in to an artifact, to generate code from the idl definitions that we care about and use the generated code in our project as any other source code.
 
