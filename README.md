@@ -122,7 +122,7 @@ maven_install(
 Then run
 
 ```terminal
-bazel run //:GitQuery -- -h
+bazel run @GitQuery//:GitQuery -- -h
 ```
 
 to get started.
