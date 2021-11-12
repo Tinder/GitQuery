@@ -15,7 +15,6 @@ allprojects {
     group = project.group
     version = project.version
     repositories {
-        jcenter()
         mavenCentral()
     }
     tasks.withType<KotlinCompile> {

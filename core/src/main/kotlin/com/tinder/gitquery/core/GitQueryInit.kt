@@ -75,7 +75,7 @@ object GitQueryInit {
     ): HashMap<String, Any> {
         val actualRepoPath = Paths.get(actualRepoDirectory)
         var repoHeadRevision = revision.ifEmpty { repoHeadRevision(actualRepoDirectory, verbose = verbose) }
-        if (repoHeadRevision.toUpperCase() == "HEAD") {
+        if (repoHeadRevision.uppercase() == "HEAD") {
             repoHeadRevision = repoHeadRevision(actualRepoDirectory, verbose = verbose)
         }
 

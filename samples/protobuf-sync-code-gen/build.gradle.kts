@@ -8,7 +8,7 @@ import com.google.protobuf.gradle.protoc
 
 plugins {
     application
-    id("com.google.protobuf") version "0.8.13"
+    id("com.google.protobuf") version "0.8.17"
     id("com.tinder.gitquery") version "3.0.10"
     java
 }
@@ -28,8 +28,6 @@ sourceSets {
     }
 }
 
-val protobufVersion by extra("3.14.0")
-
 repositories {
     jcenter()
     if (System.getenv("CI") == "true") {
@@ -39,18 +37,18 @@ repositories {
 }
 
 application {
-    mainClassName = "com.examples.addressbook.MainKt"
+    mainClass.set("com.examples.addressbook.MainKt")
     applicationName = "addressbook"
 }
 
 dependencies {
-    implementation("com.google.protobuf:protobuf-java:3.14.0")
+    implementation("com.google.protobuf:protobuf-java:3.19.1")
 }
 
 protobuf {
     generatedFilesBaseDir = "$projectDir/src"
     protoc {
-        artifact = "com.google.protobuf:protoc:$protobufVersion"
+        artifact = "com.google.protobuf:protoc:3.19.1"
     }
     generateProtoTasks {
         ofSourceSet("main").forEach { task ->
