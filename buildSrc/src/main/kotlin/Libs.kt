@@ -14,7 +14,7 @@ object Libs {
         const val ktlint = "0.43.0"
         const val ktlintGradlePlugin = "10.2.0"
         const val snakeyaml = "1.29"
-        const val vanniktechMavenPublish = "0.18.0"
+        const val vanniktechMavenPublish = "0.13.0"
     }
 
     const val clikt = "com.github.ajalt.clikt:clikt:${Versions.clikt}"
