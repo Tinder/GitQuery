@@ -96,21 +96,4 @@ files:
     user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
 
         """.trimIndent()
-
-    private fun getContentMissingRemoteConfig() =
-        """
----
-schema:
-  version: 1
-branch: master
-files:
-  definitions:
-    user.proto: 42933446d0321958e8c12216d04b9f0c382ebf1b
-        """.trimIndent()
-
-    private fun getContentWrongFormat() =
-        """---
-master{ }
-incorrectFormat
-        """.trimIndent()
 }
