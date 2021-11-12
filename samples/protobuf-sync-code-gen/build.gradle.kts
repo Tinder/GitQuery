@@ -9,7 +9,7 @@ import com.google.protobuf.gradle.protoc
 plugins {
     application
     id("com.google.protobuf") version "0.8.17"
-    id("com.tinder.gitquery") version "3.0.11"
+    id("com.tinder.gitquery") version "3.0.10"
     java
 }
 
@@ -37,7 +37,7 @@ repositories {
 }
 
 application {
-    mainClassName = "com.examples.addressbook.MainKt"
+    mainClass.set("com.examples.addressbook.MainKt")
     applicationName = "addressbook"
 }
 

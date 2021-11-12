@@ -524,7 +524,7 @@ public final class AddressBookProtos {
       @java.lang.Override
       public void writeTo(com.google.protobuf.CodedOutputStream output)
                           throws java.io.IOException {
-        if (!getNumberBytes().isEmpty()) {
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(number_)) {
           com.google.protobuf.GeneratedMessageV3.writeString(output, 1, number_);
         }
         if (type_ != com.example.tutorial.AddressBookProtos.Person.PhoneType.MOBILE.getNumber()) {
@@ -539,7 +539,7 @@ public final class AddressBookProtos {
         if (size != -1) return size;
 
         size = 0;
-        if (!getNumberBytes().isEmpty()) {
+        if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(number_)) {
           size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, number_);
         }
         if (type_ != com.example.tutorial.AddressBookProtos.Person.PhoneType.MOBILE.getNumber()) {
@@ -1181,13 +1181,13 @@ public final class AddressBookProtos {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getNameBytes().isEmpty()) {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
       }
       if (id_ != 0) {
         output.writeInt32(2, id_);
       }
-      if (!getEmailBytes().isEmpty()) {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(email_)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, email_);
       }
       for (int i = 0; i < phones_.size(); i++) {
@@ -1205,14 +1205,14 @@ public final class AddressBookProtos {
       if (size != -1) return size;
 
       size = 0;
-      if (!getNameBytes().isEmpty()) {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(name_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
       }
       if (id_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt32Size(2, id_);
       }
-      if (!getEmailBytes().isEmpty()) {
+      if (!com.google.protobuf.GeneratedMessageV3.isStringEmpty(email_)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, email_);
       }
       for (int i = 0; i < phones_.size(); i++) {
