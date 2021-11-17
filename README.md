@@ -60,7 +60,7 @@ extra:
 `module/build.gradle:`
 ```groovy
 plugins {
-    id "com.tinder.gitquery" version "3.0.6"
+    id "com.tinder.gitquery" version "3.0.12"
 }
 
 gitQuery {
@@ -249,7 +249,7 @@ We can choose to build a single artifact for each language that we support in ou
 License
 ---
 ~~~
-Copyright (c) 2019, Match Group, LLC
+Copyright (c) 2021, Match Group, LLC
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
