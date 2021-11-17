@@ -1,4 +1,4 @@
-Copyright (c) 2019, Match Group, LLC
+Copyright (c) 2021, Match Group, LLC
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
