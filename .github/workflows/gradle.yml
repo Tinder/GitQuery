@@ -23,6 +23,7 @@ jobs:
         run: ./gradlew test --stacktrace
       - name: Build Samples
         run: |
+          mv .m2 $HOME/
           for d in samples/*; do
             set -e
             [ -d "$d" ] || continue
