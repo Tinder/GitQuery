@@ -1,6 +1,5 @@
 GitQuery
 ==========
-[![CircleCI](https://circleci.com/gh/Tinder/GitQuery.svg?style=svg)](https://circleci.com/gh/Tinder/GitQuery)
 
 Fast and incremental query and sync of files in a remote git repository.
 
