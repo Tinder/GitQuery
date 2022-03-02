@@ -1,5 +1,6 @@
 GitQuery
 ==========
+![workflow](https://github.com/Tinder/GitQuery/actions/workflows/gradle.yml/badge.svg)
 
 Fast and incremental query and sync of files in a remote git repository.
 
