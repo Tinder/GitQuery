@@ -15,9 +15,6 @@ jobs:
       - uses: actions/setup-java@v1
         with:
           java-version: 8
-      - uses: webfactory/ssh-agent@v0.5.4
-        with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
@@ -27,16 +24,6 @@ jobs:
         run: ./gradlew ktlintCheck
       - name: Build
         run: ./gradlew test --stacktrace
-      - name: Build Samples
-        run: |
-          for d in samples/*; do
-            set -e
-            [ -d "$d" ] || continue
-            echo "== $d =="
-            pushd "$d" >/dev/null
-            ../../gradlew gitQueryInit build
-            popd >/dev/null
-          done
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
