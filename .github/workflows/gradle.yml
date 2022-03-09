@@ -5,7 +5,36 @@ on:
   pull_request:
     branches: [ main ]
 jobs:
-  gradle:
+  gradle_build_samples:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    if: github.ref == 'refs/heads/main'
+    steps:
+        env:
+           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v1
+        with:
+          java-version: 8
+      - uses: webfactory/ssh-agent@v0.5.4
+        with:
+          ssh-private-key: $SSH_PRIVATE_KEY
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+    - name: Build Samples
+      run: |
+        for d in samples/*; do
+          set -e
+          [ -d "$d" ] || continue
+          echo "== $d =="
+          pushd "$d" >/dev/null
+          ../../gradlew gitQueryInit build
+          popd >/dev/null
+        done
+
+  gradle_build:
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -24,7 +53,6 @@ jobs:
         run: ./gradlew ktlintCheck
       - name: Build
         run: ./gradlew test --stacktrace
-
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
