@@ -144,7 +144,9 @@ If you need Java 1.8:
 brew cask install homebrew/cask-versions/adoptopenjdk8
 ```
 
-To install from source:
+#### To install from source (Recommended for Apple M1):
+If you are using Apple M1 please use install from source
+
 ```shell script
 ./install
 ```
