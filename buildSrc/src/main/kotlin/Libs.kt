@@ -10,7 +10,7 @@ object Libs {
         const val googleJavaFormatCli = "1.7"
         const val gradlePluginPublish = "0.17.0"
         const val junit = "4.13.2"
-        const val kotlin = "1.5.31"
+        const val kotlin = "1.8.0"
         const val ktlint = "0.43.0"
         const val ktlintGradlePlugin = "10.2.0"
         const val snakeyaml = "1.29"
