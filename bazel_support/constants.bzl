@@ -2,13 +2,14 @@
 Constants used in GitQuery configs
 """
 
-RULES_JVM_EXTERNAL_TAG = "4.0"
-RULES_JVM_EXTERNAL_SHA = "31701ad93dbfe544d597dbe62c9a1fdd76d81d8a9150c2bf1ecf928ecdf97169"
+RULES_JVM_EXTERNAL_TAG = "6.1"
+RULES_JVM_EXTERNAL_SHA = "42a6d48eb2c08089961c715a813304f30dc434df48e371ebdd868fc3636f0e82"
 
-RULES_KOTLIN_VERSION = "v1.5.0-beta-4"
-RULES_KOTLIN_SHA = "6cbd4e5768bdfae1598662e40272729ec9ece8b7bded8f0d2c81c8ff96dc139d"
+RULES_KOTLIN_VERSION = "v1.9.5"
+RULES_KOTLIN_SHA = "34e8c0351764b71d78f76c8746e98063979ce08dcf1a91666f3f3bc2949a533d"
 
 MAVEN_ARTIFACTS = [
     "org.yaml:snakeyaml:1.27",
-    "com.github.ajalt.clikt:clikt-jvm:3.1.0"
+    "com.github.ajalt.clikt:clikt-jvm:3.1.0",
+    "org.seleniumhq.selenium:selenium-java:4.16.1",
 ]
