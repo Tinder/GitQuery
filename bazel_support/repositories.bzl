@@ -34,3 +34,10 @@ def gitquery_dependencies(
         sha256 = rules_jvm_external_sha,
         url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % rules_jvm_external_tag,
     )
+
+    _maybe(
+        http_archive,
+        name = "rules_java",
+        sha256 = "f8ae9ed3887df02f40de9f4f7ac3873e6dd7a471f9cddf63952538b94b59aeb3",
+        url = "https://github.com/bazelbuild/rules_java/releases/download/7.6.1/rules_java-7.6.1.tar.gz",
+    )
