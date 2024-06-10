@@ -1,4 +1,3 @@
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("//bazel_support:repositories.bzl", "gitquery_dependencies")
 load("//bazel_support:constants.bzl", "MAVEN_ARTIFACTS")
 
@@ -8,7 +7,8 @@ load("@io_bazel_rules_kotlin//kotlin:repositories.bzl", "kotlin_repositories")
 kotlin_repositories()
 
 load("@io_bazel_rules_kotlin//kotlin:core.bzl", "kt_register_toolchains")
-kt_register_toolchains()
+# kt_register_toolchains()
+register_toolchains("//:kotlin_toolchain")
 
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 
