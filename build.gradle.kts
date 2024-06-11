@@ -18,11 +18,11 @@ allprojects {
         mavenCentral()
     }
     tasks.withType<KotlinCompile> {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions.jvmTarget = "11"
     }
     tasks.withType<Detekt> {
         // Target version of the generated JVM bytecode. It is used for type resolution.
-        this.jvmTarget = "1.8"
+        this.jvmTarget = "11"
     }
 }
 
